@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000000;
+  color: #ffffff;
+}
+
+button {
+  outline: 0;
+  border-radius: 0;
+  border: none;
+  padding: 10px;
+  background: rgb(225, 225, 225);
+  &:hover {
+    cursor: pointer;
+    background: rgb(215, 215, 215);;
+  }
+}
+// new styles
+.container2 {
+  width: 100%;
+  height: 100%;
+  height: 100vh;
+}
+
+.dev-controls {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  ul {
+    display: flex;
+    list-style: none;
+    li {
+      margin: 10px;
+    }
+  }
+}
+
+.container2 .film13 {
+  width: 100%;
+  height: 100%;
+}
+
+.container2 .layer-stack-wrapper {
+  position: relative;
+}
+.container2 .layer-stack {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+}
+.container2 .layer-stack-show {
+  opacity: 1;
+  z-index: 10;
+}
+.container2 .layer-stack-hidden {
+  opacity: 0;
+  z-index: 0;
+}
+
+.film13-remote {
+  padding-top: 100px;
+  z-index: 500;
+  margin-bottom: 100px;
+}
+
+
+.grid-film13 {
+  width: 1000px;
+  height: 563px;
+  position: relative;
+  > * {
+    width: 100%;
+    height: 100%;
+    border: 1px solid red;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .hover {
+    padding: 5px 135px; // black box offset
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    grid-template-rows: repeat(4, 1fr);
+    .hover-item {
+      border: 1px solid red;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.iframe-wrapper {
+  height: 100%;
+  width: 100%;
+  div {
+    height: 100%;
+    width: 100%;
+  }
+  iframe {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+
+.section-show {
+  opacity: 1;
+}
+.section-hide {
+  opacity: 0;
+}
+
+.collapse-area {
+  transition: .3s ease all;
+}
+.collapse-hide {
+  max-height: 0;
+  opacity: 0;
+}
+.collapse-show {
+  max-height: auto;
+  opacity: 1;
+}
+
+.countdown {
+  height: 2ch;
+  width: 2ch;
+  font-size: 18px;
+  // background: #ffffff;
+  color: #ffffff;
+  &:after {
+    width: 100%;
+    height: 100%;
+    content: ' ';
+    animation: countdown 5s;
+  }
+}
+
+.filmmodal-controls {
+  display: flex;
+}
+
+@keyframes countdown {
+  0% {
+    content: ' '
+  }
+  20% {
+    content: '5'
+  }
+  40% {
+    content: '4'
+  }
+  60% {
+    content: '3'
+  }
+  80% {
+    content: '2'
+  }
+  100% {
+    content: '1'
+  }
+}
