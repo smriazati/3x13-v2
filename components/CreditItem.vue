@@ -1,19 +1,19 @@
 <template>
   <div class="credit-component accordion">
-    <h2>{{ Name }}</h2>
-    <h3>{{ Role }}</h3>
-    <p><a target="_blank" :href="Link">Link</a></p>
-    <figure>
-        <img :src="Image" :alt="ImageAlt">
+    <h2>{{ name }}</h2>
+    <h3>{{ role }}</h3>
+    <p v-if="link"><a target="_blank" :href="link">Link</a></p>
+    <figure v-if="image">
+        <img :src="image" :alt="imageAlt">
     </figure>
-    <div v-if="Bio" class="collapse" @click="toggleCollapse()">
-        <div class="collapse-button">
+    <div v-if="bio" class="collapse" @click="toggleCollapse()">
+        <div class="link-hover collapse-button">
             Open Bio
         </div>
         <div
             :class="isCollapsed ? 'collapse-hide' : 'collapse-show'" 
             class="collapse-area">
-            <p>{{ Bio }}</p>
+            <div v-html="bio"></div>
         </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
 <script>
 export default {
     props: [
-        "Name", "Role", "Link", "Bio", "Image", "ImageAlt"
+        "name", "role", "link", "bio", "image", "imageAlt"
     ],
     data() {
         return {

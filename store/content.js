@@ -3,8 +3,7 @@ export const state = () => ({
     apiDataFilmsLoaded: false,
     apiDataAbout: '',
     apiDataAboutLoaded: false,
-    apiMainScore: '',
-    testScore: '/song.mp3',
+
     testData: [
         {
             id: "rec3le2ErYD4PTsGN",
@@ -377,20 +376,21 @@ export const state = () => ({
 
 export const mutations = {
     setFilmData: (state, payload) => {
-        state.apiDataFilms = payload;
+        let ref = payload;
+        // ref.sort((a, b) => (parseInt(a.acf.film_order) > parseInt(b.acf.film_order)) ? 1 : -1)
+
+        state.apiDataFilms = ref;
         state.apiDataFilmsLoaded = true;
     },
     setAboutData: (state, payload) => {
-        state.apiDataAbout = payload;
+        state.apiDataAbout = payload[0];
         state.apiDataAboutLoaded = true;
     }
 }
 
 export const getters = {
     totalVideos: (state) => {
-        return state.testData.length
-    },
-    vidsInOrder: (state) => {
-        return state.testData;
+        return state.apiDataFilms.length
     }
 }
+

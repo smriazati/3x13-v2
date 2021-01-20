@@ -19,7 +19,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;0,700;1,500&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Nunito&family=Work+Sans:ital,wght@0,400;0,500;1,400&display=swap'
       }
     ]
   },
@@ -47,7 +47,8 @@ export default {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    "@nuxtjs/svg"
   ],
   /*
   ** Nuxt.js modules

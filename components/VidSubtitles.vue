@@ -1,32 +1,70 @@
 <template>
-    <section :class="stack ? 'stacked-subs' : 'titled-subs' " class="subtitles">
-        <h3>Subtitles</h3>
-        <ul>
-            <li 
-            :class="activeSubtitle === 'en' ? 'active-sub' : 'inactive-sub' "
-            @click="subtitleChange('en')">English</li>
-            <li 
-            :class="activeSubtitle === 'ar' ? 'active-sub' : 'inactive-sub' "
-            @click="subtitleChange('ar')">عربى</li>
-        </ul>
-    </section>
+  <ul class="subtitles">
+    <li
+      :class="activeSubtitle === 'en' ? 'active-sub' : 'inactive-sub'"
+      @click="subtitleChange('en')"
+    >
+      English
+    </li>
+    <li
+      :class="activeSubtitle === 'ar' ? 'active-sub' : 'inactive-sub'"
+      @click="subtitleChange('ar')"
+    >
+      عربى
+    </li>
+  </ul>
 </template>
 
 <script>
-
 export default {
-  props: {
-    stack: Boolean
-  },
-  computed: {
-    activeSubtitle() {
-      return this.$store.state.grid.subtitleLanguage;
-    }
+  data() {
+    return {
+      activeSubtitle: "en",
+    };
   },
   methods: {
     subtitleChange(payload) {
-      this.$store.commit("grid/setSubtitle", payload);
-    }
-  }
+      // this.$store.commit("grid/setSubtitle", payload);
+      this.activeSubtitle = payload;
+    },
+  },
 };
 </script>
+
+<style lang="scss">
+$spacer: 10px;
+
+$gold: rgb(202, 166, 17);
+$dark: rgb(12, 11, 11);
+$light: rgb(232, 232, 232);
+$gray: rgb(44, 44, 44);
+
+.subtitles ul {
+  justify-content: flex-start;
+  > li {
+    margin-right: $spacer * 3;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.subtitles {
+  ul {
+    margin-top: $spacer;
+    display: flex;
+    padding: 0;
+    list-style: none;
+    justify-content: space-between;
+    li {
+      &.active-sub {
+        color: $gold;
+      }
+      &:hover {
+        cursor: pointer;
+        color: $gold;
+      }
+    }
+  }
+}
+</style>
