@@ -1,5 +1,9 @@
 <template>
-  <div class="">hi</div>
+  <div>
+      <div v-for="item in artistCredits" :key="item.id">
+          {{ item.acf.artist_first_name }}
+      </div>
+  </div>
 </template>
 
 <script>
@@ -22,10 +26,14 @@ export default {
         artistCredits() {
             var ref = this.filmsApi;
 
+            // ref.sort(function(a, b) {
+            //     var textA = a.acf.artist_first_name.toUpperCase();
+            //     var textB = b.acf.artist_first_name.toUpperCase();
+            //     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            // });
+
             ref.sort(function(a, b) {
-                var textA = a.acf.artist_first_name.toUpperCase();
-                var textB = b.acf.artist_first_name.toUpperCase();
-                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                return a.acf.artist_first_name.localeCompare(b.acf.artist_first_name);
             });
 
             return ref;

@@ -1,14 +1,27 @@
 <template>
   <div class="credit-component accordion">
-    <h2>{{ name }}</h2>
-    <h3>{{ role }}</h3>
-    <p v-if="link"><a target="_blank" :href="link">Link</a></p>
     <figure v-if="image">
         <img :src="image" :alt="imageAlt">
     </figure>
-    <div v-if="bio" class="collapse" @click="toggleCollapse()">
-        <div class="link-hover collapse-button">
-            Open Bio
+    <h2 class="name">
+        <a v-if="link" :href="link" target="_blank" >
+            {{ name }}
+        </a>
+        <span v-else>
+            {{ name }}
+        </span>
+    </h2>
+    <h3 class="role">{{ role }}</h3>
+    <div v-if="bio" class="bio collapse">
+        <div class="link-hover collapse-button" @click="toggleCollapse()">
+            <span v-if="isCollapsed">
+                Bio
+                <span class="icon"><SvgThing name="Next" /></span>
+            </span>
+            <span v-else>
+                <span class="visually-hidden">Close</span>
+                <span class="icon"><SvgThing name="Close" /></span>
+            </span>
         </div>
         <div
             :class="isCollapsed ? 'collapse-hide' : 'collapse-show'" 
@@ -20,7 +33,12 @@
 </template>
 
 <script>
+import SvgThing from "@/components/SvgThing.vue";
+
 export default {
+    components: {
+        SvgThing
+    },
     props: [
         "name", "role", "link", "bio", "image", "imageAlt"
     ],

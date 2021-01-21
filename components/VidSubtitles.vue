@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     subtitleChange(payload) {
-      // this.$store.commit("grid/setSubtitle", payload);
+      this.$store.commit("grid/setSubtitle", payload);
       this.activeSubtitle = payload;
     },
   },

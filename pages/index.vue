@@ -19,20 +19,20 @@
         <main class="container-intro"> 
           <header>
             <div class="text-wrapper">
-              <h1 class="logo">{{ aboutData.acf.intro_headline }}</h1>
+              <h1 class="logo center">{{ aboutData.acf.intro_headline }}</h1>
+              <div class="intro-body-text center">
+                <p>{{ aboutData.acf.intro_body_text}}</p>
+              </div>
               <nav>
                 <button @click="changeActiveFrame(frames[1])" :disabled="!isFilmDataLoaded">Play Film</button>
               </nav>
-              <div class="intro-body-text">
-                <p>{{ aboutData.acf.intro_body_text}}</p>
-              </div>
-              <div class="tutorial-text">
-                <h2>{{ aboutData.acf.tutorial_headline}}</h2>
-                <div v-html="aboutData.acf.tutorial_body_text"></div>
-              </div>
-              <div class="subtitle-controls">
+              <div class="subtitle-controls center">
                 <h2>Subtitles</h2>
                 <VidSubtitles />
+              </div>
+              <div class="tutorial-text">
+                <h2 class="center">{{ aboutData.acf.tutorial_headline}}</h2>
+                <div v-html="aboutData.acf.tutorial_body_text"></div>
               </div>
             </div>
             <nav>
@@ -73,7 +73,7 @@
             activeIntroSection === 'Credits' ? 'section-show' : 'section-hide'
           "
         >
-          <h2>Credits</h2>
+          <h2 class="center">Credits</h2>
 
           <div class="credits-section">
             <h3>{{ aboutData.acf.primary_credits_headline}}</h3>
@@ -157,7 +157,7 @@
             </ul>
           </div>  
 
-          <div class="credits-section">
+          <div class="credits-section credits-no-image">
             <h3>{{ aboutData.acf.tertiary_credits_headline}}</h3>
             <ul class="credits-list">
               <li v-for="(item, index) in aboutData.acf.tertiary_credits_list" :key="index">
@@ -264,13 +264,24 @@
               </div>
             </div>
             <div class="hover">
+              <div class="hover-wrapper-overlay"></div>
               <div class="hover-wrapper">
                 <div
                   v-for="(item, index) in filmData"
                   :key="index"
                   class="hover-item"
                   @click="openFilmModal(index)"
+                  @mouseenter="playSfx(item.acf.film_order)"
                 >
+                  <div class="hover-item-sound">
+                    <audio
+                    ref="sfx"
+                    :alt="item.acf.film_hover_sound.alt"
+                    :data-sfx-id="item.acf.film_order"
+                    @ended="onSfxEnding(item.acf.film_order)">
+                      <source :src="item.acf.film_hover_sound.url" type="audio/mpeg" />
+                    </audio>
+                  </div>
                   <div class="hover-item-text">
                     <h2>{{ item.acf.artist_first_name }}</h2>
                     <h3>{{ item.acf.artist_country }}</h3>
@@ -386,10 +397,6 @@ export default {
       },
       modalId: "495232585",
       modalLink: "https://vimeo.com/495232585/ed11198286",
-      modalOptions: {
-        controls: true,
-        autoplay: true,
-      },
       isFilm13Ready: false,
       isFilm13Playing: false,
       isFilm13Muted: false,
@@ -405,6 +412,17 @@ export default {
   },
 
   computed: {
+    activeSfx() {
+      return this.$store.state.sound.activeSfx;
+    },
+    modalOptions() {
+      let options = {
+        controls: true,
+        autoplay: true,
+        texttrack: this.$store.state.grid.subtitleLanguage,
+      }
+      return options;
+    },
     isFilmDataLoaded() {
       if (this.filmsApi) {
         return true;
@@ -423,33 +441,24 @@ export default {
         return false;
       }
 
-      var ref = this.filmsApi;
-      ref.sort((a, b) => parseFloat(a.acf.film_order) - parseFloat(b.acf.film_order));
+      var ref = this.filmsApi.slice();
+      // ref.sort((a, b) => parseFloat(a.acf.film_order) - parseFloat(b.acf.film_order));
+
+      ref.sort(function(a, b) {
+        return parseFloat(a.acf.film_order) - parseFloat(b.acf.film_order);
+      })
 
       return ref;
     },
     artistCredits() {
-        var ref = this.filmsApi;
+        var ref2 = this.filmsApi.slice();
 
-        ref.sort(function(a, b) {
-            var textA = a.acf.artist_first_name.toUpperCase();
-            var textB = b.acf.artist_first_name.toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        ref2.sort(function(a, b) {
+            return a.acf.artist_first_name.localeCompare(b.acf.artist_first_name);
         });
 
-        return ref;
+        return ref2;
     },
-    // testData() {
-    //   if (!this.$store.state.content.testData) {
-    //     return false;
-    //   }
-
-    //   if (!this.$store.state.content.testData[0].fields) {
-    //     return false;
-    //   }
-
-    //   return this.$store.state.content.testData;
-    // },
     paginationPrevModal() {
       if (this.activeModal === null) {
         return null;
@@ -508,6 +517,29 @@ export default {
     },
   },
   methods: {
+    playSfx(order) {
+      if (!this.activeSfx) {
+        // the first time
+        this.playSound(order);
+        this.$store.commit("sound/addSfx", order);
+      } else if (!this.activeSfx.includes(order)) {
+        this.$store.commit("sound/addSfx", order);
+        this.playSound(order);
+      }
+    },
+    playSound(order) {
+      // console.log(order);
+      this.$refs.sfx.forEach((s) => {
+        if (parseInt(order) === parseInt(s.dataset.sfxId)) {
+          // console.log(s)
+          s.load();
+          s.play();
+        }
+      });
+    },
+    onSfxEnding(order) {
+      this.$store.commit("sound/removeSfx", order);
+    },
     onFilm13Ended() {
       console.log('ended now')
       this.hideFilm13Grid();
@@ -648,6 +680,7 @@ export default {
         return;
       }
       ref.play();
+      this.unmuteFilm13Sfx();
       this.isFilm13Playing = true;
     },
     pauseFilm13() {
@@ -656,13 +689,16 @@ export default {
         return;
       }
       ref.pause();
+      this.muteFilm13Sfx();
       this.isFilm13Playing = false;
     },
     toggleFilm13Audio() {
       if (this.isFilm13Muted) {
         this.unmuteFilm13();
+        this.unmuteFilm13Sfx();
       } else {
         this.muteFilm13();
+        this.muteFilm13Sfx();
       }
     },
     muteFilm13() {
@@ -680,6 +716,24 @@ export default {
       }
       ref.unmute();
       this.isFilm13Muted = false;
+    },
+    muteFilm13Sfx() {
+      const ref = this.$refs.sfx;
+      if (!ref) {
+        return;
+      }
+      ref.forEach((s) => {
+        s.muted = true;
+      });
+    },
+    unmuteFilm13Sfx() {
+      const ref = this.$refs.sfx;
+      if (!ref) {
+        return;
+      }
+      ref.forEach((s) => {
+        s.muted = false;
+      });
     },
     playFilm13FromStart() {
       const ref = this.$refs.film13;
@@ -762,8 +816,13 @@ export default {
             );
           });
       });
-    },
+    }
   },
+  mounted() {
+    this.$refs.sfx.forEach((s) => {
+      s.load();
+    });
+  }
 };
 </script>
 

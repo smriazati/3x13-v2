@@ -13,6 +13,22 @@ $bp-lg: 1440px;
 $bp-type: 1100px;
 $bp-sm: 960px;
 
+@mixin unsetUl() {
+  list-style: none;
+  padding-left: 0;
+}
+
+@mixin linkHover() {
+  transition: .3s ease all;
+  &:hover {
+    color: $gold;
+    cursor: pointer;
+    .icon {
+      stroke: $gold !important;
+    }
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -122,13 +138,25 @@ button {
 .collapse-area {
   transition: .3s ease all;
 }
-.collapse-hide {
+.collapse-hide,
+.collapse-hide * {
   max-height: 0;
   opacity: 0;
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 .collapse-show {
   max-height: auto;
-  opacity: 1;
+  animation: .3s ease-out forwards fadeIn;
 }
 
 .countdown {
@@ -172,7 +200,7 @@ button {
 
 
 .hover {
-  padding: 0px 13.5vw; // black box offset
+  padding: 0px 13.25vw; // black box offset
 }
 
 .hover-wrapper {
@@ -282,6 +310,9 @@ body {
   font-family: 'Work Sans', sans-serif;
 }
 
+button {
+  font-family: 'Work Sans', sans-serif;
+}
 
 
 .logo,
@@ -529,9 +560,12 @@ body {
 
 
   header {
-    height: 90vh;
+    // height: 90vh;
     padding-top: 20vh;
-
+    h2 {
+      margin-top: $spacer*3;
+      margin-bottom: $spacer*1.5;
+    }
   }
 
   header,
@@ -540,10 +574,6 @@ body {
     margin: 0 auto;
 
   //  border: 1px solid red;
-
-    h2 {
-      margin: $spacer*3 0 $spacer*1.5 0;
-    }
 
     nav {
       text-align: center;
@@ -797,4 +827,157 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+// h2, h3 {
+//   margin-top: $spacer*3;
+//   margin-bottom: $spacer;
+// }
+
+
+
+// tutorial
+
+.text-wrapper {
+  p {
+    margin-bottom: 1em;
+  }
+}
+
+.center {
+  text-align: center;
+}
+
+
+ul.subtitles {
+  @include unsetUl;
+  display: flex;
+  justify-content: center;
+  > * {
+    padding-right: $spacer*3;
+    &:last-child {
+      padding-right: 0;
+    }
+    @include linkHover;
+  }
+  .active-sub {
+    color: $gold;
+  }
+}
+
+
+.supporters-gallery {
+  ul {
+    @include unsetUl;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    > * {
+      flex: 0 0 22%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+// credits
+
+ul.credits-list {
+  @include unsetUl;
+}
+
+.credits-section {
+  margin-top: $spacer*8;
+}
+.credits-section > h3 {
+  text-align: center;
+  margin-bottom: $spacer*3;
+}
+
+.credits-section:not(.credits-no-image) .credit-component {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  grid-auto-rows: min-content;
+  grid-column-gap: $spacer;
+  margin: $spacer*3 0;
+  svg {
+    width: 10px;
+    height: 100%;
+  }
+  h2, h3 {
+    margin: 0;
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+  figure {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 5;
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.collapse-button {
+  text-transform: uppercase;
+}
+
+.credits-section.credits-no-image .credit-component {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: min-content;
+  grid-column-gap: $spacer;
+  margin: $spacer*3 0;
+  .name,
+  .bio {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+  .role {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: right;
+  }
+}
+
+.link-hover {
+  @include linkHover;
+}
+
+.container-film13 {
+  overflow-x: hidden;
+}
+
+
+.hover {
+  position: relative;
+}
+@keyframes hoverOverlayFadeOut {
+  from {
+    opacity: 1;
+    display: block;
+  }
+  
+  to {
+    opacity: 0;
+    display: none;
+    max-height: 0;
+  }
+}
+.hover-wrapper-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  // background: pink;
+  background: rgba(0,0,0,0);
+  animation: 1.2s ease-in 5s forwards hoverOverlayFadeOut;
 }
