@@ -1,5 +1,5 @@
 <template>
-   <component v-bind:is="src"></component>
+   <component :is="src"></component>
 </template>
 <script>
 export default {
