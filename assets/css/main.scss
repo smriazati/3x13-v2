@@ -256,9 +256,6 @@ button {
   }
 }
 
-.filmmodal-controls {
-  display: flex;
-}
 
 @keyframes countdown {
   0% {
@@ -286,6 +283,11 @@ button {
   @media (min-width: $grid-bp + 1) {
     padding: 0px 13.25vw; // black box offset
   }
+  @media (max-width: 758px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .hover-wrapper {
@@ -294,7 +296,7 @@ button {
   display: grid;
   @media (min-width: $grid-bp + 1) {
     grid-template-columns: repeat(3, 1fr);
-    padding: 2px 0;
+    padding: 2px;
     grid-gap: 2px;
   }
 
@@ -302,16 +304,17 @@ button {
     height: 563px;
     grid-template-columns: repeat(3, 246px);
     margin: 0 auto;
-    width: 746px;
+    width: 738px;
     grid-gap: 0;
-    padding: 0 2px;
+    padding: 0;
   }
 
   @media (max-width: 758px) {
     width: 98vw;
+    max-width: calc(133.333vh); 
+    height: calc(75vw);
     margin: 0 auto;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 2px;
   }
 
   grid-template-rows: repeat(4, 1fr);
@@ -707,6 +710,9 @@ body {
   text-align: left;
   position: relative;
   
+  height: 100vh;
+  overflow-y: scroll;
+  
   header {
     // height: 90vh;
     padding-top: 35vh
@@ -925,6 +931,9 @@ body {
 
 .modal-player-wrapper {
   width: 90%;
+  @media (max-width: $bp-sm) {
+    width: 80vw;
+  }
   .modal-player-wrapper div {
     width: 100%;
     height: 100%;
@@ -967,6 +976,7 @@ body {
         width: 100%;
       }
     }
+
   }
 
   .pagination-button-prev {
@@ -1001,14 +1011,23 @@ body {
 
   h2 {
     font-size: 1.3em;
+    @media (max-width: $bp-sm) {
+      font-size: .9em;
+    }
   }
   h3 {
     font-size: 1em;
+    @media (max-width: $bp-sm) {
+      font-size: .7em;
+    }
   }
   .icon {
     // position: absolute;
     // bottom: $spacer*2;
     font-size: .8em;
+    @media (max-width: $bp-sm) {
+      font-size: .5em;
+    }
     padding-top: $spacer;
     &:hover {
       fill: $gold;
@@ -1120,6 +1139,12 @@ ul.credits-list {
   letter-spacing: 0;
 }
 
+.site-tagline {
+  @media (max-width: 70ch) {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
 .section-title {
   margin: $spacer*3 0 $spacer 0;
   text-align: center;
@@ -1138,6 +1163,10 @@ ul.credits-list {
   p {
     margin-bottom: 1em;
   }
+  @media (max-width: 70ch) {
+    width: 90%;
+    margin: 0 auto;
+  }
 }
 
 // credits grid
@@ -1146,6 +1175,10 @@ ul.credits-list {
   display: grid;
   grid-template-columns: 100px 1fr;
   grid-column-gap: $spacer*2;
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 15vw 1fr;
+    padding: 0 $spacer;
+  }
   grid-auto-rows: min-content;
   margin: $spacer*4 0;
 
@@ -1163,6 +1196,9 @@ ul.credits-list {
 
     display: grid;
     grid-template-columns: 1fr 30ch;
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr 20vw;
+    }
     grid-auto-rows: min-content;
 
     .name {
@@ -1183,6 +1219,9 @@ ul.credits-list {
 
     .name, .role {
       align-self: start;
+      @media (max-width: $bp-sm) {
+        align-self: end;
+      }
     }
 
     .bio {
@@ -1277,7 +1316,9 @@ ul.credits-list {
     align-items: center;
     img {
       max-width: 100%;
-      clip-path: circle(33%);
+      @media (min-width: $bp-sm) {
+        clip-path: circle(33%);
+      }
       order: 1;
       margin-bottom: $spacer;
     }
@@ -1288,6 +1329,22 @@ ul.credits-list {
     h3 {
       order: 3;
       font-size: 0.8em;
+    }
+
+    @media (max-width: $bp-sm) {
+      max-height: inherit;
+      position: absolute;
+      top: 0;
+      background: rgba($dark, 0.8);
+      padding: 5px;
+    }
+  }
+}
+
+.film-modal-playing {
+  img {
+    @media (max-width: $bp-sm) {
+      width: 100px;
     }
   }
 }
@@ -1303,8 +1360,14 @@ ul.credits-list {
   }
 
   .filmmodal-controls {
+    display: flex;
     flex-wrap: wrap;
-    max-width: 80%;
+    width: 100%;
+    justify-content: center;
+    @media (min-width: $bp-sm) {
+      max-width: 80%;
+    }
+    
     margin: 0 auto;
     .pagination-button {
       flex: 0 0 50%;
@@ -1329,7 +1392,9 @@ ul.credits-list {
         justify-content: center;
         align-items: center;
         text-align: center;
-
+        @media (max-width: $bp-sm) {
+          padding: 5px;
+        }
         img {
           max-width: 100%;
           order: 1;
@@ -1438,13 +1503,15 @@ ul.credits-list {
 }
 
 .film-modal-ended {
-  background: rgba($dark, .8);
+  background: rgba($dark, .8);  
 }
 
 .film-modal-playing {
   .pagination-info {
     opacity: 0;
-    max-height: 0;
+    @media (min-width: $bp-sm) {
+      max-height: 0;
+    }
     transition: .3s ease-out opacity;
   }
   
@@ -1459,9 +1526,9 @@ ul.credits-list {
   }
 }
 
-.film-modal-playing {
-  .pagination-button {
-    opacity: 0;
-    animation: 1.5s ease-in 1s forwards fadeIn;
+
+.film-modal-ended {
+  .pagination-label {
+    display: none;
   }
 }

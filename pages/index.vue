@@ -494,7 +494,7 @@
                 />
               </span>
             </div>
-            <div v-if="showCountdown" class="countdown">Continue</div>
+            <div v-if="showCountdown" class="link-hover countdown" @click="goToNextModal()">Continue</div>
           </nav>
         </div>
       </div>
@@ -813,14 +813,14 @@ export default {
       this.deactivateCountdown();
       this.showModalPlayer();
       this.previousActiveModal = this.activeModal;
-      this.updateModalPlayer(this.filmData[this.activeModal].acf.vimeo_id);
       if (direction === 'next') {
         this.activeModal = this.paginationNextModal;
       }
       if (direction === 'prev') {
         this.activeModal = this.paginationPrevModal;
       }
-      // this.playFilmModal();
+      this.updateModalPlayer(this.filmData[this.activeModal].acf.vimeo_id);
+      this.playFilmModal();
     },
     goToPrevModal() {
       this.modalPaginate('prev');
@@ -873,6 +873,10 @@ export default {
     activateCreditsFrame() {},
     activateFilm13Frame() {
       // this.unmuteFilm13();
+      window.scroll({
+        top: 0,
+        left: 0
+      });
       this.hoverStopperExit();
       this.playFilm13();
     },
