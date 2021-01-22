@@ -40,6 +40,7 @@ module.exports = {
     'vue/singleline-html-element-content-newline' : 'off',
     'vue/require-default-prop': 'off',
     'no-multi-spaces': 'off',
-    'padded-blocks' : 'off'
+    'padded-blocks' : 'off',
+    'one-var' : 'off'
   }
 }

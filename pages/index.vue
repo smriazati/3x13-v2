@@ -341,25 +341,26 @@
               </li>
               <li>
                 <div @click="jumpFilm13Back()">
-                  <span class="visually-hidden">Skip 15 Seconds Backward</span>
+                  <span class="visually-hidden">Jump Backward</span>
                   <span class="icon"><SvgThing name="SkipBack" /></span>
                 </div>
               </li>
               <li>
                 <div @click="jumpFilm13Forward()">
-                  <span class="visually-hidden">Skip 15 Seconds Forward</span>
+                  <span class="visually-hidden">Jump Forward</span>
                   <span class="icon"><SvgThing name="SkipForward" /></span>
                 </div>
               </li>
             </ul>
-            <ul v-else>
-              <li>
-                <button class="replay" @click="replayFilm13()">
-                  <span class="visually-hidden">Watch again</span>
-                  <span class="icon"><SvgThing name="Replay" /></span>
-                </button>
-              </li>
-            </ul>
+          </div>
+
+          <div 
+            v-if="isFilm13ReplayActive"
+            class="replay-film13">
+            <button class="replay" @click="replayFilm13()">
+              Watch again
+              <!-- <span class="icon"><SvgThing name="Replay" /></span> -->
+            </button>
           </div>
           <div ref="gridFilm13" class="grid-film13">
             <div class="background">
@@ -494,7 +495,7 @@
                 />
               </span>
             </div>
-            <div v-if="showCountdown" class="link-hover countdown" @click="goToNextModal()">Continue</div>
+            <div v-if="showCountdown" class="link-hover countdown" @click="goToNextModal()">Continue <span ref="countdownContainer">{{ countdownNum }}</span></div>
           </nav>
         </div>
       </div>
@@ -552,7 +553,9 @@ export default {
       showCountdown: false,
       isFilm13ReplayActive: false,
       isHoverStopperOver: false,
-      isFilmModalEnded: false
+      isFilmModalEnded: false,
+      countdownDuration: 5,
+      countdownNum: 5
     };
   },
 
@@ -725,6 +728,7 @@ export default {
       this.isFilm13ReplayActive = true;
     },
     replayFilm13() {
+      console.log('replaying film 13');
       this.isFilm13ReplayActive = false;
       this.showFilm13Grid();
       this.hoverStopperExit();
@@ -762,11 +766,28 @@ export default {
       ref.classList.remove("hideModalPlayer");
       ref.classList.add("showModalPlayer");
     },
+    countdownTheNumbers(duration, display) {
+      var timer = duration, seconds;
+      setInterval(function () {
+          seconds = parseInt(timer % 60, 10);
+  /*         seconds = seconds < 10 ? "0" + seconds : seconds;
+          */
+          display = seconds;
+          console.log(display);
+          if (--timer < 0) {
+              display = 'over'
+          }
+      }, 1000);
+    },
     activateCountdown() {
+      var duration = this.countdownDuration;
+      var display = this.countdownNum;
       this.showCountdown = true;
+      this.countdownTheNumbers(duration, display);
     },
     deactivateCountdown() {
       this.showCountdown = false;
+      this.countdownNum = this.countdownDuration;
     },
     onFilmModalLoaded() {
         const ref = this.$refs.filmModal;

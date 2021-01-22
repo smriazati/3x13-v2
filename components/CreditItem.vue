@@ -21,8 +21,8 @@
           </span> -->
           Bio
         </div>
-        <div class="link link-hover">
-          <a v-if="link" :href="link" target="_blank">
+        <div v-if="link" class="link link-hover">
+          <a :href="link" target="_blank">
             Website
           </a>
         </div>
