@@ -1,57 +1,100 @@
 <template>
-  <div class="credit-component accordion">
-    <figure v-if="image" class="credit-image">
-      <img :src="image" :alt="imageAlt" />
-    </figure>
-    <div class="credit-text">
-      <h2 class="name">
-          {{ name }}
-      </h2>
-      <h3 class="role">{{ role }}</h3>
-      <div class="bio collapse">
-        <div 
-            v-if="bio" 
-            :class="isCollapsed ? 'closed-collapse' : 'open-collapse' "
-            class="link-hover collapse-button" 
-            @click="toggleCollapse()">
-          <!-- <span v-if="isCollapsed"> Bio </span>
-          <span v-else>
-            <span class="visually-hidden">Close</span>
-            <span class="icon"><SvgThing name="Close" /></span>
-          </span> -->
-          Bio
-        </div>
-        <div v-if="link" class="link link-hover">
-          <a :href="link" target="_blank">
-            Website
-          </a>
-        </div>
-        <div
-           v-if="bio" 
-          :class="isCollapsed ? 'collapse-hide' : 'collapse-show'"
-          class="collapse-area"
-        >
-          <div v-html="bio"></div>
-        </div>
+  <li
+    v-if="item.acf"
+    :class="isCollapsed ? 'accordion-collapsed' : 'accordion-open'"
+    class="credit-component accordion"
+  >
+    <div
+      v-if="type === 'secondary'"
+      class="credit-item-header credit-item-visible"
+    >
+      <div :class="type" class="credit-item-header-text">
+        <h2 v-if="item.acf.credit_name" class="name">
+          <span v-if="item.acf.credit_website">
+            <a :href="item.acf.credit_website" target="_blank">{{
+              item.acf.credit_name
+            }}</a>
+          </span>
+          <span v-else> {{ item.acf.credit_name }}</span>
+        </h2>
+        <h3 v-if="item.acf.credit_role" class="role">
+          {{ item.acf.credit_role }}
+        </h3>
+        <p v-if="item.acf.credit_location" class="location">
+          {{ item.acf.credit_location }}
+        </p>
       </div>
     </div>
-  </div>
+
+    <div
+      v-if="type === 'primary'"
+      class="credit-item-header credit-item-visible"
+      @click="toggleFilmmakerCollapse()"
+    >
+      <figure v-if="item.acf.credit_image" class="credit-item-image">
+        <ImageLoader
+          :src="item.acf.credit_image.sizes.medium"
+          :alt="item.acf.credit_image.alt"
+        />
+      </figure>
+      <div :class="type" class="credit-item-header-text">
+        <h2 v-if="item.acf.credit_name" class="name">
+          {{ item.acf.credit_name }}
+        </h2>
+        <h3 v-if="item.acf.credit_role" class="role">
+          {{ item.acf.credit_role }}
+        </h3>
+      </div>
+    </div>
+    <div
+      v-if="item.acf.credit_bio"
+      class="credit-item-hidden credit-item-bio collapse"
+      :class="isCollapsed ? 'collapse-hide' : 'collapse-show'"
+    >
+      <div
+        class="credit-item-bio collapse-area"
+        v-html="item.acf.credit_bio"
+      ></div>
+    </div>
+
+    <div
+      v-if="type === 'artist'"
+      class="credit-item-header credit-item-visible"
+      @click="toggleArtistCollapse()"
+    >
+      <figure v-if="item.acf.artist_image" class="credit-item-image">
+        <ImageLoader
+          :src="item.acf.artist_image.sizes.medium"
+          :alt="item.acf.artist_image.alt"
+        />
+      </figure>
+      <div :class="type" class="credit-item-header-text">
+        <h2 v-if="item.acf.artist_full_name" class="name">
+          {{ item.acf.artist_full_name }}
+        </h2>
+        <h3 v-if="item.acf.artist_full_location" class="role">
+          {{ item.acf.artist_full_location }}
+        </h3>
+      </div>
+    </div>
+    <div
+      v-if="item.acf.artist_bio"
+      class="credit-item-hidden credit-item-bio collapse"
+      :class="isCollapsed ? 'collapse-hide' : 'collapse-show'"
+    >
+      <div
+        class="credit-item-bio collapse-area"
+        v-html="item.acf.artist_bio"
+      ></div>
+    </div>
+  </li>
 </template>
 
 <script>
-import SvgThing from "@/components/SvgThing.vue";
-
 export default {
-  components: {
-    // SvgThing,
-  },
-   props: {
-    name: String,
-    role: String,
-    link: String,
-    bio: String,
-    image: String,
-    imageAlt: String
+  props: {
+    item: Object,
+    type: String,
   },
   data() {
     return {
@@ -59,8 +102,13 @@ export default {
     };
   },
   methods: {
-    toggleCollapse() {
+    toggleArtistCollapse() {
       this.isCollapsed = !this.isCollapsed;
+      this.$emit("on-artist-accordion-toggle");
+    },
+    toggleFilmmakerCollapse() {
+      this.isCollapsed = !this.isCollapsed;
+      this.$emit("on-filmmaker-accordion-toggle");
     },
   },
 };

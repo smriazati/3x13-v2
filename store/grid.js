@@ -1,76 +1,81 @@
 export const state = () => ({
-    areVidsSynced: false,
     isGridPlaying: false,
-    isAboutOpen: false,
-    neverBeenPlayed: true,
-    isModalOpen: false,
-    isModalPlaying: false,
-    isModalEnded: false,
-    isFilm13Ended: false,
-    isFilm13Restarted: false,
+    // isAboutOpen: false,
+    // neverBeenPlayed: true,
+    // isModalOpen: false,
+    // isModalPlaying: false,
+    // isModalEnded: false,
+    // isFilm13Ended: false,
+    // isFilm13Restarted: false,
+    // activeModal: null,
+    // isModalTransitioning: false,
+    subtitleLanguage: '',
+    activeIntroSection: '',
+    introSections: [
+        'About', 'Credits', 'Tutorial'
+    ],
+    previouslyActiveModal: null,
+    prevModal: null,
     activeModal: null,
-    isModalTransitioning: false,
-    subtitleLanguage: 'en'
+    nextModal: null,
+    previousFrame: '',
+    activeFrame: 'Intro',
+    frames: ["Intro", "Film13", "FilmModal", "Tutorial"],
+    isFullscreen: false,
+    activeModalState: 'player',
+    modalStates: ['player', 'tiles']
 })
 
 
 export const mutations = {
-    areVidsSynced: (state, payload) => {
-        state.areVidsSynced = payload;
+    activateIntroSection: (state, payload) => {
+        state.activeIntroSection = payload;
+    },
+    deactivateIntroSection: (state) => {
+        state.activeIntroSection = null;
+    },
+    changeModalState: (state, modalState) => {
+        state.activeModalState = modalState;
+    },
+    createPrevNextModalsForReplay: (state) => {
+        state.prevModal = 0;
+        state.nextModal = 11;
+    },
+    activateModal: (state, payload) => {
+        state.previouslyActiveModal = state.activeModal;
+        state.activeModal = payload;
+
+        if (payload === 0) {
+            state.prevModal = 11;
+            state.nextModal = 1;
+        } else if (payload === 11) {
+            state.prevModal = 10;
+            state.nextModal = 0;
+        } else {
+            state.prevModal = payload - 1;
+            state.nextModal = payload + 1;
+        }
+    },
+    deactivateModal: (state) => {
+        state.activeModal = null;
+        state.previouslyActiveModal = null;
+    },
+    changeActiveFrame: (state, payload) => {
+        if (payload !== state.activeFrame) {
+            state.previousFrame = state.activeFrame;
+        }
+        state.activeFrame = payload;
+    },
+    toggleFullscreen: (state) => {
+        state.isFullscreen = !state.isFullscreen;
+    },
+    change: (state, payload) => {
+        state.isFullscreen = payload;
     },
     setSubtitle: (state, payload) => {
         state.subtitleLanguage = payload;
     },
-    changeGridPlayback: (state, payload) => {
-        state.isGridPlaying = payload;
-        
-        if (payload && state.neverBeenPlayed) {
-            state.neverBeenPlayed = false;
-        }
-        if (state.isGridPlaying) {
-            state.isAboutOpen = false;
-        }
-    },
-    isModalTransitioning: (state, payload) => {
-        state.isModalTransitioning = payload;
-    },
-    openAbout: (state) => {
-        state.isAboutOpen = true;
-    },
-    openModal: (state, payload) => {
-        state.activeModal = payload;
-
-        if (!state.isModalOpen) {
-            state.isModalOpen = true;
-        }
-
-        if (state.isGridPlaying) {
-            state.isGridPlaying = false;
-        }
-
-        if (state.isModalEnded) {
-            state.isModalEnded = false;
-        }
-    },
-    setModalPlaying: (state, payload) => {
-        state.isModalPlaying = payload;
-    },
-    closeModal: (state) => {
-        state.isModalOpen = false;
-        state.activeModal = null;
-        state.isGridPlaying = true;
-        state.isModalPlaying = false;
-    },
-    isModalEnded: (state, payload) => {
-        state.isModalEnded = payload;
-    },
-    endFilm13: (state) => {
-        state.isFilm13Ended = true;
-    },
-    restartFilm13: (state) => {
-        state.isFilm13Restarted = true;
-        state.isFilm13Ended = false;
+    deactivateSubtitle: (state) => {
+        state.subtitleLanguage = ''
     }
 }
-
-

@@ -17,15 +17,26 @@
 
 <script>
 export default {
-  data() {
-    return {
-      activeSubtitle: "en",
-    };
+  computed: {
+    activeSubtitle: {
+      // return this.$store.state.grid.activeIntroSection;
+      // getter
+      get: function () {
+        return this.$store.state.grid.subtitleLanguage;
+      },
+      // setter
+      set: function (payload) {
+        this.$store.commit("grid/setSubtitle", payload);
+      },
+    },
   },
   methods: {
     subtitleChange(payload) {
-      this.$store.commit("grid/setSubtitle", payload);
-      this.activeSubtitle = payload;
+      if (payload === this.activeSubtitle) {
+        this.$store.commit("grid/deactivateSubtitle", payload);
+      } else {
+        this.$store.commit("grid/setSubtitle", payload);
+      }
     },
   },
 };

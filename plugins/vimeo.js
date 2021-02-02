@@ -3,4 +3,4 @@ import Vue from 'vue'
 
 Vue.use(vueVimeoPlayer)
 
-Vue.use(vueVimeoPlayer, { global: true })
+Vue.use(vueVimeoPlayer)

@@ -1,632 +1,438 @@
 <template>
   <div class="container">
-    <div class="container-layer-stack">
-      <div
-        class="layer-stack layer-stack-intro"
-        :class="
-          activeFrame === frames[0] ? 'layer-stack-show' : 'layer-stack-hidden'
-        "
-      >
-        <div class="container-poster-images video-grid-overlay">
-          <div class="hover">
-            <div class="hover-wrapper">
-              <div v-for="item in filmData" :key="item.id" class="hover-item">
-                <img
-                  :src="item.acf.film_poster_image.sizes.medium"
-                  :alt="item.acf.film_poster_image.alt"
-                />
+    <fullscreen
+      ref="fullscreen"
+      class="fullscreenWrapper"
+      @change="changeFullscreen"
+    >
+      <div class="container-layer-stack">
+        <div
+          class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
+          :class="
+            activeIntroSection != '' && activeIntroSection != undefined
+              ? 'layer-stack-show'
+              : 'layer-stack-hide'
+          "
+        >
+          <div
+            v-if="activeIntroSection != '' && activeIntroSection != undefined"
+            class="close-button-container"
+            @click="deactivateIntroSection"
+          >
+            <button class="close-button close-intro-frame-btn">
+              <span class="visually-hidden">Close</span>
+              <span class="icon"><SvgThing name="Close" /></span>
+            </button>
+          </div>
+          <TutorialFrame
+            v-if="activeIntroSection === 'Tutorial'"
+            ref="tutorialSection"
+            class="container-tutorial intro-frame tutorial-text section-show-hide"
+            :class="
+              activeIntroSection === 'Tutorial'
+                ? 'section-show'
+                : 'section-hide'
+            "
+            :active-intro-section="activeIntroSection"
+          />
+          <LazyAboutFrame
+            v-if="activeIntroSection === 'About'"
+            ref="aboutSection"
+            class="container-about intro-frame section-show-hide"
+            :class="
+              activeIntroSection === 'About' ? 'section-show' : 'section-hide'
+            "
+            :active-intro-section="activeIntroSection"
+          />
+          <LazyCreditsFrame
+            v-if="activeIntroSection === 'Credits'"
+            ref="creditsSection"
+            class="container-credits intro-frame section-show-hide"
+            :class="
+              activeIntroSection === 'Credits' ? 'section-show' : 'section-hide'
+            "
+            :active-intro-section="activeIntroSection"
+          />
+        </div>
+        <div
+          class="layer-stack layer-stack-intro"
+          :class="
+            activeFrame === frames[0]
+              ? 'layer-stack-show'
+              : 'layer-stack-hidden'
+          "
+        >
+          <div
+            v-if="filmData"
+            class="container-poster-images video-grid-overlay"
+          >
+            <div class="hover">
+              <div class="hover-wrapper">
+                <div v-for="item in filmData" :key="item.id" class="hover-item">
+                  <ImageLoader
+                    :src="item.acf.film_poster_image.sizes.medium"
+                    :alt="item.acf.film_poster_image.alt"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <main class="container-intro">
-          <header ref="header">
-            <div class="text-wrapper">
-              <h1 class="site-logo center">
-                {{ aboutData.acf.intro_headline }}
-              </h1>
-              <div class="site-tagline intro-body-text center">
-                <p>{{ aboutData.acf.intro_body_text }}</p>
-              </div>
-              <nav class="play-film13-button">
-                <button
-                  ref="playBtn"
-                  :disabled="!isFilmDataLoaded"
-                  @click="changeActiveFrame(frames[1])"
-                >
-                  Play Film
-                </button>
-              </nav>
-              <div class="subtitle-controls center">
-                <h2 class="section-title">Subtitles</h2>
-                <VidSubtitles />
-              </div>
-              <div class="tutorial-text">
-                <h2 class="section-title">
-                  {{ aboutData.acf.tutorial_headline }}
-                </h2>
-                <div
-                  class="body-text"
-                  v-html="aboutData.acf.tutorial_body_text"
-                ></div>
-              </div>
-            </div>
-            <nav>
-              <ul class="subtle-links">
-                <li>
+          <main v-if="aboutData" class="container-intro">
+            <header ref="header">
+              <div class="text-wrapper">
+                <h1 class="site-logo center">
+                  {{ aboutData.acf.intro_headline }}
+                </h1>
+                <div class="site-tagline intro-body-text center">
+                  <p>{{ aboutData.acf.intro_body_text }}</p>
+                </div>
+                <nav class="play-film13-button">
                   <button
-                    :class="
-                      activeIntroSection === 'About'
-                        ? 'active-link'
-                        : 'inactive-link'
-                    "
-                    @click="activateIntroSection('About')"
+                    ref="playBtn"
+                    :disabled="!isFilm13Loaded"
+                    @click="changeActiveFrame(frames[1])"
                   >
-                    About
+                    <span v-if="!isFilm13Loaded">Loading Film</span>
+                    <span>Enter Film</span>
                   </button>
+                </nav>
+                <div class="subtitle-controls center">
+                  <h2 class="section-title">Subtitles</h2>
+                  <VidSubtitles />
+                </div>
+              </div>
+              <IntroSectionsNav :active-intro-section="activeIntroSection" />
+            </header>
+            <!-- /intro-sections -->
+          </main>
+        </div>
+        <!-- end frame0-->
+        <div
+          class="layer-stack layer-stack-film13"
+          :class="
+            activeFrame === frames[1] || !isFilm13FrameHidden
+              ? 'layer-stack-show'
+              : 'layer-stack-hidden'
+          "
+        >
+          <Film13FrameNav />
+          <div class="container-film13">
+            <div
+              v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
+              class="film13-remote"
+            >
+              <ul>
+                <li>
+                  <div @click="toggleFilm13Playback()">
+                    <span v-if="!isFilm13Playing">
+                      <span class="visually-hidden">Play</span>
+                      <span class="icon active">
+                        <SvgThing name="PlayPause" />
+                      </span>
+                    </span>
+                    <span v-else>
+                      <span class="visually-hidden">Pause</span>
+                      <span class="icon"><SvgThing name="PlayPause" /></span>
+                    </span>
+                  </div>
                 </li>
                 <li>
-                  <button
-                    :class="
-                      activeIntroSection === 'Credits'
-                        ? 'active-link'
-                        : 'inactive-link'
-                    "
-                    @click="activateIntroSection('Credits')"
-                  >
-                    Credits
-                  </button>
+                  <div @click="jumpFilm13Back()">
+                    <span class="visually-hidden">Jump Backward</span>
+                    <span class="icon"><SvgThing name="SkipBack" /></span>
+                  </div>
+                </li>
+                <li>
+                  <div @click="jumpFilm13Forward()">
+                    <span class="visually-hidden">Jump Forward</span>
+                    <span class="icon"><SvgThing name="SkipForward" /></span>
+                  </div>
+                </li>
+                <li>
+                  <div @click="toggleFullscreen()">
+                    <span v-if="!fullscreen">
+                      <span class="visually-hidden">Open Fullscreen</span>
+                      <span class="icon">
+                        <SvgThing name="FullscreenOpen" />
+                      </span>
+                    </span>
+                    <span v-else>
+                      <span class="visually-hidden">Close Fullscreen</span>
+                      <span class="icon active">
+                        <SvgThing name="FullscreenClose" />
+                      </span>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div @click="toggleFilm13Audio()">
+                    <span v-if="!isFilm13Muted">
+                      <span class="visually-hidden">Unmute sound</span>
+                      <span class="icon"><SvgThing name="Mute" /></span>
+                    </span>
+                    <span v-else>
+                      <span class="visually-hidden"> Mute sound</span>
+                      <span class="icon active"><SvgThing name="Mute" /></span>
+                    </span>
+                  </div>
                 </li>
               </ul>
-            </nav>
-          </header>
-          <div class="intro-sections">
-            <section
-              ref="aboutSection"
-              class="container-about section-show-hide"
-              :class="
-                activeIntroSection === 'About' ? 'section-show' : 'section-hide'
-              "
-            >
-              <div class="text-wrapper">
-                <h2 class="section-title">
-                  {{ aboutData.acf.about_headline }}
-                </h2>
-                <div
-                  class="body-text about-body-text"
-                  v-html="aboutData.acf.about_body_text"
-                ></div>
-                <div class="supporters">
-                  <h3 class="section-subtitle">
-                    {{ aboutData.acf.supporters_headline }}
-                  </h3>
-                  <div
-                    class="body-text supporters-text"
-                    v-html="aboutData.acf.supporters_body_text"
-                  ></div>
-                  <div class="media-gallery supporters-gallery">
-                    <ul>
-                      <li
-                        v-for="item in aboutData.acf.supporters_logo_gallery"
-                        :key="item.ID"
-                        class="supporter-logo"
-                      >
-                        <img :src="item.sizes.medium" :alt="item.alt" />
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+            </div>
 
-  <nav class="cta">
-    <button
-      ref="playBtn"
-      :disabled="!isFilmDataLoaded"
-      @click="changeActiveFrame(frames[1])"
-    >
-      Play Film
-    </button>
-
-    <ul class="subtle-links">
-      <li>
-        <button class="inactive-link" @click="activateIntroSection('Credits')">
-          Credits
-        </button>
-      </li>
-      <li>
-        <button class="inactive-link" @click="backToTop">
-          Back to top
-        </button>
-      </li>
-    </ul>
-    
-  </nav>
-            </section>
-            <section
-              ref="creditsSection"
-              class="container-credits section-show-hide"
-              :class="
-                activeIntroSection === 'Credits'
-                  ? 'section-show'
-                  : 'section-hide'
-              "
-            >
-              <h2 class="section-title">Credits</h2>
-
-              <div class="credits-section">
-                <h3 class="section-subtitle">
-                  {{ aboutData.acf.primary_credits_headline }}
-                </h3>
-                <ul class="credits-list">
-                  <li
-                    v-for="(item, index) in aboutData.acf.primary_credits_list"
-                    :key="index"
-                  >
-                    <div v-if="item.link">
-                      <CreditItem
-                        :name="item.name"
-                        :role="item.role"
-                        :image="item.image.sizes.medium"
-                        :image-alt="item.image.alt"
-                        :bio="item.bio"
-                        :link="item.link"
-                      />
-                    </div>
-                    <div v-else>
-                      <CreditItem
-                        :name="item.name"
-                        :role="item.role"
-                        :image="item.image.sizes.medium"
-                        :image-alt="item.image.alt"
-                        :bio="item.bio"
-                      />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="credits-section">
-                <h3 class="section-subtitle">Artists</h3>
-                <ul class="credits-list">
-                  <li v-for="(item, index) in artistCredits" :key="index">
-                    <div v-if="item.acf.artist_link">
-                      <CreditItem
-                        :name="item.acf.artist_full_name"
-                        :role="item.acf.artist_full_location"
-                        :image="item.acf.artist_image.sizes.medium"
-                        :image-alt="item.acf.artist_image.alt"
-                        :bio="item.acf.artist_bio"
-                        :link="item.acf.artist_link"
-                      />
-                    </div>
-                    <div v-else>
-                      <CreditItem
-                        :name="item.acf.artist_full_name"
-                        :role="item.acf.artist_full_location"
-                        :image="item.acf.artist_image.sizes.medium"
-                        :image-alt="item.acf.artist_image.alt"
-                        :bio="item.acf.artist_bio"
-                      />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="credits-section">
-                <h3 class="section-subtitle">
-                  {{ aboutData.acf.secondary_credits_headline }}
-                </h3>
-                <ul class="credits-list">
-                  <li
-                    v-for="(item, index) in aboutData.acf
-                      .secondary_credits_list"
-                    :key="index"
-                  >
-                    <div v-if="item.link">
-                      <CreditItem
-                        :name="item.name"
-                        :role="item.role"
-                        :image="item.image.sizes.medium"
-                        :image-alt="item.image.alt"
-                        :bio="item.bio"
-                        :link="item.link"
-                      />
-                    </div>
-                    <div v-else>
-                      <CreditItem
-                        :name="item.name"
-                        :role="item.role"
-                        :image="item.image.sizes.medium"
-                        :image-alt="item.image.alt"
-                        :bio="item.bio"
-                      />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="credits-section credits-no-image">
-                <h3 class="section-subtitle">
-                  {{ aboutData.acf.tertiary_credits_headline }}
-                </h3>
-                <ul class="credits-list">
-                  <li
-                    v-for="(item, index) in aboutData.acf.tertiary_credits_list"
-                    :key="index"
-                  >
-                    <div v-if="item.link">
-                      <CreditItem
-                        :name="item.name"
-                        :role="item.role"
-                        :link="item.link"
-                      />
-                    </div>
-                    <div v-else>
-                      <CreditItem :name="item.name" :role="item.role" />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <nav class="cta">
-                <button
-                  ref="playBtn"
-                  :disabled="!isFilmDataLoaded"
-                  @click="changeActiveFrame(frames[1])"
-                >
-                  Play Film
+            <div v-if="isFilm13ReplayActive" class="replay-film13">
+              <FilmTileNavigation
+                @start-watching-next="deactivateReplay()"
+                :film13-replay="true"
+                :countdown-duration="15"
+              />
+              <div class="replay-button-container">
+                <button class="replay button-icon" @click="replayFilm13()">
+                  Replay Grid
+                  <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
                 </button>
-
-                <ul class="subtle-links">
-                  <li>
-                    <button class="inactive-link" @click="activateIntroSection('About')">
-                      About
-                    </button>
-                  </li>
-                  <li>
-                    <button class="inactive-link" @click="backToTop">
-                      Back to top
-                    </button>
-                  </li>
-                </ul>
-
-              </nav>
-            </section>
-          </div>
-          <!-- /intro-sections -->
-        </main>
-      </div>
-      <!-- end frame0-->
-      <div
-        class="layer-stack layer-stack-film13"
-        :class="
-          activeFrame === frames[1] ? 'layer-stack-show' : 'layer-stack-hidden'
-        "
-      >
-        <div class="container-film13">
-          <nav>
-            <button class="brand" @click="changeActiveFrame(frames[0])">
-              3 x 13
-            </button>
-          </nav>
-
-          <div class="film13-remote">
-            <ul v-if="!isFilm13ReplayActive">
-              <li>
-                <div @click="toggleFilm13Playback()">
-                  <span v-if="!isFilm13Playing">
-                    <span class="visually-hidden">Play</span>
-                    <span 
-                      class="icon active"
-                      >
-                      <SvgThing name="PlayPause" />
-                    </span>
-                  </span>
-                  <span v-else>
-                    <span class="visually-hidden">Pause</span>
-                    <span class="icon"><SvgThing name="PlayPause" /></span>
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div @click="toggleFilm13Audio()">
-                  <span v-if="!isFilm13Muted">
-                    <span class="visually-hidden">Unmute sound</span>
-                    <span class="icon"><SvgThing name="Mute" /></span>
-                  </span>
-                  <span v-else>
-                    <span class="visually-hidden"> Mute sound</span>
-                    <span class="icon active"><SvgThing name="Mute" /></span>
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div @click="jumpFilm13Back()">
-                  <span class="visually-hidden">Jump Backward</span>
-                  <span class="icon"><SvgThing name="SkipBack" /></span>
-                </div>
-              </li>
-              <li>
-                <div @click="jumpFilm13Forward()">
-                  <span class="visually-hidden">Jump Forward</span>
-                  <span class="icon"><SvgThing name="SkipForward" /></span>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div 
-            v-if="isFilm13ReplayActive"
-            class="replay-film13">
-            <button class="replay" @click="replayFilm13()">
-              Watch again
-              <!-- <span class="icon"><SvgThing name="Replay" /></span> -->
-            </button>
-          </div>
-          <div ref="gridFilm13" class="grid-film13">
-            <div class="background">
-              <div class="iframe-wrapper">
-                <client-only>
-                  <div ref="film13Wrapper" class="film13-player-wrapper">
-                    <vimeo-player
-                      ref="film13"
-                      :video-id="gridId"
-                      :options="gridOptions"
-                      :video-url="gridLink"
-                      @timeupdate="onFilm13TimeUpdate"
-                      @ended="onFilm13Ended"
-                    >
-                    </vimeo-player>
-                  </div>
-                </client-only>
               </div>
             </div>
-            <div class="hover">
-              <div 
-                :class="isHoverStopperOver ? 'hover-wrapper-overlay-exit' : 'hover-wrapper-overlay-enter' "
-                class="hover-wrapper-overlay"></div>
-              <div class="hover-wrapper">
+            <div ref="gridFilm13" class="grid-film13">
+              <div class="background background-iframe film13-background">
+                <div class="iframe-wrapper">
+                  <client-only>
+                    <div ref="film13Wrapper" class="film13-player-wrapper">
+                      <vimeo-player
+                        ref="film13"
+                        :video-url="gridLink"
+                        :video-id="null"
+                        :options="gridOptions"
+                        @ready="onFilm13Ready"
+                        @loaded="onFilm13Loaded"
+                        @timeupdate="onFilm13TimeUpdate"
+                        @ended="onFilm13Ended"
+                      >
+                      </vimeo-player>
+                    </div>
+                  </client-only>
+                </div>
+              </div>
+              <div class="hover">
                 <div
-                  v-for="(item, index) in filmData"
-                  :key="index"
-                  class="hover-item"
-                  @click="openFilmModal(index)"
-                  @mouseenter="playSfx(item.acf.film_order)"
-                >
-                  <div class="hover-item-sound">
-                    <audio
-                      ref="sfx"
-                      :alt="item.acf.film_hover_sound.alt"
-                      :data-sfx-id="item.acf.film_order"
-                      @ended="onSfxEnding(item.acf.film_order)"
-                    >
-                      <source
-                        :src="item.acf.film_hover_sound.url"
-                        type="audio/mpeg"
-                      />
-                    </audio>
+                  :class="
+                    isHoverStopperOver
+                      ? 'hover-wrapper-overlay-exit'
+                      : 'hover-wrapper-overlay-enter'
+                  "
+                  class="hover-wrapper-overlay"
+                ></div>
+                <div class="hover-wrapper">
+                  <div
+                    v-for="(item, index) in filmData"
+                    :key="index"
+                    class="hover-item"
+                    @click="openFilmModal(index)"
+                    @mouseenter="playSfx(item.acf.film_order)"
+                  >
+                    <div class="hover-item-sound">
+                      <audio
+                        ref="sfx"
+                        :alt="item.acf.film_hover_sound.alt"
+                        :data-sfx-id="item.acf.film_order"
+                        @ended="onSfxEnding(item.acf.film_order)"
+                      >
+                        <source
+                          :src="item.acf.film_hover_sound.url"
+                          type="audio/mpeg"
+                        />
+                      </audio>
+                    </div>
+                    <div class="hover-item-text">
+                      <h2>{{ item.acf.artist_first_name }}</h2>
+                      <h3>{{ item.acf.artist_country }}</h3>
+                      <span class="icon"><SvgThing name="Play" /></span>
+                    </div>
+                    <div class="hover-item-darken"></div>
                   </div>
-                  <div class="hover-item-text">
-                    <h2>{{ item.acf.artist_first_name }}</h2>
-                    <h3>{{ item.acf.artist_country }}</h3>
-                    <span class="icon"><SvgThing name="Play" /></span>
-                  </div>
-                  <div class="hover-item-darken"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- end frame3 -->
-      <div
-        class="layer-stack layer-stack-film-modal"
-        :class="
-          activeFrame === frames[2] ? 'layer-stack-show' : 'layer-stack-hidden'
-        "
-      >
+        <!-- end frame3 -->
         <div
-          v-if="filmData && activeFrame === frames[2]"
-          :class="isFilmModalEnded ? 'film-modal-ended' : 'film-modal-playing'"
-          class="container-filmmodal"
+          class="layer-stack layer-stack-film-modal"
+          :class="
+            activeFrame === frames[2]
+              ? 'layer-stack-show'
+              : 'layer-stack-hidden'
+          "
         >
-          <!-- {{ activeModal }} -->
-          <client-only>
-            <div ref="filmModalWrapper" class="modal-player-wrapper">
-              <vimeo-player
-                ref="filmModal"
-                :video-id="filmData[activeModal].acf.vimeo_id"
-                :options="modalOptions"
-                :video-url="filmData[activeModal].acf.vimeo_private_link"
-                @ready="onFilmModalReady"
-                @loaded="onFilmModalLoaded"
-                @ended="onFilmModalEnded"
-              >
-              </vimeo-player>
-            </div>
-          </client-only>
-          <nav class="filmmodal-controls">
-            <div class="close-modal">
-              <button @click="closeModal()">
+          <div
+            v-if="filmData && activeFrame === frames[2]"
+            class="container-filmmodal"
+          >
+            <div
+              class="close-modal-container close-modal-overlay"
+              @click="closeModal()"
+            >
+              <button class="close-modal-button">
                 <span class="visually-hidden">Close</span>
                 <span class="icon"><SvgThing name="Close" /></span>
               </button>
             </div>
             <div
-              class="pagination-button pagination-button-prev"
-              @click="goToPrevModal()"
+              v-if="showModalPlayer"
+              ref="filmModalWrapper"
+              class="modal-player-wrapper"
             >
-              <button class="pagination-label">
-                <span class="visually-hidden">Previous</span>
-                <span class="icon"><SvgThing name="Prev" /></span>
-              </button>
-              <span class="pagination-info">
-                <h2>
-                  {{ filmData[paginationPrevModal].acf.artist_first_name }}
-                </h2>
-                <h3>{{ filmData[paginationPrevModal].acf.artist_country }}</h3>
-                <img
-                  :src="
-                    filmData[paginationPrevModal].acf.film_poster_image.sizes
-                      .large
-                  "
-                  :alt="filmData[paginationPrevModal].acf.film_poster_image.alt"
-                />
-              </span>
+              <client-only>
+                <div class="iframe-wrapper">
+                  <vimeo-player
+                    ref="filmModal"
+                    :video-id="null"
+                    :options="modalOptions"
+                    :video-url="filmData[activeModal].acf.vimeo_private_link"
+                    @ready="onFilmModalReady"
+                    @loaded="onFilmModalLoaded"
+                    @texttrackchange="onFilmModalTextTrackUserChange"
+                    @ended="onFilmModalEnded"
+                  >
+                  </vimeo-player>
+                </div>
+              </client-only>
+              <div class="film-individual-pagination-container">
+                <FilmIndividualPagination />
+              </div>
             </div>
             <div
-              class="pagination-button pagination-button-next"
-              @click="goToNextModal()"
+              v-if="activeModalState === 'tiles'"
+              class="film-tile-navigation-container"
             >
-              <button class="pagination-label">
-                <span class="visually-hidden">Next</span>
-                <span class="icon"><SvgThing name="Next" /></span>
-              </button>
-              <span class="pagination-info">
-                <h2>
-                  {{ filmData[paginationNextModal].acf.artist_first_name }}
-                </h2>
-                <h3>{{ filmData[paginationNextModal].acf.artist_country }}</h3>
-                <img
-                  :src="
-                    filmData[paginationNextModal].acf.film_poster_image.sizes
-                      .large
-                  "
-                  :alt="filmData[paginationNextModal].acf.film_poster_image.alt"
-                />
-              </span>
+              <FilmTileNavigation :countdown-duration="10" />
             </div>
-            <div v-if="showCountdown" class="link-hover countdown" @click="goToNextModal()">Continue <span ref="countdownContainer">{{ countdownNum }}</span></div>
-          </nav>
+          </div>
         </div>
+        <!-- end frame4 -->
       </div>
-      <!-- end frame4 -->
-    </div>
-    <!-- end layer-stack-wrapper -->
+      <!-- end layer-stack-wrapper -->
+    </fullscreen>
   </div>
 </template>
 
 <script>
-import CreditItem from "@/components/CreditItem.vue";
-import VidSubtitles from "@/components/VidSubtitles.vue";
-import SvgThing from "@/components/SvgThing.vue";
+import { mapGetters, mapState } from "vuex";
 
+import FilmTileNavigation from "../components/FilmTileNavigation.vue";
 
 export default {
+  components: { FilmTileNavigation },
   layout: "default",
-  components: {
-    SvgThing,
-    VidSubtitles,
-    CreditItem,
-  },
   async asyncData({ store, $axios }) {
-    const [aboutRes, filmsRes] = await Promise.all([
-      $axios.get("https://www.ysdt.org/wp-json/wp/v2/3x13_general/?per_page=1"),
-      $axios.get("https://www.ysdt.org/wp-json/wp/v2/3x13films/?per_page=12"),
+    const [aboutRes, filmsRes, creditsRes] = await Promise.all([
+      $axios
+        .get("https://www.ysdt.org/wp-json/wp/v2/3x13_general/?per_page=1")
+        .then((res) => {
+          store.commit("content/setAboutData", res.data);
+          return { aboutApi: res.data[0] };
+        }),
+      $axios
+        .get("https://www.ysdt.org/wp-json/wp/v2/3x13films/?per_page=12")
+        .then((res) => {
+          store.commit("content/setFilmData", res.data);
+          return { filmsApi: res.data };
+        }),
+      $axios
+        .get("https://www.ysdt.org/wp-json/wp/v2/3x13credits/?per_page=14")
+        .then((res) => {
+          store.commit("content/setCreditsData", res.data);
+          return { creditsApi: res.data };
+        }),
     ]);
 
     // store.commit("content/setAboutData", aboutRes.data);
     // store.commit("content/setFilmsData", filmRes.data);
+    // store.commit("content/setCreditsData", creditsRes.data);
 
-    return {
-      aboutApi: aboutRes.data[0],
-      filmsApi: filmsRes.data,
-    };
+    // return {
+    //   aboutApi: aboutRes.data[0],
+    //   filmsApi: filmsRes.data,
+    //   creditsApi: creditsRes.data,
+    // };
   },
   data() {
     return {
-      gridId: "495232585",
-      gridLink: "https://vimeo.com/495232585/ed11198286",
       gridOptions: {
         controls: false,
       },
-      modalId: "495232585",
-      modalLink: "https://vimeo.com/495232585/ed11198286",
       isFilm13Ready: false,
       isFilm13Playing: false,
       isFilm13Muted: false,
-      frames: ["Intro", "Film13", "FilmModal"],
-      previousFrame: null,
-      activeFrame: "Intro",
-      previousActiveModal: null,
-      activeModal: null,
-      activeIntroSection: null,
-      showCountdown: false,
       isFilm13ReplayActive: false,
       isHoverStopperOver: false,
       isFilmModalEnded: false,
-      countdownDuration: 5,
-      countdownNum: 5
+      fullscreen: false,
+      isFilm13RemoteHidden: false,
+      isFilm13Loaded: false,
+      isFilm13FrameHidden: true,
     };
   },
 
   computed: {
-    activeSfx() {
-      return this.$store.state.sound.activeSfx;
+    ...mapState({
+      // activeModal: (state) => state.grid.activeModal,
+      prevModal: (state) => state.grid.prevModal,
+      nextModal: (state) => state.grid.nextModal,
+      previouslyActiveModal: (state) => state.grid.previouslyActiveModal,
+      frames: (state) => state.grid.frames,
+      previousFrame: (state) => state.grid.previousFrame,
+      activeFrame: (state) => state.grid.activeFrame,
+      activeModalState: (state) => state.grid.activeModalState,
+      activeSfx: (state) => state.sound.activeSfx,
+      subtitleLanguage: (state) => state.grid.subtitleLanguage,
+      isFilmDataLoaded: (state) => state.content.isFilmDataLoaded,
+    }),
+    ...mapGetters({
+      aboutData: "content/aboutData",
+      filmData: "content/filmData",
+      gridLink: "content/gridLink",
+    }),
+    showModalPlayer: function () {
+      if (this.activeModal >= 0 && this.activeModalState === "player") {
+        return true;
+      }
+      return false;
+    },
+    activeModal: {
+      // return this.$store.state.grid.activeIntroSection;
+      // getter
+      get: function () {
+        return this.$store.state.grid.activeModal;
+      },
+      // setter
+      set: function (payload) {
+        this.$store.commit("grid/activateModal", payload);
+      },
+    },
+    activeIntroSection: {
+      // return this.$store.state.grid.activeIntroSection;
+      // getter
+      get: function () {
+        return this.$store.state.grid.activeIntroSection;
+      },
+      // setter
+      set: function (payload) {
+        this.$store.commit("grid/activateIntroSection", payload);
+      },
     },
     modalOptions() {
-      let options = {
-        controls: true,
-        autoplay: false,
-        texttrack: this.$store.state.grid.subtitleLanguage,
-      };
+      let options;
+      if (this.subtitleLanguage === "") {
+        options = {
+          controls: true,
+        };
+      } else {
+        options = {
+          controls: true,
+          texttrack: this.subtitleLanguage,
+        };
+      }
       return options;
-    },
-    isFilmDataLoaded() {
-      if (this.filmsApi) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    aboutData() {
-      if (!this.aboutApi) {
-        return false;
-      }
-      return this.aboutApi;
-    },
-    filmData() {
-      if (!this.isFilmDataLoaded) {
-        return false;
-      }
-
-      var ref = this.filmsApi.slice();
-      // ref.sort((a, b) => parseFloat(a.acf.film_order) - parseFloat(b.acf.film_order));
-
-      ref.sort(function (a, b) {
-        return parseFloat(a.acf.film_order) - parseFloat(b.acf.film_order);
-      });
-
-      return ref;
-    },
-    artistCredits() {
-      var ref2 = this.filmsApi.slice();
-
-      ref2.sort(function (a, b) {
-        return a.acf.artist_first_name.localeCompare(b.acf.artist_first_name);
-      });
-
-      return ref2;
-    },
-    paginationPrevModal() {
-      if (this.activeModal === null) {
-        return null;
-      }
-
-      if (this.activeModal === 0) {
-        return 11;
-      } else {
-        return this.activeModal - 1;
-      }
-    },
-    paginationNextModal() {
-      if (this.activeModal === null) {
-        return null;
-      }
-      if (this.activeModal === 11) {
-        return 0;
-      } else {
-        return this.activeModal + 1;
-      }
     },
   },
   watch: {
@@ -656,43 +462,69 @@ export default {
       if (this.previousFrame === "Credits") {
         this.deactivateCreditsFrame();
       }
-      if (this.previousFrame === "Film13") {
+      if (this.previousFrame === "Film13" && this.activeFrame !== "FilmModal") {
         this.deactivateFilm13Frame();
+      }
+      if (this.activeFrame === "FilmModal" && this.previousFrame === "Film13") {
+        this.isFilm13FrameHidden = false;
+        this.pauseFilm13();
       }
       if (this.previousFrame === "FilmModal") {
         this.deactivateFilmModalFrame();
       }
     },
     activeIntroSection() {
-      if (this.activeIntroSection) {
-        const delay = 100;
-        setTimeout(() => this.scrollIntroSectionIntoView(), delay);
+      if (this.activeFrame === "Film13") {
+        if (
+          this.activeIntroSection === "About" ||
+          this.activeIntroSection === "Credits" ||
+          this.activeIntroSection === "Tutorial"
+        ) {
+          this.pauseFilm13();
+        } else {
+          this.playFilm13();
+        }
+      }
+    },
+    activeModalState: function () {
+      if (this.activeModalState === "switching" && this.activeModal >= 0) {
+        const delay = 10;
+        setTimeout(
+          () => this.$store.commit("grid/changeModalState", "player"),
+          delay
+        );
+      }
+    },
+    activeModal() {
+      if (this.previouslyActiveModal >= 0) {
+        this.modalToModalNav();
       }
     },
   },
   mounted() {
-    this.$refs.sfx.forEach((s) => {
-      s.load();
-    });
+    if (this.$refs.sfx) {
+      this.$refs.sfx.forEach((s) => {
+        s.load();
+      });
+    }
   },
   methods: {
+    modalToModalNav() {
+      this.$store.commit("grid/changeModalState", "switching");
+    },
+    changeFullscreen(fullscreen) {
+      this.fullscreen = fullscreen;
+      this.$store.commit("grid/changeFullscreen", fullscreen);
+    },
+    toggleFullscreen() {
+      this.$refs.fullscreen.toggle(); // recommended
+      this.$store.commit("grid/toggleFullscreen");
+    },
     hoverStopperExit() {
       this.isHoverStopperOver = true;
     },
     hoverStopperEnter() {
       this.isHoverStopperOver = false;
-    },
-    backToTop() {
-      // console.log('hi')
-      // window.scroll({
-      //   top: 0,
-      //   left: 0,
-      //   behavior: "smooth",
-      // });
-        const ref = this.$refs.header;
-        console.log(ref);
-        ref.scrollIntoView({ behavior: 'smooth' });
-        // console.log(ref);
     },
     playSfx(order) {
       if (!this.activeSfx) {
@@ -711,7 +543,8 @@ export default {
           if (parseInt(order) === parseInt(s.dataset.sfxId)) {
             // console.log(s)
             s.load();
-            s.play();
+            const delay = 300;
+            setTimeout(() => s.play(), delay);
           }
         });
       }
@@ -719,20 +552,32 @@ export default {
     onSfxEnding(order) {
       this.$store.commit("sound/removeSfx", order);
     },
+    onFilm13Loaded() {
+      this.isFilm13Loaded = true;
+      // console.log("loaded");
+    },
+    onFilm13Ready() {
+      // console.log("ready now");
+    },
     onFilm13Playing() {
-      console.log("playing now");
+      // console.log("playing now");
     },
     onFilm13Ended() {
-      console.log("ended now");
-      this.hideFilm13Grid();
+      // console.log("ended now");
+      // this.hideFilm13Grid();
       this.isFilm13ReplayActive = true;
     },
     replayFilm13() {
-      console.log('replaying film 13');
-      this.isFilm13ReplayActive = false;
+      console.log("replaying film 13");
+      this.deactivateReplay();
       this.showFilm13Grid();
       this.hoverStopperExit();
       this.playFilm13FromStart();
+      this.unmuteFilm13();
+    },
+    deactivateReplay() {
+      this.isFilm13ReplayActive = false;
+      this.setFilm13ToStart();
     },
     hideFilm13Grid() {
       const ref = this.$refs.gridFilm13;
@@ -750,76 +595,53 @@ export default {
       ref.classList.remove("hideFilm13Grid");
       ref.classList.add("showFilm13Grid");
     },
-    hideModalPlayer() {
-      const ref = this.$refs.filmModalWrapper;
-      if (!ref) {
-        return;
+    onFilmModalTextTrackUserChange(event) {
+      if (event.language) {
+        this.$store.commit("grid/setSubtitle", event.language);
+      } else {
+        this.$store.commit("grid/deactivateSubtitle");
       }
-      ref.classList.remove("showModalPlayer");
-      ref.classList.add("hideModalPlayer");
-    },
-    showModalPlayer() {
-      const ref = this.$refs.filmModalWrapper;
-      if (!ref) {
-        return;
-      }
-      ref.classList.remove("hideModalPlayer");
-      ref.classList.add("showModalPlayer");
-    },
-    countdownTheNumbers(duration, display) {
-      var timer = duration, seconds;
-      setInterval(function () {
-          seconds = parseInt(timer % 60, 10);
-  /*         seconds = seconds < 10 ? "0" + seconds : seconds;
-          */
-          display = seconds;
-          console.log(display);
-          if (--timer < 0) {
-              display = 'over'
-          }
-      }, 1000);
-    },
-    activateCountdown() {
-      var duration = this.countdownDuration;
-      var display = this.countdownNum;
-      this.showCountdown = true;
-      this.countdownTheNumbers(duration, display);
-    },
-    deactivateCountdown() {
-      this.showCountdown = false;
-      this.countdownNum = this.countdownDuration;
     },
     onFilmModalLoaded() {
-        const ref = this.$refs.filmModal;
-        if (!ref) {
-          return;
-        }
-        console.log('modal loaded')
-        const currentLang = this.$store.state.grid.subtitleLanguage;
-        ref.player.enableTextTrack(currentLang).then(function(track) {
-          console.log('enabled the text')
-          ref.play();
-        }).catch(function(error) {
+      const ref = this.$refs.filmModal;
+      if (!ref) {
+        return;
+      }
+      // console.log("modal loaded");
+      const currentLang = this.subtitleLanguage;
+      if (currentLang === "") {
+        ref.play();
+      } else {
+        ref.player
+          .enableTextTrack(currentLang)
+          .then(function (track) {
+            console.log("enabled the text");
+            ref.play();
+          })
+          .catch(function (error) {
             console.log(error);
-        });  
+          });
+      }
     },
     onFilmModalReady() {
-      console.log('modal is ready');
       this.playFilmModal();
     },
     onFilmModalEnded() {
-      // console.log('ended')
-      this.activateCountdown();
       this.isFilmModalEnded = true;
-      this.hideModalPlayer();
-      const delay = 5000; // 5 seconds
-      setTimeout(() => this.goToNextModal(), delay);
+      this.$store.commit("grid/changeModalState", "tiles");
     },
     closeModal() {
       this.changeActiveFrame(this.frames[1]);
+      if (this.activeModalState === "tiles") {
+        this.$store.commit("grid/changeModalState", "player");
+      }
+      if (this.isFilm13ReplayActive) {
+        this.deactivateReplay();
+        this.playFilm13FromStart();
+      }
     },
     updateModalPlayer(id) {
-      console.log('updating');
+      console.log("updating");
       const ref = this.$refs.filmModal;
       if (!ref) {
         return;
@@ -831,47 +653,44 @@ export default {
       this.pauseFilmModal();
       this.isFilmModalEnded = false;
       this.changeActiveFrame(this.frames[2]);
-      this.deactivateCountdown();
-      this.showModalPlayer();
       this.previousActiveModal = this.activeModal;
-      if (direction === 'next') {
+      if (direction === "next") {
         this.activeModal = this.paginationNextModal;
       }
-      if (direction === 'prev') {
+      if (direction === "prev") {
         this.activeModal = this.paginationPrevModal;
       }
       this.updateModalPlayer(this.filmData[this.activeModal].acf.vimeo_id);
       this.playFilmModal();
     },
     goToPrevModal() {
-      this.modalPaginate('prev');
+      this.modalPaginate("prev");
     },
     goToNextModal() {
-      this.modalPaginate('next');
+      this.modalPaginate("next");
     },
-    activateIntroSection(section) {
-      this.activeIntroSection = section;
+    activateIntroSection(payload) {
+      this.$store.commit("grid/activateIntroSection", payload);
+      // console.log(section);
+      // this.activeIntroSection = section;
+      this.pauseFilm13();
     },
-    scrollIntroSectionIntoView() {
-      // console.log("scrolling");
-      // window.scroll({
-      //   top: window.innerHeight + 100,
-      //   left: 0,
-      //   behavior: "smooth",
-      // });
-      if (this.activeIntroSection === 'About') {
-        const ref = this.$refs.aboutSection;
-        ref.scrollIntoView({ behavior: 'smooth' });
-        // console.log(ref);
-      }
-      if (this.activeIntroSection === 'Credits') {
-        const ref = this.$refs.creditsSection;
-        ref.scrollIntoView({ behavior: 'smooth' });
-        // console.log(ref);
+    deactivateIntroSection() {
+      // this.activeIntroSection = null;
+      this.$store.commit("grid/activateIntroSection");
+      if (this.activeFrame === "Film13") {
+        this.playFilm13();
       }
     },
-    openFilmModal(id) {
-      this.activeModal = id;
+    openFilmModal(payload) {
+      this.$store.commit("grid/activateModal", payload);
+      // this.activeModal = id;
+      if (
+        this.activeModalState === "tiles" ||
+        this.activeModalState === "switching"
+      ) {
+        this.$store.commit("grid/changeModalState", "player");
+      }
       this.changeActiveFrame(this.frames[2]);
     },
     onFilm13TimeUpdate(event, data, player) {
@@ -881,13 +700,31 @@ export default {
           this.hoverStopperEnter();
         }
       }
+      // hide remote
+      if (event.seconds > 195) {
+        this.hideFilm13Remote();
+      }
+
+      // pause film on frame
+      if (event.seconds > 200) {
+        this.pauseFilm13();
+        this.isFilm13ReplayActive = true;
+      }
+
       // console.log(event.payload[0].seconds);
     },
+    hideFilm13Remote() {
+      this.isFilm13RemoteHidden = true;
+    },
+    showFilm13Remote() {
+      this.isFilm13RemoteHidden = false;
+    },
     changeActiveFrame(frame) {
-      if (frame !== this.activeFrame) {
-        this.previousFrame = this.activeFrame;
-      }
-      this.activeFrame = frame;
+      // if (frame !== this.activeFrame) {
+      //   this.previousFrame = this.activeFrame;
+      // }
+      // this.activeFrame = frame;
+      this.$store.commit("grid/changeActiveFrame", frame);
     },
     activateIntroFrame() {},
     activateAboutFrame() {},
@@ -896,10 +733,13 @@ export default {
       // this.unmuteFilm13();
       window.scroll({
         top: 0,
-        left: 0
+        left: 0,
       });
       this.hoverStopperExit();
       this.playFilm13();
+    },
+    showFilm13Frame() {
+      this.hoverStopperExit();
     },
     activateFilmModalFrame(id) {
       this.playFilmModal();
@@ -911,14 +751,13 @@ export default {
     deactivateCreditsFrame() {},
     deactivateFilm13Frame() {
       // this.muteFilm13();
+      this.isFilm13FrameHidden = true;
       this.pauseFilm13();
     },
     deactivateFilmModalFrame() {
       this.activeModal = null;
       this.previousActiveModal = null;
-      this.deactivateCountdown();
       this.pauseFilmModal();
-      this.deactivateCountdown();
     },
     toggleFilm13Playback() {
       if (this.isFilm13Playing) {
@@ -933,12 +772,19 @@ export default {
         return;
       }
       const currentLang = this.$store.state.grid.subtitleLanguage;
-      ref.player.enableTextTrack(currentLang).then(function(track) {
-        track.kind = 'subtitles';
+      if (currentLang === "") {
         ref.play();
-      }).catch(function(error) {
-          console.log(error);
-      });
+      } else {
+        ref.player
+          .enableTextTrack(currentLang)
+          .then(function (track) {
+            track.kind = "subtitles";
+            ref.play();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     },
     pauseFilmModal() {
       const ref = this.$refs.filmModal;
@@ -1010,6 +856,20 @@ export default {
         s.muted = false;
       });
     },
+    setFilm13ToStart() {
+      const ref = this.$refs.film13;
+      if (!ref) {
+        return;
+      }
+      ref.player
+        .setCurrentTime(0)
+        .then((seconds) => {
+          this.pauseFilm13();
+        })
+        .catch(function (error) {
+          console.log(`${ref} player time jump to start failed: ${error}`);
+        });
+    },
     playFilm13FromStart() {
       const ref = this.$refs.film13;
       if (!ref) {
@@ -1019,6 +879,7 @@ export default {
         .setCurrentTime(0)
         .then((seconds) => {
           this.playFilm13();
+          this.showFilm13Remote();
         })
         .catch(function (error) {
           console.log(`${ref} player time jump/pause failed. error: ${error}`);
@@ -1075,7 +936,7 @@ export default {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-
+        jumpedTime = 197;
         // console.log(jumpedTime);
 
         ref.player
@@ -1090,7 +951,6 @@ export default {
           });
       });
     },
-  }
+  },
 };
 </script>
-

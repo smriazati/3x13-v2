@@ -3,6 +3,7 @@ export default {
   /*
   ** Headers of the page
   */
+  target: 'static',
   head: {
     title: '3 x 13',
     meta: [
@@ -31,16 +32,18 @@ export default {
   ** Global CSS
   */
   css: [
-      // CSS file in the project
-      // '~/assets/css/main.css',
-      // SCSS file in the project
-      '~/assets/css/main.scss'
+    // CSS file in the project
+    // '~/assets/css/main.css',
+    // SCSS file in the project
+    '~/assets/css/main.scss'
   ],
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [ 
-    { src: '@/plugins/vimeo.js', ssr: false }
+  components: true,
+  plugins: [
+    { src: '@/plugins/vimeo.js', ssr: false },
+    { src: '@/plugins/fullscreen.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -57,7 +60,11 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // Simple usage
+    ['@nuxtjs/google-analytics', {
+      id: process.env.GA_ID || ''
+    }]
   ],
   /*
   ** Axios module configuration
@@ -73,7 +80,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    vendor: [
+      'vue-vimeo-player'
+    ],
+    extend(config, ctx) {
     }
   }
 }
