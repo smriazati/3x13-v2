@@ -2,6 +2,9 @@ $site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
+$film13-grid-bp: 1060px;
+$film13-grid-bp-lg: 1600px;
+
 $gold: rgb(202, 166, 17);
 $dark: rgb(0, 0, 0);
 $light:rgb(232, 232, 232);
@@ -14,8 +17,8 @@ $bp-lg: 1440px;
 $bp-type: 1100px;
 $bp-sm: 960px;
 
-$grid-bp: 1060px;
-
+$grid-bp: $film13-grid-bp;
+$grid-bp-lg: $film13-grid-bp-lg;
 $tagline-container: 90%;
 
 
@@ -308,11 +311,52 @@ button {
 
 
 // HOVER GRID FOR FILM 13
+// .grid-film13 // this is the parent, full size 
+  // .hover // this is like iframe wrapper 
+    // .hover-wrapper this is like player
+
+
+.grid-film13 {
+  width: 100%;
+  height: 100%;
+} 
+
 .hover {
-  @media (min-width: $grid-bp + 1) {
-    padding: 0px 13.25vw; // black box offset
+  display: flex;
+align-items: center;
+  justify-content: center;
+  // @media (min-width: $grid-bp + 1) {
+  //   padding: 0px 5.25%; // black box offset
+  // }
+  // @media (max-width: $grid-bp) {
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  // }
+}
+
+
+
+@media (min-width: 1250px) and (max-width: $grid-bp-lg) {
+  .hover-wrapper,
+  .grid-film13 .iframe-wrapper div {
+    width: 999px !important;
+    height: 749px !important;
   }
-  @media (max-width: 758px) {
+  .grid-film13 .iframe-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (min-width: $grid-bp + 1) and (max-width: 1249px) {
+  .hover-wrapper,
+  .grid-film13 .iframe-wrapper div {
+    width: 768px !important;
+    height: 576px !important;
+  }
+  .grid-film13 .iframe-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -320,40 +364,70 @@ button {
 }
 
 .hover-wrapper {
+  // width: 100%;
+  // height: 100%;
+  
+  // @media (min-width: $grid-bp + 1) {
+  //   grid-template-columns: repeat(3, 1fr);
+  //   padding: 2px;
+  //   grid-gap: 2px;
+  // }
+
+  // // @media (max-width: $grid-bp) {
+  // //   height: 563px;
+  // //   grid-template-columns: repeat(3, 246px);
+  // //   margin: 0 auto;
+  // //   width: 738px;
+  // //   grid-gap: 0;
+  // //   padding: 0;
+  // //   // max-width: calc(133.333vh);
+  // //   // height: calc(75vw);
+  // // }
+
+  // @media (max-width: $grid-bp) {
+  //   // width: 98vw;
+  //   max-width: calc(133.333vh); 
+  //   height: calc(75vw);
+  //   margin: 0 auto;
+  //   grid-template-columns: repeat(3, 1fr);
+  // }
+  // from vimeo iframe .player
   width: 100%;
-  height: 100%;
+  margin: 0;
+  padding: 0;
+  max-width: calc(133.333vh);
+  height: calc(75vw);
+  position: relative;
+  max-height: 100%;
+  overflow: visible;
+  border-collapse: separate;
+
   display: grid;
-  @media (min-width: $grid-bp + 1) {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 2px;
-    grid-gap: 2px;
-  }
-
-  @media (min-width: 759px) and (max-width: $grid-bp) {
-    height: 563px;
-    grid-template-columns: repeat(3, 246px);
-    margin: 0 auto;
-    width: 738px;
-    grid-gap: 0;
-    padding: 0;
-  }
-
-  @media (max-width: 758px) {
-    width: 98vw;
-    max-width: calc(133.333vh); 
-    height: calc(75vw);
-    margin: 0 auto;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
+  grid-gap: 2px;
+
+  @media (min-width: $grid-bp-lg + 1) {
+    padding: 6px 12px;
+  }
+  @media (min-width: 1250px) and (max-width: $grid-bp-lg) {
+    padding: 2px 12px;
+  }
+  @media (min-width: $grid-bp + 1) and (max-width: 1249px) {
+    padding: 2px 6px;
+  }
+    
+  @media (max-width: $grid-bp) {
+    padding: 0px 5px;
+  }
+
+  
   .hover-item {
   //  border: 1px solid red;
     &:hover {
       cursor: pointer;
     }
   }
-
   .icon svg {
     width: 3ch;
     * {
@@ -457,6 +531,7 @@ button {
 .site-tagline,
 .nunito {
   font-family: 'Nunito Sans', sans-serif;
+  font-display: block;
 }
 
 // color
@@ -482,6 +557,8 @@ body {
   padding-bottom: 56.25%; /* 16:9 */
   // height: 0;
 }
+
+
 
 @media (max-width: $grid-bp) {
   .grid-film13 .iframe-wrapper div {
@@ -658,22 +735,18 @@ button:disabled,
   header {
     // height: 90vh;
     padding-top: 35vh;
-    @media (max-width: $bp-sm) {
+    @media (max-width: 768px) {
       padding-top: 25vh;
     }
 
+    .play-film13-button {
+      margin: $spacer*3 0;
+    }
     .subtitle-controls .section-title {
         font-size: 1em;
     }
   }
 
-  header,
-  section {
-    nav {
-      text-align: center;
-      margin: $spacer*3 0;
-    }
-  }
 }
 
 // film 13
@@ -682,10 +755,6 @@ button:disabled,
   position: relative;
   overflow-x: hidden;
   height: 100%;
-  min-height: 100%;
-  .layer-stack-show & {
-    min-height: 100vh;
-  }
 }
 
 .container-film13 {
@@ -707,19 +776,6 @@ button:disabled,
   }
 }
 
-@media (max-width: 999px) {
-  .grid-film13 {
-    width: 1000px;
-    height: 563px;
-  } 
-}
-
-@media (min-width: 999px) {
-  .grid-film13 {
-    width: 100vw;
-    height: 56.3vw;
-  } 
-}
 
 .video-grid-overlay {
   position: fixed;
@@ -732,16 +788,16 @@ button:disabled,
   justify-content: center;
   align-items: center;
 
-  .hover {
-    width: 100vw;
-    height: 56.3vw;
-  }
+  // .hover {
+  //   width: 100vw;
+  //   height: 56.3vw;
+  // }
 }
 
 .container-poster-images {
   opacity: 0.18;
   @media (max-width: $bp-sm) {
-    opacity: 0.3;
+    opacity: 0.25;
   }
   .hover-item {
     overflow: hidden;
@@ -774,16 +830,6 @@ button:disabled,
   }
 }
 
-.modal-player-wrapper {
-  width: 90%;
-  @media (max-width: $bp-sm) {
-    width: 80vw;
-  }
-  .modal-player-wrapper div {
-    width: 100%;
-    height: 100%;
-  }
-}
 
 
 
@@ -798,6 +844,9 @@ button:disabled,
 
   h2 {
     font-size: 1.3em;
+    // flex: 1;
+    display: flex;
+    align-items: flex-end;
     @media (max-width: $bp-sm) {
       font-size: .9em;
     }
@@ -812,6 +861,7 @@ button:disabled,
   .icon {
     // position: absolute;
     // bottom: $spacer*2;
+    flex: 0 0 $spacer*2;
     font-size: .8em;
     @media (max-width: $bp-sm) {
       font-size: .5em;
@@ -851,6 +901,9 @@ button:disabled,
     justify-content: space-between;
     > * {
       flex: 0 0 22%;
+      @media (max-width: $bp-sm) {
+        flex: 0 0 50%;
+      }
       display: flex;
       justify-content: center;
       align-items: center;
@@ -952,6 +1005,41 @@ ul.credits-list {
     color: $gold;
   }
 }
+@media (min-width: $bp-sm) {
+  .credit-item-image .placeholder {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: $bp-sm) {
+  .credit-item-image {
+    max-width: 100px;
+    margin: 0 auto;
+    img {
+      max-width: 100%;
+    }
+  }
+  .credit-item-header-text {
+    h2 {
+      font-size: 1.1em;
+      line-height: 1.3em;
+    }
+    h3 {
+      margin-top: $spacer/2;
+      font-size: 0.9em;
+      line-height: 1.1em;
+    }
+  }
+
+  .credit-component.accordion-open {
+    display: flex;
+    flex-direction: column;
+    .credit-item-bio {
+      margin-top: $spacer;
+    }
+  }
+}
 
 
 // intro sections typography
@@ -979,8 +1067,8 @@ ul.credits-list {
   max-width: 80ch;
   margin: 0 auto;
   @media (max-width: $bp-sm) {
-    font-size: 20px;
-    line-height: 36px;
+    font-size: 18px;
+    line-height: 28px;
     margin-top: $spacer*2;
   }
   letter-spacing: 0;
@@ -1227,12 +1315,18 @@ ul.subtitles {
     color: $gold;
     cursor: pointer;
   }
+  @media (max-width: $bp-sm) {
+    font-size: 12px;
+  }
 }
 .active-tab-title {
   color: $gold;
 }
 .tab-item-content {
   padding-top: $spacer*6;
+  @media (max-width: $bp-sm) {
+    padding-top: $spacer*3;
+  }
   opacity: 1;
   transition: .2s ease opacity;
   grid-column-start: 1;
@@ -1272,8 +1366,19 @@ ul.subtitles {
   justify-content: center;
   align-items: center;
   text-align: center;
+  @media (max-width: $bp-sm) {
+    justify-content: flex-start;
+  }
   min-height: 100%;
   min-height: 100vh;
+}
+
+.film13-grid-wrapper .film-tile-navigation {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba($dark, 0.3);
 }
 
 .modal-navigation-container {
@@ -1281,13 +1386,24 @@ ul.subtitles {
    width: 100vw;
    margin: 0 auto;
    display: flex;
+   @media (max-width: $bp-sm) {
+     padding-top: $spacer*3;
+    flex-direction: column;
+   }
    position: relative;
    z-index: 999;
    .modal-navigation-item {
      flex: 0 0 50%;
-     padding: $spacer*3;
+     @media (min-width: $bp-sm) {
+      padding: $spacer*3;
+     }
      display: flex;
      flex-direction: column-reverse;
+     @media (max-width: $bp-sm) {
+      flex-direction: row-reverse;
+      padding: $spacer 0;
+      align-items: center;
+     }
      justify-content: center;
      background: transparent;
      transition: $transition;
@@ -1308,6 +1424,10 @@ ul.subtitles {
 
    .text {
      margin-top: $spacer*3;
+     @media (max-width: $bp-sm) {
+       margin-top: 0;
+       margin-left: $spacer;
+     }
    }
    h3 {
      text-transform: none;
@@ -1324,6 +1444,7 @@ ul.subtitles {
 }
 
 
+
 // FILM TILE NAV @ END OF FILM
 
 .replay-film13 {
@@ -1337,6 +1458,9 @@ ul.subtitles {
       display: flex;
       justify-content: center;
       position: absolute;
+      @media (max-width: $film13-grid-bp) {
+        position: fixed;
+      }
       bottom: $spacer*3;
       left: 0;
       z-index: 999;
@@ -1357,122 +1481,6 @@ ul.subtitles {
   }
 }
 
-// film individual pagination
-
-.film-individual-pagination {
-  button {
-    @include unsetBtn;
-    position: fixed;
-    top: 40%;
-    top: 40vh;
-    height: 10%;
-    height: 10vh;
-    min-width: 10%;
-    min-width: 10vw;
-    display: flex;
-    flex-direction: column;
-    .text {
-      margin-top: $spacer;
-    }
-    &.prev {
-      left: $spacer;
-      align-items: flex-start;
-      .text {
-        text-align: left;
-      }
-    }
-    &.next {
-      right: $spacer;
-      align-items: flex-end;
-      .text {
-        text-align: right;
-      }
-    }
-  }
-  h2 {
-    font-size: 20px;
-    line-height: 24px;
-  }
-  h3 {
-    font-size: 14px;
-    line-height: 18px;
-    text-transform: none;
-  }
-  .icon * {
-    height: $spacer*3;
-  }
-}
-
-// animation 
-
-.film-individual-pagination {
-  button {
-    .text {
-      opacity: 0;
-      transition: .3s ease opacity;
-    }
-    .arrow {
-      opacity: 0.25;
-      transition: .3s ease opacity;    
-    }
-    &:hover {
-      .text {
-        opacity: 1;
-        width: unset;
-      }
-      .icon * {
-        fill: $gold !important;
-      }
-      .arrow {
-        opacity: 1;
-      }
-    }
-    &.prev:hover {
-      left: $spacer/2;
-    }
-    &.next:hover {
-      right: $spacer/2;
-    }
-  }
-}
-
-// FILM13-FRAME-NAV component
-
-.film13-frame-nav {
-  position: fixed;
-  z-index: 98;
-  top: 0;
-  left: 0;
-  padding: $spacer*2;
-  button {
-    @include unsetBtn;
-    text-transform: uppercase;
-    &:hover {
-      color: $gold;
-    }
-  }
-  ul {
-    @include unsetUl;
-  }
-  .brand {
-    font-size: 36px;
-  }
-}
-
-// DROPDOWN NAV IN FILM13 GRID VIEW
-
-.film13-frame-nav {
-  .dropdown {
-    opacity: 0;
-    transition: opacity .3s;
-  }
-
-  &:hover {
-    .dropdown {
-      opacity: 1;
-    }
-  }
-}
 
 // FULLSCREEN COMPONENT
 
@@ -1488,10 +1496,10 @@ ul.subtitles {
 $remoteIconWidth: 22px;
 $remoteIconPadding: 11px;
 .film13-remote {
-  position: absolute;
-  z-index: 99;
-  bottom: 0;
-  right: 0;
+  // position: absolute;
+  // z-index: 99;
+  // bottom: 0;
+  // right: 0;
   padding: $spacer/2 $spacer*2;
   @media (max-width: $bp-sm) {
     left: 0;
@@ -1507,10 +1515,10 @@ $remoteIconPadding: 11px;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: $remoteIconWidth*3 + $remoteIconPadding*6.1;
+    // width: $remoteIconWidth*3 + $remoteIconPadding*6.1;
     > * {
       flex: 0 0 $remoteIconWidth + $remoteIconPadding;
-      padding: $remoteIconPadding/2 $remoteIconPadding;
+      padding: $remoteIconPadding/2;
       // border: 1px solid $white;
       svg {
         width: $remoteIconWidth;
@@ -1569,7 +1577,7 @@ $remoteIconPadding: 11px;
     }
     &:hover {
       .icon * {
-        fill: $light !important;
+        fill: $gold !important;
       }
     }
   }
@@ -1683,10 +1691,17 @@ $remoteIconPadding: 11px;
   figure {
     width: 100%;
     height: 24vw;
+    @media (max-width: $bp-sm) {
+      width: 50%;
+      height: unset;
+    }
     background: $dark;
     .placeholder {
       width: 100%;
       height: 24vw;
+      @media (max-width: $bp-sm) {
+        height: unset;
+      }
     }
     overflow: hidden;
     img {
@@ -1695,5 +1710,339 @@ $remoteIconPadding: 11px;
       object-fit: cover;
     }
   }
+  .text {
+    margin-top: $spacer;
+    h2 {
+      font-size: 1.1em;
+    }
+    h3 {
+      font-size: 1em;
+    }
+  }
 }
 
+// modal grid layout 
+
+$modal-bp: 960px;
+.modal-grid-wrapper {
+  display: grid;
+  position: relative;
+  z-index: 999;
+  width: 100%;
+  @media (min-width: $modal-bp + 1) {
+    margin-top: 10%;
+    margin-top: 10vh;
+    max-width: 1950px;
+    max-height: 80%;
+    max-height: 80vh;
+    margin: 0 auto;
+    grid-template-columns: 15ch 1fr 15ch;
+    grid-template-rows: 1fr;
+    .pagination-button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        justify-content: center;
+        .icon {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          * {
+            fill: $gray !important;
+          }
+        }
+        .text {
+          padding-top: $spacer;
+          h2 {
+            font-size: 1.2em;
+          }
+          h3 {
+            font-size: 1em;
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: $modal-bp) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: $spacer*2;
+    grid-template-rows: repeat(2, min-content);
+    .modal-player-wrapper {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .pagination-button-prev {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 3;
+    }
+    .pagination-button-next {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 2;
+      grid-row-end: 3;
+    }
+
+    .pagination-button-container button {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      .text {
+        flex: 1;
+      }
+      .arrow {
+        flex: 0 0 $spacer*3;
+        .icon * {
+          fill: $gray !important;
+        }
+      }
+    }
+    .pagination-button-container.pagination-button-prev button {
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+      .arrow .icon {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
+.modal-grid-wrapper .pagination-button-container {
+  button {
+    @include unsetBtn();
+  }
+  h3 {
+    text-transform: none;
+  }
+  .icon {
+    height: $spacer*3;
+  }
+  &:hover {
+    * {
+      color: $gold;
+      fill: $gold !important;
+    }
+  }
+}
+
+.modal-grid-wrapper .pagination-button-container {
+  .text {
+    opacity: 0;
+    transition: $transition;
+  }
+  &:hover {
+    .text {
+      opacity: 1;
+    }
+    .arrow {
+      flex: 0 0 $spacer*3;
+      .icon * {
+        fill: $gold !important;
+      }
+    }
+  }
+
+  .arrow {
+    transform: translateX(0);
+    transition: $transition;
+  }
+  &.pagination-button-prev:hover {
+    .arrow {
+      transform: translateX(-$spacer);
+    }
+  }
+  &.pagination-button-next:hover {
+    .arrow {
+      transform: translateX($spacer);
+    }
+  }
+}
+
+.modal-grid-wrapper .pagination-button-container {
+  @include fadeInStartKeyframe();
+}
+
+.modal-grid-wrapper .pagination-button-container {
+  animation: .9s ease-in 2s forwards fadeIn;
+}
+
+
+
+
+// FILM13-MAIN-NAV component
+
+.film13-main-nav {
+  button {
+    @include unsetBtn;
+    text-transform: uppercase;
+    &:hover {
+      color: $gold;
+    }
+  }
+  ul {
+    @include unsetUl;
+  }
+  .brand {
+    font-size: 36px;
+  }
+}
+
+// film13 grid layout 
+.film13-grid-wrapper {
+  @media (max-width: $film13-grid-bp) {
+    display: grid;
+    height: 100%;
+    height: 100vh;
+    grid-template-columns: 100%;
+    grid-template-columns: 100vw;
+    grid-gap: $spacer*2;
+    grid-template-rows: 100px 1fr 100px;
+    .film13-main-nav {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .film13-remote {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 3;
+      grid-row-end: 4;
+      align-self: end;
+      padding-bottom: $spacer;
+    }
+    .container-film13 {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 3;
+      overflow: hidden;
+    }
+
+    .film13-main-nav {
+      text-align: center;
+      ul {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        > * {
+          padding: $spacer;
+        }
+      }
+      * {
+        color: rgba($light, 0.7);
+        transition: $transition;
+      }
+    }
+  }
+  @media (min-width: $film13-grid-bp + 1) {
+    display: grid;
+    grid-template-columns: 15ch 1fr 15ch;
+    width: 100%;
+    width: 100vw;
+    height: 100%;
+    height: 100vh;
+    grid-template-rows: 1fr;
+    .film13-player-wrapper {
+      padding-bottom: 0;
+    }
+    .film13-main-nav {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .film13-remote {
+      grid-column-start: 3;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      align-self: end;
+    }
+    .container-film13 {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .film13-main-nav,
+    .film13-remote {
+      padding: $spacer*2;
+    }
+
+    .film13-main-nav {
+      ul {
+        @include unsetUl;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+}
+
+@mixin slideInStartKey {
+    transform: translateX(-100px);
+    opacity: 0;
+}
+
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-15ch);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+@media (min-width: $film13-grid-bp) {
+  .film13-grid-wrapper 
+  .film13-main-nav {
+    text-align: left;
+    .logo {
+      @include slideInStartKey;
+    }
+    .layer-stack-show & {
+      .logo {
+        animation: .5s ease-in forwards slideRight;
+      }
+    }
+    button {
+      text-align: left;
+      width: 100%;
+    }
+    .dropdown {
+      opacity: 0;
+      transition: opacity .3s;
+      @include slideInStartKey();
+    }
+    &:hover {
+      .dropdown {
+        opacity: 1;
+        animation: .1s ease-in-out forwards slideRight;
+      }
+    }
+    li {
+      width: 100%;
+      padding: $spacer/2;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

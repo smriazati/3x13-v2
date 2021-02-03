@@ -115,139 +115,91 @@
               : 'layer-stack-hidden'
           "
         >
-          <Film13FrameNav />
-          <div class="container-film13">
+          <div class="film13-grid-wrapper">
+            <Film13MainNav />
             <div
               v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
               class="film13-remote"
             >
-              <ul>
-                <li>
-                  <div @click="toggleFilm13Playback()">
-                    <span v-if="!isFilm13Playing">
-                      <span class="visually-hidden">Play</span>
-                      <span class="icon active">
-                        <SvgThing name="PlayPause" />
-                      </span>
-                    </span>
-                    <span v-else>
-                      <span class="visually-hidden">Pause</span>
-                      <span class="icon"><SvgThing name="PlayPause" /></span>
-                    </span>
-                  </div>
-                </li>
-                <li>
-                  <div @click="jumpFilm13Back()">
-                    <span class="visually-hidden">Jump Backward</span>
-                    <span class="icon"><SvgThing name="SkipBack" /></span>
-                  </div>
-                </li>
-                <li>
-                  <div @click="jumpFilm13Forward()">
-                    <span class="visually-hidden">Jump Forward</span>
-                    <span class="icon"><SvgThing name="SkipForward" /></span>
-                  </div>
-                </li>
-                <li>
-                  <div @click="toggleFullscreen()">
-                    <span v-if="!fullscreen">
-                      <span class="visually-hidden">Open Fullscreen</span>
-                      <span class="icon">
-                        <SvgThing name="FullscreenOpen" />
-                      </span>
-                    </span>
-                    <span v-else>
-                      <span class="visually-hidden">Close Fullscreen</span>
-                      <span class="icon active">
-                        <SvgThing name="FullscreenClose" />
-                      </span>
-                    </span>
-                  </div>
-                </li>
-                <li>
-                  <div @click="toggleFilm13Audio()">
-                    <span v-if="!isFilm13Muted">
-                      <span class="visually-hidden">Unmute sound</span>
-                      <span class="icon"><SvgThing name="Mute" /></span>
-                    </span>
-                    <span v-else>
-                      <span class="visually-hidden"> Mute sound</span>
-                      <span class="icon active"><SvgThing name="Mute" /></span>
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <div v-if="isFilm13ReplayActive" class="replay-film13">
-              <FilmTileNavigation
-                @start-watching-next="deactivateReplay()"
-                :film13-replay="true"
-                :countdown-duration="15"
+              <Film13Remote
+                @toggle-film13-playback="toggleFilm13Playback"
+                @toggle-film13-audio="toggleFilm13Audio"
+                @jump-film13-back="jumpFilm13Back"
+                @jump-film13-forward="jumpFilm13Forward"
+                @toggle-fullscreen="toggleFullscreen"
               />
-              <div class="replay-button-container">
-                <button class="replay button-icon" @click="replayFilm13()">
-                  Replay Grid
-                  <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
-                </button>
-              </div>
             </div>
-            <div ref="gridFilm13" class="grid-film13">
-              <div class="background background-iframe film13-background">
-                <div class="iframe-wrapper">
-                  <client-only>
-                    <div ref="film13Wrapper" class="film13-player-wrapper">
-                      <vimeo-player
-                        ref="film13"
-                        :video-url="gridLink"
-                        :video-id="null"
-                        :options="gridOptions"
-                        @ready="onFilm13Ready"
-                        @loaded="onFilm13Loaded"
-                        @timeupdate="onFilm13TimeUpdate"
-                        @ended="onFilm13Ended"
-                      >
-                      </vimeo-player>
-                    </div>
-                  </client-only>
+            <div class="container-film13">
+              <div v-if="isFilm13ReplayActive" class="replay-film13">
+                <FilmTileNavigation
+                  :film13-replay="true"
+                  :countdown-duration="10"
+                  @start-watching-next="deactivateReplay()"
+                />
+                <div class="replay-button-container">
+                  <button class="replay button-icon" @click="replayFilm13()">
+                    Replay Grid
+                    <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
+                  </button>
                 </div>
               </div>
-              <div class="hover">
-                <div
-                  :class="
-                    isHoverStopperOver
-                      ? 'hover-wrapper-overlay-exit'
-                      : 'hover-wrapper-overlay-enter'
-                  "
-                  class="hover-wrapper-overlay"
-                ></div>
-                <div class="hover-wrapper">
+              <div ref="gridFilm13" class="grid-film13">
+                <div class="background background-iframe film13-background">
+                  <div class="iframe-wrapper">
+                    <client-only>
+                      <div ref="film13Wrapper" class="film13-player-wrapper">
+                        <vimeo-player
+                          ref="film13"
+                          :video-url="gridLink"
+                          :video-id="null"
+                          :options="gridOptions"
+                          @ready="onFilm13Ready"
+                          @loaded="onFilm13Loaded"
+                          @timeupdate="onFilm13TimeUpdate"
+                          @ended="onFilm13Ended"
+                        >
+                        </vimeo-player>
+                      </div>
+                    </client-only>
+                  </div>
+                </div>
+                <div class="hover">
                   <div
-                    v-for="(item, index) in filmData"
-                    :key="index"
-                    class="hover-item"
-                    @click="openFilmModal(index)"
-                    @mouseenter="playSfx(item.acf.film_order)"
-                  >
-                    <div class="hover-item-sound">
-                      <audio
-                        ref="sfx"
-                        :alt="item.acf.film_hover_sound.alt"
-                        :data-sfx-id="item.acf.film_order"
-                        @ended="onSfxEnding(item.acf.film_order)"
-                      >
-                        <source
-                          :src="item.acf.film_hover_sound.url"
-                          type="audio/mpeg"
-                        />
-                      </audio>
+                    :class="
+                      isHoverStopperOver
+                        ? 'hover-wrapper-overlay-exit'
+                        : 'hover-wrapper-overlay-enter'
+                    "
+                    class="hover-wrapper-overlay"
+                  ></div>
+                  <div class="hover-wrapper">
+                    <div
+                      v-for="(item, index) in filmData"
+                      :key="index"
+                      class="hover-item"
+                      @click="openFilmModal(index)"
+                      @mouseenter="playSfx(item.acf.film_order)"
+                    >
+                      <div class="hover-item-sound">
+                        <audio
+                          ref="sfx"
+                          :alt="item.acf.film_hover_sound.alt"
+                          :data-sfx-id="item.acf.film_order"
+                          @ended="onSfxEnding(item.acf.film_order)"
+                        >
+                          <source
+                            :src="item.acf.film_hover_sound.url"
+                            type="audio/mpeg"
+                          />
+                        </audio>
+                      </div>
+                      <div class="hover-item-text">
+                        <h2>{{ item.acf.artist_first_name }}</h2>
+                        <h3>{{ item.acf.artist_country }}</h3>
+                        <span class="icon"><SvgThing name="Play" /></span>
+                      </div>
+                      <div class="hover-item-darken"></div>
                     </div>
-                    <div class="hover-item-text">
-                      <h2>{{ item.acf.artist_first_name }}</h2>
-                      <h3>{{ item.acf.artist_country }}</h3>
-                      <span class="icon"><SvgThing name="Play" /></span>
-                    </div>
-                    <div class="hover-item-darken"></div>
                   </div>
                 </div>
               </div>
@@ -279,10 +231,24 @@
             <div
               v-if="showModalPlayer"
               ref="filmModalWrapper"
-              class="modal-player-wrapper"
+              class="modal-grid-wrapper"
             >
+              <div class="pagination-button-container pagination-button-prev">
+                <button class="prev" @click="goToPrevModal()">
+                  <div class="arrow">
+                    <span class="visually-hidden">Previous</span>
+                    <span class="icon"><SvgThing name="Prev" /></span>
+                  </div>
+                  <div class="text">
+                    <h2>
+                      {{ filmData[prevModal].acf.artist_first_name }}
+                    </h2>
+                    <h3>{{ filmData[prevModal].acf.artist_country }}</h3>
+                  </div>
+                </button>
+              </div>
               <client-only>
-                <div class="iframe-wrapper">
+                <div class="modal-player-wrapper iframe-wrapper">
                   <vimeo-player
                     ref="filmModal"
                     :video-id="null"
@@ -296,8 +262,19 @@
                   </vimeo-player>
                 </div>
               </client-only>
-              <div class="film-individual-pagination-container">
-                <FilmIndividualPagination />
+              <div class="pagination-button-container pagination-button-next">
+                <button class="next" @click="goToNextModal()">
+                  <div class="arrow">
+                    <span class="visually-hidden">Next</span>
+                    <span class="icon"><SvgThing name="Next" /></span>
+                  </div>
+                  <div class="text">
+                    <h2>
+                      {{ filmData[nextModal].acf.artist_first_name }}
+                    </h2>
+                    <h3>{{ filmData[nextModal].acf.artist_country }}</h3>
+                  </div>
+                </button>
               </div>
             </div>
             <div
@@ -344,16 +321,6 @@ export default {
           return { creditsApi: res.data };
         }),
     ]);
-
-    // store.commit("content/setAboutData", aboutRes.data);
-    // store.commit("content/setFilmsData", filmRes.data);
-    // store.commit("content/setCreditsData", creditsRes.data);
-
-    // return {
-    //   aboutApi: aboutRes.data[0],
-    //   filmsApi: filmsRes.data,
-    //   creditsApi: creditsRes.data,
-    // };
   },
   data() {
     return {
@@ -361,8 +328,6 @@ export default {
         controls: false,
       },
       isFilm13Ready: false,
-      isFilm13Playing: false,
-      isFilm13Muted: false,
       isFilm13ReplayActive: false,
       isHoverStopperOver: false,
       isFilmModalEnded: false,
@@ -386,6 +351,8 @@ export default {
       activeSfx: (state) => state.sound.activeSfx,
       subtitleLanguage: (state) => state.grid.subtitleLanguage,
       isFilmDataLoaded: (state) => state.content.isFilmDataLoaded,
+      isFilm13Playing: (state) => state.grid.isFilm13Playing,
+      isFilm13Muted: (state) => state.grid.isFilm13Muted,
     }),
     ...mapGetters({
       aboutData: "content/aboutData",
@@ -527,13 +494,15 @@ export default {
       this.isHoverStopperOver = false;
     },
     playSfx(order) {
-      if (!this.activeSfx) {
-        // the first time
-        this.playSound(order);
-        this.$store.commit("sound/addSfx", order);
-      } else if (!this.activeSfx.includes(order)) {
-        this.$store.commit("sound/addSfx", order);
-        this.playSound(order);
+      if (!this.isFilm13Muted) {
+        if (!this.activeSfx) {
+          // the first time
+          this.playSound(order);
+          this.$store.commit("sound/addSfx", order);
+        } else if (!this.activeSfx.includes(order)) {
+          this.$store.commit("sound/addSfx", order);
+          this.playSound(order);
+        }
       }
     },
     playSound(order) {
@@ -664,10 +633,10 @@ export default {
       this.playFilmModal();
     },
     goToPrevModal() {
-      this.modalPaginate("prev");
+      this.$store.commit("grid/activateModal", this.prevModal);
     },
     goToNextModal() {
-      this.modalPaginate("next");
+      this.$store.commit("grid/activateModal", this.nextModal);
     },
     activateIntroSection(payload) {
       this.$store.commit("grid/activateIntroSection", payload);
@@ -759,13 +728,6 @@ export default {
       this.previousActiveModal = null;
       this.pauseFilmModal();
     },
-    toggleFilm13Playback() {
-      if (this.isFilm13Playing) {
-        this.pauseFilm13();
-      } else {
-        this.playFilm13();
-      }
-    },
     playFilmModal() {
       const ref = this.$refs.filmModal;
       if (!ref) {
@@ -802,16 +764,27 @@ export default {
       if (!this.isFilm13Muted) {
         this.unmuteFilm13Sfx();
       }
-      this.isFilm13Playing = true;
+      this.$store.commit("grid/toggleFilm13Playback", true);
+      // this.isFilm13Playing = true;
     },
     pauseFilm13() {
       const ref = this.$refs.film13;
       if (!ref) {
         return;
       }
+      console.log("pausing");
       ref.pause();
       this.muteFilm13Sfx();
-      this.isFilm13Playing = false;
+      this.$store.commit("grid/toggleFilm13Playback", false);
+
+      // this.isFilm13Playing = false;
+    },
+    toggleFilm13Playback() {
+      if (this.isFilm13Playing) {
+        this.pauseFilm13();
+      } else {
+        this.playFilm13();
+      }
     },
     toggleFilm13Audio() {
       if (this.isFilm13Muted) {
@@ -828,7 +801,8 @@ export default {
         return;
       }
       ref.mute();
-      this.isFilm13Muted = true;
+      this.$store.commit("grid/toggleFilm13Audio", true);
+      // this.isFilm13Muted = true;
     },
     unmuteFilm13() {
       const ref = this.$refs.film13;
@@ -836,7 +810,8 @@ export default {
         return;
       }
       ref.unmute();
-      this.isFilm13Muted = false;
+      // this.isFilm13Muted = false;
+      this.$store.commit("grid/toggleFilm13Audio", false);
     },
     muteFilm13Sfx() {
       const ref = this.$refs.sfx;
@@ -890,11 +865,6 @@ export default {
       if (!ref) {
         return;
       }
-      // // first, pause vid if its not already
-      // if (this.isFilm13Playing) {
-      //   this.pauseFilm13();
-      // }
-
       // get currentTime and subtract interval
       ref.player.getCurrentTime().then((seconds) => {
         const currentTime = seconds;
@@ -925,12 +895,6 @@ export default {
       if (!ref) {
         return;
       }
-
-      // first, pause vid if its not already
-      // if (this.isFilm13Playing) {
-      //   this.pauseFilm13();
-      // }
-
       // get currentTime and subtract interval
       ref.player.getCurrentTime().then((seconds) => {
         const currentTime = seconds;
@@ -938,7 +902,6 @@ export default {
         let jumpedTime = seconds + offset;
         jumpedTime = 197;
         // console.log(jumpedTime);
-
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {

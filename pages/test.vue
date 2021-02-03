@@ -1,5 +1,79 @@
 <template>
-  <div></div>
+  <div class="film13-grid-wrapper">
+    <Film13MainNav />
+    <div
+      v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
+      class="film13-remote"
+    >
+      <Film13Remote
+        @toggle-film13-playback="toggleFilm13Playback"
+        @toggle-film13-audio="toggleFilm13Audio"
+        @jump-film13-back="jumpFilm13Back"
+        @jump-film13-forward="jumpFilm13Forward"
+        @toggle-fullscreen="toggleFullscreen"
+      />
+    </div>
+    <div ref="gridFilm13" class="grid-film13">
+      <div class="background background-iframe film13-background">
+        <div class="iframe-wrapper">
+          <client-only>
+            <div ref="film13Wrapper" class="film13-player-wrapper">
+              <vimeo-player
+                ref="film13"
+                :video-url="gridLink"
+                :video-id="null"
+                :options="gridOptions"
+                @ready="onFilm13Ready"
+                @loaded="onFilm13Loaded"
+                @timeupdate="onFilm13TimeUpdate"
+                @ended="onFilm13Ended"
+              >
+              </vimeo-player>
+            </div>
+          </client-only>
+        </div>
+      </div>
+      <div class="hover">
+        <div
+          :class="
+            isHoverStopperOver
+              ? 'hover-wrapper-overlay-exit'
+              : 'hover-wrapper-overlay-enter'
+          "
+          class="hover-wrapper-overlay"
+        ></div>
+        <div class="hover-wrapper">
+          <div
+            v-for="(item, index) in filmData"
+            :key="item.id"
+            class="hover-item"
+            @click="openFilmModal(index)"
+            @mouseenter="playSfx(item.acf.film_order)"
+          >
+            <div class="hover-item-sound">
+              <audio
+                ref="sfx"
+                :alt="item.acf.film_hover_sound.alt"
+                :data-sfx-id="item.acf.film_order"
+                @ended="onSfxEnding(item.acf.film_order)"
+              >
+                <source
+                  :src="item.acf.film_hover_sound.url"
+                  type="audio/mpeg"
+                />
+              </audio>
+            </div>
+            <div class="hover-item-text">
+              <h2>{{ item.acf.artist_first_name }}</h2>
+              <h3>{{ item.acf.artist_country }}</h3>
+              <span class="icon"><SvgThing name="Play" /></span>
+            </div>
+            <div class="hover-item-darken"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

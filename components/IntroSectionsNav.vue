@@ -2,6 +2,9 @@
   <nav class="intro-sections-nav">
     <ul>
       <li>
+        <button v-if="showHome" @click="goToHome">Home</button>
+      </li>
+      <li>
         <button
           :class="
             activeIntroSection === 'About' ? 'active-link' : 'inactive-link'
@@ -39,6 +42,9 @@
 import { mapState } from "vuex";
 
 export default {
+  props: {
+    showHome: Boolean,
+  },
   computed: {
     ...mapState({
       activeFrame: (state) => state.grid.activeFrame,
@@ -48,6 +54,9 @@ export default {
   methods: {
     activateIntroSection: function (payload) {
       this.$store.commit("grid/activateIntroSection", payload);
+    },
+    goToHome: function () {
+      this.$emit("go-to-home");
     },
   },
 };

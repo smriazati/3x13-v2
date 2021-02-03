@@ -1,10 +1,13 @@
 <template>
-  <div class="film13-frame-nav">
+  <div class="film13-main-nav">
     <button class="brand logo" @click="changeActiveFrame('Intro')">
       3 x 13
     </button>
     <div class="dropdown">
-      <IntroSectionsNav />
+      <IntroSectionsNav
+        :show-home="true"
+        @go-to-home="changeActiveFrame('Intro')"
+      />
     </div>
   </div>
 </template>

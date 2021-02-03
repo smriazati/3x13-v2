@@ -23,7 +23,9 @@ export const state = () => ({
     frames: ["Intro", "Film13", "FilmModal", "Tutorial"],
     isFullscreen: false,
     activeModalState: 'player',
-    modalStates: ['player', 'tiles']
+    modalStates: ['player', 'tiles'],
+    isFilm13Playing: true,
+    isFilm13Muted: false
 })
 
 
@@ -77,5 +79,11 @@ export const mutations = {
     },
     deactivateSubtitle: (state) => {
         state.subtitleLanguage = ''
-    }
+    },
+    toggleFilm13Playback: (state, payload) => {
+        state.isFilm13Playing = payload
+    },
+    toggleFilm13Audio: (state, payload) => {
+        state.isFilm13Muted = payload
+    },
 }
