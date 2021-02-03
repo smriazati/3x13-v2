@@ -24,6 +24,7 @@
       </h2>
 
       <div
+        ref="filmmakersItemContent"
         class="tab-item-content tab-item-content-accordion"
         :class="isActiveTab === 'Filmmakers' ? 'active-tab' : 'inactive-tab'"
       >
@@ -41,7 +42,7 @@
             :key="item.id"
             :item="item"
             type="primary"
-            @on-filmmaker-accordion-toggle="toggleOtherFilmmakerAccordions()"
+            @on-filmmaker-accordion-toggle="toggleOtherFilmmakerAccordions"
           />
           <CreditItem
             v-for="item in secondaryCredits"
@@ -54,6 +55,7 @@
       </div>
 
       <div
+        ref="artistsItemContent"
         class="tab-item-content tab-item-content-accordion"
         :class="isActiveTab === 'Artists' ? 'active-tab' : 'inactive-tab'"
       >
@@ -71,7 +73,7 @@
             :key="item.id"
             :item="item"
             type="artist"
-            @on-artist-accordion-toggle="toggleOtherArtistAccordions()"
+            @on-artist-accordion-toggle="toggleOtherArtistAccordions"
           />
         </ul>
       </div>
@@ -95,6 +97,8 @@ export default {
       isActiveTab: "Filmmakers",
       areCollapsedArtistsHidden: false,
       areCollapsedFilmmakersHidden: false,
+      savedScrollPlaceFilmmakers: 0,
+      savedScrollPlaceArtists: 0,
     };
   },
   computed: {
@@ -119,11 +123,30 @@ export default {
     },
     setLastPlace() {},
     scrollToLastPlace() {},
-    toggleOtherArtistAccordions() {
+    toggleOtherArtistAccordions: function (payload) {
       this.areCollapsedArtistsHidden = !this.areCollapsedArtistsHidden;
+
+      const top = this.$refs.artistsItemContent;
+
+      if (this.areCollapsedArtistsHidden) {
+        this.savedScrollPlaceArtists = top.scrollTop;
+        top.scrollTop = 0;
+      } else {
+        top.scrollTop = this.savedScrollPlaceArtists;
+      }
     },
-    toggleOtherFilmmakerAccordions() {
+    toggleOtherFilmmakerAccordions: function (payload) {
       this.areCollapsedFilmmakersHidden = !this.areCollapsedFilmmakersHidden;
+      const top = this.$refs.filmmakersItemContent;
+
+      if (this.areCollapsedFilmmakersHidden) {
+        this.savedScrollPlaceFilmmakers = top.scrollTop;
+        top.scrollTop = 0;
+        // console.log("scrolling to top");
+      } else {
+        top.scrollTop = this.savedScrollPlaceFilmmakers;
+        // console.log("scrolling to ", this.savedScrollPlaceFilmmakers);
+      }
     },
   },
 };

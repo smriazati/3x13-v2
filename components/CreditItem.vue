@@ -1,6 +1,7 @@
 <template>
   <li
     v-if="item.acf"
+    ref="itemTop"
     :class="isCollapsed ? 'accordion-collapsed' : 'accordion-open'"
     class="credit-component accordion"
   >
@@ -29,7 +30,7 @@
     <div
       v-if="type === 'primary'"
       class="credit-item-header credit-item-visible"
-      @click="toggleFilmmakerCollapse()"
+      @click="toggleFilmmakerCollapse"
     >
       <figure v-if="item.acf.credit_image" class="credit-item-image">
         <ImageLoader
@@ -60,7 +61,7 @@
     <div
       v-if="type === 'artist'"
       class="credit-item-header credit-item-visible"
-      @click="toggleArtistCollapse()"
+      @click="toggleArtistCollapse"
     >
       <figure v-if="item.acf.artist_image" class="credit-item-image">
         <ImageLoader
@@ -104,11 +105,11 @@ export default {
   methods: {
     toggleArtistCollapse() {
       this.isCollapsed = !this.isCollapsed;
-      this.$emit("on-artist-accordion-toggle");
+      this.$emit("on-artist-accordion-toggle", this);
     },
     toggleFilmmakerCollapse() {
       this.isCollapsed = !this.isCollapsed;
-      this.$emit("on-filmmaker-accordion-toggle");
+      this.$emit("on-filmmaker-accordion-toggle", this);
     },
   },
 };

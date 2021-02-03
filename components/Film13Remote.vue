@@ -26,7 +26,7 @@
         <span class="icon"><SvgThing name="SkipForward" /></span>
       </div>
     </li>
-    <li>
+    <li class="fullscreen-btn">
       <div @click="toggleFullscreen()">
         <span v-if="!fullscreen">
           <span class="visually-hidden">Open Fullscreen</span>

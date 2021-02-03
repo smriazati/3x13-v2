@@ -209,6 +209,16 @@ button {
   }
 }
 
+// setup layout
+
+html, body, #__nuxt, #__layout, #__layout > div {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
 
 // icons 
 
@@ -236,7 +246,10 @@ button {
   width: 100%;
   width: 100vw;
   height: 100%;
-  height: 100vh;
+  // height: 100vh;
+  max-height: 100%;
+  // max-height: 100vh;
+  overflow: hidden;
 }
 
 .container .layer-stack-wrapper {
@@ -247,13 +260,14 @@ button {
   // z-index: 10;
   top: 0;
   left: 0;
-  // min-height: 100%;
+  min-height: 100%;
   // min-height: 100vh;
   width: 100%;
   width: 100vw;
   height: 100%;
-  height: 100vh;
-  max-height: 100vh;
+  // height: 100vh;
+  max-height: 100%;
+  // max-height: 100vh;
   overflow: hidden;
 }
 .container .layer-stack-show {
@@ -416,11 +430,16 @@ align-items: center;
   @media (min-width: $grid-bp + 1) and (max-width: 1249px) {
     padding: 2px 6px;
   }
-    
-  @media (max-width: $grid-bp) {
+  @media (min-width: $bp-sm + 1) and (max-width: $grid-bp) {
     padding: 0px 5px;
   }
-
+  @media (min-width: 769px) and (max-width: $bp-sm) {
+    padding: 1px 6px;
+  }
+  @media (max-width: 768px) {
+    padding: 1px 4px;
+    grid-gap: 1px;
+  }
   
   .hover-item {
   //  border: 1px solid red;
@@ -612,6 +631,8 @@ h1, h2, h3, h4 {
 
 // .about-container h3,
 // .about-container h4, 
+.credit-item-bio,
+.tutorial-list-item-text,
 p,
 ul,
 ol {
@@ -619,8 +640,16 @@ ol {
   font-size: 0.95em;
   letter-spacing: 0.03em;
   line-height: 1.8em;
+  @media (max-width: $bp-sm) {
+    font-size: 12px;
+    line-height: 20px;
+  }
 }
 
+
+.tutorial-list-item-text {
+  line-height: 1.5em;
+}
 .small {
   font-size: .8em;
 }
@@ -729,14 +758,14 @@ button:disabled,
   text-align: center;
   position: relative;
   
-  height: 100vh;
-  overflow-y: scroll;
+  // height: 100vh;
+  // overflow-y: scroll;
   
   header {
     // height: 90vh;
     padding-top: 35vh;
     @media (max-width: 768px) {
-      padding-top: 25vh;
+      padding-top: 100px;
     }
 
     .play-film13-button {
@@ -747,6 +776,22 @@ button:disabled,
     }
   }
 
+}
+
+// home page grid
+
+.container-intro header {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3fr 1fr;
+  height: 100%;
+
+  .intro-sections-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: $spacer 0;
+  }
 }
 
 // film 13
@@ -782,8 +827,10 @@ button:disabled,
   z-index: 0;
   top: 0;
   left: 0;
+  width: 100%;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
+  // height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -817,15 +864,18 @@ button:disabled,
 .container-filmmodal {
   background: rgba(0,0,0, 0.8);
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  // height: 100vh;
   overflow: hidden;
 //  border: 1px solid red;
   display: flex;
   justify-content: center;
   align-items: center;
   @media (max-width: $bp-sm) {
+    max-width: 100%;
     max-width: 100vw;
-    max-height: 100vh;
+    max-height: 100%;
+    // max-height: 100vh;
     overflow: hidden;
   }
 }
@@ -1027,8 +1077,8 @@ ul.credits-list {
     }
     h3 {
       margin-top: $spacer/2;
-      font-size: 0.9em;
-      line-height: 1.1em;
+      font-size: 12px;
+      line-height: 16px;
     }
   }
 
@@ -1198,7 +1248,8 @@ ul.subtitles {
 // INTRO FRAMES 
 
 .layer-stack-intro {
-  max-height: 100vh;
+  max-height: 100%;
+  // max-height: 100vh;
   overflow: hidden;
 }
 
@@ -1366,20 +1417,11 @@ ul.subtitles {
   justify-content: center;
   align-items: center;
   text-align: center;
-  @media (max-width: $bp-sm) {
-    justify-content: flex-start;
-  }
   min-height: 100%;
-  min-height: 100vh;
+  // min-height: 100vh;
 }
 
-.film13-grid-wrapper .film-tile-navigation {
-  width: 100vw;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba($dark, 0.3);
-}
+
 
 .modal-navigation-container {
    width: 100%;
@@ -1445,49 +1487,13 @@ ul.subtitles {
 
 
 
-// FILM TILE NAV @ END OF FILM
-
-.replay-film13 {
-  position: absolute; 
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-  .replay-button-container {
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      @media (max-width: $film13-grid-bp) {
-        position: fixed;
-      }
-      bottom: $spacer*3;
-      left: 0;
-      z-index: 999;
-      width: 100%;
-      .icon {
-        width: $spacer*2;
-        height: $spacer*2;
-        display: inline-block;
-        margin-left: $spacer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        svg {
-          vertical-align: middle;
-          fill: $dark !important;
-        }
-      }
-  }
-}
-
-
 // FULLSCREEN COMPONENT
 
 .fullscreenWrapper {
   width: 100%;
   height: 100%;
-  max-height: 100vh;
+  max-height: 100%;
+  // max-height: 100vh;
   overflow: hidden;
   background: $dark !important;
 }
@@ -1549,7 +1555,7 @@ $remoteIconPadding: 11px;
   width: 100%;
   width: 100vw;
   height: 100%;
-  height: 100vh;
+  // height: 100vh;
   position: absolute;
   z-index: 0;
   top: 0;
@@ -1574,6 +1580,9 @@ $remoteIconPadding: 11px;
     .icon * {
       height: 100%;
       fill: $gray !important;
+      @media (max-width: $bp-sm) {
+        fill: $light !important;
+      }
     }
     &:hover {
       .icon * {
@@ -1614,11 +1623,18 @@ $remoteIconPadding: 11px;
 
 
 // INTRO SECTIONS NAV on home page 
+.container-intro {
+  height: 100%;
+  // height: 100vh;
+  max-height: 100%;
+  // // max-height: 100vh;
+  // overflow-y: hidden;
+}
 .container-intro .intro-sections-nav {
-  position: absolute;
-  bottom: $spacer*3; 
-  width: 100%;
-  width: 100vw;
+  // position: absolute;
+  // bottom: $spacer*3; 
+  // width: 100%;
+  // width: 100vw;
   button {
     @include unsetBtn();
     text-transform: uppercase;
@@ -1663,6 +1679,9 @@ $remoteIconPadding: 11px;
     flex: 50%;
   }
   .tutorial-list-item-image {
+    .image {
+      margin-bottom: 0 !important;
+    }
     img {
       margin-bottom: 0 !important;
       max-width: 150px;
@@ -1692,7 +1711,7 @@ $remoteIconPadding: 11px;
     width: 100%;
     height: 24vw;
     @media (max-width: $bp-sm) {
-      width: 50%;
+      flex: 0 0 50%;
       height: unset;
     }
     background: $dark;
@@ -1771,6 +1790,9 @@ $modal-bp: 960px;
   @media (max-width: $modal-bp) {
     grid-template-columns: repeat(2, 1fr);
     grid-gap: $spacer*2;
+    @media (max-width: $bp-sm) {
+      grid-row-gap: $spacer*4;
+    }
     grid-template-rows: repeat(2, min-content);
     .modal-player-wrapper {
       grid-column-start: 1;
@@ -1798,11 +1820,22 @@ $modal-bp: 960px;
       width: 100%;
       .text {
         flex: 1;
+        @media (max-width: $bp-sm) {
+          h2 {
+            font-size: 18px;
+          }
+          h3 {
+            font-size: 14px;
+          }
+        }
       }
       .arrow {
         flex: 0 0 $spacer*3;
         .icon * {
           fill: $gray !important;
+          @media (max-width: $bp-sm) {
+            fill: $light !important;
+          }
         }
       }
     }
@@ -1903,7 +1936,7 @@ $modal-bp: 960px;
   @media (max-width: $film13-grid-bp) {
     display: grid;
     height: 100%;
-    height: 100vh;
+    // height: 100vh;
     grid-template-columns: 100%;
     grid-template-columns: 100vw;
     grid-gap: $spacer*2;
@@ -1933,9 +1966,9 @@ $modal-bp: 960px;
     .film13-main-nav {
       text-align: center;
       ul {
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
+        // display: flex;
+        // justify-content: center;
+        // flex-direction: row;
         > * {
           padding: $spacer;
         }
@@ -1952,7 +1985,7 @@ $modal-bp: 960px;
     width: 100%;
     width: 100vw;
     height: 100%;
-    height: 100vh;
+    // height: 100vh;
     grid-template-rows: 1fr;
     .film13-player-wrapper {
       padding-bottom: 0;
@@ -2034,7 +2067,7 @@ $modal-bp: 960px;
     &:hover {
       .dropdown {
         opacity: 1;
-        animation: .1s ease-in-out forwards slideRight;
+        animation: .3s ease-in-out forwards slideRight;
       }
     }
     li {
@@ -2044,5 +2077,115 @@ $modal-bp: 960px;
         width: 100%;
       }
     }
+  }
+}
+
+// replay grid
+
+.replay-film13 {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 1fr min-content;
+  grid-template-columns: 1fr;
+  position: absolute; 
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background: rgba($dark, 0.9);
+
+  .film-tile-navigation {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100%;
+    justify-content: center;
+  }
+
+  .replay-button-container {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: $spacer;
+    .icon {
+      width: $spacer*2;
+      height: $spacer*2;
+      display: inline-block;
+      margin-left: $spacer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      svg {
+        vertical-align: middle;
+        fill: $dark !important;
+      }
+    }
+}
+}
+
+
+// hide full screen on mobile
+
+@media (max-width: $bp-sm) {
+    .fullscreen-btn {
+      display: none;
+    }
+}
+
+// mobile nav
+
+@media (min-width: $grid-bp + 1) {
+  .mobile-menu-button {
+    display: none;
+  }
+}
+@media (max-width: $bp-sm) {
+
+  .mobile-menu-button {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: $spacer/2;
+    left: $spacer/2;
+  }
+  .dropdown {
+    transition: .3s ease left, .3s ease background;
+    position: absolute;
+    z-index: 999;
+    top: 40px;
+    left: -100%;
+    left: -100vw;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    * {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    nav {
+      height: 60%;
+      margin-top: 10%;
+    }
+    ul {
+      justify-content: space-between;
+      height: 100%;
+      li button {
+        color: $light;
+        font-size: 30px;
+        &:hover {
+          color: $gold;
+        }
+      }
+    }
+  }
+  // .mobile-menu-collapsed.dropdown {
+  //   display: none;
+  // }
+  .mobile-menu-open.dropdown {
+    left: 0;
+    top: 40px;
+    background: rgba($dark, 1);
   }
 }

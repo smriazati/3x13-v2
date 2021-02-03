@@ -93,7 +93,7 @@
                     @click="changeActiveFrame(frames[1])"
                   >
                     <span v-if="!isFilm13Loaded">Loading Film</span>
-                    <span>Enter Film</span>
+                    <span v-else>Enter Film</span>
                   </button>
                 </nav>
                 <div class="subtitle-controls center">
@@ -116,7 +116,10 @@
           "
         >
           <div class="film13-grid-wrapper">
-            <Film13MainNav />
+            <Film13MainNav
+              @mobile-menu-open="playFilm13"
+              @mobile-menu-close="pauseFilm13"
+            />
             <div
               v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
               class="film13-remote"
@@ -130,19 +133,6 @@
               />
             </div>
             <div class="container-film13">
-              <div v-if="isFilm13ReplayActive" class="replay-film13">
-                <FilmTileNavigation
-                  :film13-replay="true"
-                  :countdown-duration="10"
-                  @start-watching-next="deactivateReplay()"
-                />
-                <div class="replay-button-container">
-                  <button class="replay button-icon" @click="replayFilm13()">
-                    Replay Grid
-                    <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
-                  </button>
-                </div>
-              </div>
               <div ref="gridFilm13" class="grid-film13">
                 <div class="background background-iframe film13-background">
                   <div class="iframe-wrapper">
@@ -202,6 +192,19 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div v-if="isFilm13ReplayActive" class="replay-film13">
+              <FilmTileNavigation
+                :film13-replay="true"
+                :countdown-duration="15"
+                @start-watching-next="deactivateReplay()"
+              />
+              <div class="replay-button-container">
+                <button class="replay button-icon" @click="replayFilm13()">
+                  Replay Grid
+                  <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
+                </button>
               </div>
             </div>
           </div>
@@ -281,7 +284,7 @@
               v-if="activeModalState === 'tiles'"
               class="film-tile-navigation-container"
             >
-              <FilmTileNavigation :countdown-duration="10" />
+              <FilmTileNavigation :countdown-duration="1000" />
             </div>
           </div>
         </div>
@@ -840,6 +843,7 @@ export default {
         .setCurrentTime(0)
         .then((seconds) => {
           this.pauseFilm13();
+          this.showFilm13Remote();
         })
         .catch(function (error) {
           console.log(`${ref} player time jump to start failed: ${error}`);
@@ -847,6 +851,7 @@ export default {
     },
     playFilm13FromStart() {
       const ref = this.$refs.film13;
+
       if (!ref) {
         return;
       }

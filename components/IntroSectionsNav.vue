@@ -1,8 +1,8 @@
 <template>
   <nav class="intro-sections-nav">
     <ul>
-      <li>
-        <button v-if="showHome" @click="goToHome">Home</button>
+      <li v-if="showHome">
+        <button @click="goToHome">Home</button>
       </li>
       <li>
         <button
@@ -54,8 +54,10 @@ export default {
   methods: {
     activateIntroSection: function (payload) {
       this.$store.commit("grid/activateIntroSection", payload);
+      this.$emit("clicked-section-link");
     },
     goToHome: function () {
+      this.$emit("clicked-section-link");
       this.$emit("go-to-home");
     },
   },
