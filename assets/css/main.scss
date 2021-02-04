@@ -548,7 +548,7 @@ button {
   font-family: 'Work Sans', sans-serif;
 }
 
-
+.logo,
 .site-logo,
 .site-tagline,
 .nunito {
@@ -799,7 +799,7 @@ button:disabled,
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: $spacer 0;
+    padding: $spacer*3 0 $spacer 0;
   }
 }
 
@@ -1073,10 +1073,14 @@ ul.credits-list {
   }
 }
 @media (min-width: $bp-sm) {
+  .credit-item-image figure,
   .credit-item-image .placeholder {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     margin: 0 auto;
+    img {
+      max-width: 100%;
+    }
   }
 }
 @media (max-width: $bp-sm) {
@@ -1310,9 +1314,9 @@ ul.subtitles {
   margin-top: 15vh;
   height: 80%;
   height: 80vh;
-  @media (max-width: 800px) {
-    width: 90%;
-    width: 90vw;
+  @media (max-width: $bp-sm) {
+    width: 85%;
+    width: 85vw;
   }
 }
 
@@ -1347,6 +1351,10 @@ ul.subtitles {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 5% 1fr;
   grid-template-rows: 5vh 1fr;
+  height: 100%;
+  @media (max-width: $bp-sm) {
+    grid-template-rows: 30px 1fr;
+  }
 
   background: rgba($dark, 0.9);
 
@@ -1766,6 +1774,7 @@ $modal-bp: 960px;
   z-index: 999;
   width: 100%;
   height: 100%;
+  margin-top: 100px;
   @media (min-width: $modal-bp-lg + 1) {
     margin-top: 10%;
     margin-top: 10vh;
@@ -1971,7 +1980,7 @@ $modal-bp: 960px;
     grid-template-columns: 100%;
     grid-template-columns: 100vw;
     grid-gap: $spacer*2;
-    grid-template-rows: 100px 1fr 100px;
+    grid-template-rows: min-content 1fr min-content;
     .film13-main-nav {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -2085,10 +2094,12 @@ $modal-bp: 960px;
   .film13-grid-wrapper 
   .film13-main-nav {
     text-align: left;
+    .mobile-menu-button,
     .logo {
       @include slideInStartKey;
     }
     .layer-stack-show & {
+      .mobile-menu-button,
       .logo {
         animation: .5s ease-in forwards slideRight;
       }
@@ -2110,7 +2121,7 @@ $modal-bp: 960px;
     }
     li {
       width: 100%;
-      padding: $spacer/2;
+      padding: $spacer/4 0;
       button {
         width: 100%;
       }
@@ -2175,7 +2186,24 @@ $modal-bp: 960px;
 
 @media (min-width: $grid-bp + 1) {
   .mobile-menu-button {
-    display: none;
+    // display: none;
+    width: 25px;
+    height: 25px;
+    opacity: 1;
+    transition: .1s ease opacity;
+    .icon, .icon > * {
+      width: 25px;
+      height: 25px;
+    }
+    .icon * {
+      fill: rgba($light, 0.5) !important;
+    }
+  }
+
+  .film13-main-nav:hover {
+    .mobile-menu-button .icon * {
+      fill: $gold !important;
+    }
   }
 }
 @media (max-width: $grid-bp) {
@@ -2224,6 +2252,7 @@ $modal-bp: 960px;
   // }
   .mobile-menu-open.dropdown {
     left: 0;
+    top: 50px;
     background: rgba($dark, 1);
   }
 }
@@ -2284,7 +2313,7 @@ $modal-bp: 960px;
     }
   }
   .modal-grid-wrapper {
-    margin-top: 20%;
+    margin-top: 15%;
     grid-row-gap: $spacer*2;
   }
   .modal-grid-wrapper .modal-player-wrapper {
@@ -2329,11 +2358,11 @@ $modal-bp: 960px;
     width: 375px !important;
     height: 281px !important;
   }
-  .modal-player-wrapper,
-  .modal-player-wrapper div {
-    width: 500px !important;
-    min-height: 280px !important;
-  }
+  // .modal-player-wrapper,
+  // .modal-player-wrapper div {
+  //   width: 500px !important;
+  //   min-height: 280px !important;
+  // }
   .hover-wrapper {
     padding: 1.5px 4px 1px 5px;
     grid-gap: 1px;
@@ -2345,19 +2374,19 @@ $modal-bp: 960px;
   }
 
   .intro-frame:not(.section-hide) {
-    margin-top: 20%;
-    margin-top: 20vh;
+    margin-top: 7%;
+    margin-top: 7vh;
     height: 70%;
     height: 70vh;
     padding: 0;
-    .tab-item-content {
-      height: 70vh;
-      padding: $spacer;
-    }
+    // .tab-item-content {
+    //   height: 70vh;
+    //   padding: $spacer;
+    // }
   }
   .modal-grid-wrapper {
     grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: 80%;
+    grid-template-rows: 85%;
     .pagination-button-prev {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -2405,3 +2434,23 @@ $modal-bp: 960px;
   }
 }
 
+@media (max-height: 380px) and (orientation: landscape) {
+  // .modal-grid-wrapper {
+  //   margin-top: 60px;
+  // }
+
+  //   .modal-player-wrapper,
+  // .modal-player-wrapper div {
+  //   width: 500px !important;
+  //   min-height: 280px !important;
+  // }
+  // .modal-player-wrapper, .modal-player-wrapper div {
+  //   min-height: unset !important;
+  // }
+  // .modal-player-wrapper > div {
+  //   height: 75%;
+  //   height: 75vh;
+  //   max-height: 75%;
+  //   max-height: 75vh;
+  // }
+}

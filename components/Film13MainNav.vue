@@ -36,18 +36,24 @@ export default {
   methods: {
     changeActiveFrame(frame) {
       this.$store.commit("grid/changeActiveFrame", frame);
+      if (!this.isMobileMenuCollapsed) {
+        this.isMobileMenuCollapsed = true;
+      }
     },
     clickedSectionLink() {
       this.isMobileMenuCollapsed = true;
     },
     toggleMenuCollapse() {
-      this.isMobileMenuCollapsed = !this.isMobileMenuCollapsed;
-      console.log("menu collapse is ", this.isMobileMenuCollapsed);
-      if (this.isMobileMenuCollapsed) {
-        this.$emit("mobile-menu-open"); // play film13
-      }
-      if (!this.isMobileMenuCollapsed) {
-        this.$emit("mobile-menu-close"); // pausefilm13
+      const gridBp = 1060;
+      if (window.innerWidth < gridBp) {
+        this.isMobileMenuCollapsed = !this.isMobileMenuCollapsed;
+        console.log("menu collapse is ", this.isMobileMenuCollapsed);
+        if (this.isMobileMenuCollapsed) {
+          this.$emit("mobile-menu-open"); // play film13
+        }
+        if (!this.isMobileMenuCollapsed) {
+          this.$emit("mobile-menu-close"); // pausefilm13
+        }
       }
     },
   },
