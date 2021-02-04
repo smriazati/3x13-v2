@@ -201,7 +201,10 @@
                 @start-watching-next="deactivateReplay()"
               />
               <div class="replay-button-container">
-                <button class="replay button-icon" @click="replayFilm13()">
+                <button
+                  class="replay button-icon button-small"
+                  @click="replayFilm13()"
+                >
                   Replay Grid
                   <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
                 </button>
@@ -284,7 +287,7 @@
               v-if="activeModalState === 'tiles'"
               class="film-tile-navigation-container"
             >
-              <FilmTileNavigation :countdown-duration="1000" />
+              <FilmTileNavigation :countdown-duration="10" />
             </div>
           </div>
         </div>
@@ -905,7 +908,7 @@ export default {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-        jumpedTime = 197;
+        // jumpedTime = 197;
         // console.log(jumpedTime);
         ref.player
           .setCurrentTime(jumpedTime)

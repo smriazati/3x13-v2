@@ -83,7 +83,7 @@ export default {
     jumpFilm13Forward: function () {
       this.$emit("jump-film13-forward");
     },
-    ToggleFullscreen: function () {
+    toggleFullscreen: function () {
       this.$emit("toggle-fullscreen");
     },
   },
