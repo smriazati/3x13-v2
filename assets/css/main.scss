@@ -1929,6 +1929,9 @@ $modal-bp: 960px;
   .arrow {
     transform: translateX(0);
     transition: $transition;
+    height: 30px;
+    width: 30px;
+
   }
   &.pagination-button-prev:hover {
     .arrow {
