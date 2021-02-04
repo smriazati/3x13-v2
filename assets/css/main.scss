@@ -1443,6 +1443,8 @@ ul.subtitles {
   align-items: center;
   text-align: center;
   min-height: 100%;
+  position: relative;
+  z-index: 999;
   // min-height: 100vh;
 }
 
