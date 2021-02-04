@@ -287,7 +287,7 @@
               v-if="activeModalState === 'tiles'"
               class="film-tile-navigation-container"
             >
-              <FilmTileNavigation :countdown-duration="1000" />
+              <FilmTileNavigation :countdown-duration="10" />
             </div>
           </div>
         </div>

@@ -1,14 +1,5 @@
 export const state = () => ({
     isGridPlaying: false,
-    // isAboutOpen: false,
-    // neverBeenPlayed: true,
-    // isModalOpen: false,
-    // isModalPlaying: false,
-    // isModalEnded: false,
-    // isFilm13Ended: false,
-    // isFilm13Restarted: false,
-    // activeModal: null,
-    // isModalTransitioning: false,
     subtitleLanguage: '',
     activeIntroSection: '',
     introSections: [
