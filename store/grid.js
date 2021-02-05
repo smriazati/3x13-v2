@@ -6,9 +6,9 @@ export const state = () => ({
         'About', 'Credits', 'Tutorial'
     ],
     previouslyActiveModal: null,
-    prevModal: null,
+    prevModal: 0,
     activeModal: null,
-    nextModal: null,
+    nextModal: 11,
     previousFrame: '',
     activeFrame: 'Intro',
     frames: ["Intro", "Film13", "FilmModal", "Tutorial"],
@@ -51,6 +51,8 @@ export const mutations = {
     },
     deactivateModal: (state) => {
         state.activeModal = null;
+        state.prevModal = 0;
+        state.nextModal = 11;
         state.previouslyActiveModal = null;
     },
     changeActiveFrame: (state, payload) => {

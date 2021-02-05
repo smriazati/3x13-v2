@@ -89,3 +89,86 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+$site-width: 1920px;
+$transition: 0.3s ease-out all;
+$spacer: 10px;
+
+$gold: rgb(202, 166, 17);
+$dark: rgb(0, 0, 0);
+$light: rgb(232, 232, 232);
+$gray: rgb(44, 44, 44);
+$white: $light;
+
+$bp-lg: 1440px;
+$bp-type: 1100px;
+$bp-sm: 1060px;
+
+$remoteIconWidth: 22px;
+$remoteIconPadding: 11px;
+
+@mixin unsetBtn() {
+  background: transparent;
+  font-size: 1em;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0;
+  color: $light;
+  &:not(:disabled):hover,
+  &:hover {
+    cursor: pointer;
+    background: transparent;
+  }
+}
+
+@mixin unsetUl {
+  list-style: none;
+  padding-left: 0;
+}
+
+.film13-remote {
+  padding: $spacer/2 $spacer * 2;
+  @media (max-width: $bp-sm) {
+    left: 0;
+    top: 80px;
+    width: 100%;
+  }
+
+  button {
+    @include unsetBtn;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    // width: $remoteIconWidth*3 + $remoteIconPadding*6.1;
+    > * {
+      flex: 0 0 $remoteIconWidth + $remoteIconPadding;
+      padding: $remoteIconPadding/2;
+      // border: 1px solid $white;
+      svg {
+        width: $remoteIconWidth;
+        height: $spacer * 3;
+      }
+      &:hover {
+        cursor: pointer;
+      }
+
+      .icon {
+        * {
+          fill: rgba($light, 0.6) !important;
+        }
+        &:hover * {
+          fill: rgba($light, 1) !important;
+        }
+        &.active * {
+          fill: $gold !important;
+        }
+      }
+    }
+    list-style: none;
+  }
+}
+</style>

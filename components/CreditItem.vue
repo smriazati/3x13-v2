@@ -34,7 +34,7 @@
     >
       <figure v-if="item.acf.credit_image" class="credit-item-image">
         <ImageLoader
-          :src="item.acf.credit_image.sizes.medium"
+          :src="item.acf.credit_image.sizes.thumbnail"
           :alt="item.acf.credit_image.alt"
         />
       </figure>
@@ -65,7 +65,7 @@
     >
       <figure v-if="item.acf.artist_image" class="credit-item-image">
         <ImageLoader
-          :src="item.acf.artist_image.sizes.medium"
+          :src="item.acf.artist_image.sizes.thumbnail"
           :alt="item.acf.artist_image.alt"
         />
       </figure>

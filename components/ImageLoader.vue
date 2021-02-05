@@ -33,3 +33,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.image-loader {
+  animation: 0.5s ease fadeIn;
+}
+</style>

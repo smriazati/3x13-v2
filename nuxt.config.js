@@ -11,18 +11,6 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '12 Journeys. 8 Countries. One dance film experience.' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossorigin: true
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;1,400&display=swap'
-      }
-    ]
   },
   /*
   ** Customize the progress-bar color
@@ -32,9 +20,6 @@ export default {
   ** Global CSS
   */
   css: [
-    // CSS file in the project
-    // '~/assets/css/main.css',
-    // SCSS file in the project
     '~/assets/css/main.scss'
   ],
   /*
@@ -80,9 +65,6 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    vendor: [
-      'vue-vimeo-player'
-    ],
     extend(config, ctx) {
     }
   }

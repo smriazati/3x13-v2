@@ -133,6 +133,21 @@
               />
             </div>
             <div class="container-film13">
+              <div v-if="isFilm13ReplayActive" class="replay-film13">
+                <FilmTileNavigation
+                  :film13-replay="true"
+                  :countdown-duration="10"
+                  @start-watching-next="deactivateReplay()"
+                />
+                <div class="replay-button-container">
+                  <button
+                    class="replay button-icon button-small"
+                    @click="replayFilm13()"
+                  >
+                    Replay Grid
+                  </button>
+                </div>
+              </div>
               <div ref="gridFilm13" class="grid-film13">
                 <div class="background background-iframe film13-background">
                   <div class="iframe-wrapper">
@@ -192,22 +207,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div v-if="isFilm13ReplayActive" class="replay-film13">
-              <FilmTileNavigation
-                :film13-replay="true"
-                :countdown-duration="15"
-                @start-watching-next="deactivateReplay()"
-              />
-              <div class="replay-button-container">
-                <button
-                  class="replay button-icon button-small"
-                  @click="replayFilm13()"
-                >
-                  Replay Grid
-                  <!-- <span class="icon active"><SvgThing name="PlayPause" /></span> -->
-                </button>
               </div>
             </div>
           </div>
@@ -287,7 +286,7 @@
               v-if="activeModalState === 'tiles'"
               class="film-tile-navigation-container"
             >
-              <FilmTileNavigation :countdown-duration="10" />
+              <FilmTileNavigation :countdown-duration="5" />
             </div>
           </div>
         </div>
@@ -308,24 +307,18 @@ export default {
   layout: "default",
   async asyncData({ store, $axios }) {
     const [aboutRes, filmsRes, creditsRes] = await Promise.all([
-      $axios
-        .get("https://www.ysdt.org/wp-json/wp/v2/3x13_general/?per_page=1")
-        .then((res) => {
-          store.commit("content/setAboutData", res.data);
-          return { aboutApi: res.data[0] };
-        }),
-      $axios
-        .get("https://www.ysdt.org/wp-json/wp/v2/3x13films/?per_page=12")
-        .then((res) => {
-          store.commit("content/setFilmData", res.data);
-          return { filmsApi: res.data };
-        }),
-      $axios
-        .get("https://www.ysdt.org/wp-json/wp/v2/3x13credits/?per_page=14")
-        .then((res) => {
-          store.commit("content/setCreditsData", res.data);
-          return { creditsApi: res.data };
-        }),
+      $axios.get("3x13_general/?per_page=1").then((res) => {
+        store.commit("content/setAboutData", res.data);
+        return { aboutApi: res.data[0] };
+      }),
+      $axios.get("3x13films/?per_page=12").then((res) => {
+        store.commit("content/setFilmData", res.data);
+        return { filmsApi: res.data };
+      }),
+      $axios.get("3x13credits/?per_page=14").then((res) => {
+        store.commit("content/setCreditsData", res.data);
+        return { creditsApi: res.data };
+      }),
     ]);
   },
   data() {
@@ -346,7 +339,6 @@ export default {
 
   computed: {
     ...mapState({
-      // activeModal: (state) => state.grid.activeModal,
       prevModal: (state) => state.grid.prevModal,
       nextModal: (state) => state.grid.nextModal,
       previouslyActiveModal: (state) => state.grid.previouslyActiveModal,
@@ -372,23 +364,17 @@ export default {
       return false;
     },
     activeModal: {
-      // return this.$store.state.grid.activeIntroSection;
-      // getter
       get: function () {
         return this.$store.state.grid.activeModal;
       },
-      // setter
       set: function (payload) {
         this.$store.commit("grid/activateModal", payload);
       },
     },
     activeIntroSection: {
-      // return this.$store.state.grid.activeIntroSection;
-      // getter
       get: function () {
         return this.$store.state.grid.activeIntroSection;
       },
-      // setter
       set: function (payload) {
         this.$store.commit("grid/activateIntroSection", payload);
       },
@@ -539,8 +525,7 @@ export default {
     },
     onFilm13Ended() {
       // console.log("ended now");
-      // this.hideFilm13Grid();
-      this.isFilm13ReplayActive = true;
+      this.activateReplay();
     },
     replayFilm13() {
       console.log("replaying film 13");
@@ -549,6 +534,10 @@ export default {
       this.hoverStopperExit();
       this.playFilm13FromStart();
       this.unmuteFilm13();
+    },
+    activateReplay() {
+      this.$store.commit("grid/createPrevNextModalsForReplay");
+      this.isFilm13ReplayActive = true;
     },
     deactivateReplay() {
       this.isFilm13ReplayActive = false;
@@ -624,20 +613,6 @@ export default {
       ref.update(id);
       this.playFilmModal();
     },
-    modalPaginate(direction) {
-      this.pauseFilmModal();
-      this.isFilmModalEnded = false;
-      this.changeActiveFrame(this.frames[2]);
-      this.previousActiveModal = this.activeModal;
-      if (direction === "next") {
-        this.activeModal = this.paginationNextModal;
-      }
-      if (direction === "prev") {
-        this.activeModal = this.paginationPrevModal;
-      }
-      this.updateModalPlayer(this.filmData[this.activeModal].acf.vimeo_id);
-      this.playFilmModal();
-    },
     goToPrevModal() {
       this.$store.commit("grid/activateModal", this.prevModal);
     },
@@ -646,12 +621,9 @@ export default {
     },
     activateIntroSection(payload) {
       this.$store.commit("grid/activateIntroSection", payload);
-      // console.log(section);
-      // this.activeIntroSection = section;
       this.pauseFilm13();
     },
     deactivateIntroSection() {
-      // this.activeIntroSection = null;
       this.$store.commit("grid/activateIntroSection");
       if (this.activeFrame === "Film13") {
         this.playFilm13();
@@ -659,7 +631,6 @@ export default {
     },
     openFilmModal(payload) {
       this.$store.commit("grid/activateModal", payload);
-      // this.activeModal = id;
       if (
         this.activeModalState === "tiles" ||
         this.activeModalState === "switching"
@@ -675,18 +646,16 @@ export default {
           this.hoverStopperEnter();
         }
       }
-      // hide remote
       if (event.seconds > 195) {
         this.hideFilm13Remote();
       }
-
-      // pause film on frame
       if (event.seconds > 200) {
-        this.pauseFilm13();
-        this.isFilm13ReplayActive = true;
+        this.pauseFilm13AtEnd();
       }
-
-      // console.log(event.payload[0].seconds);
+    },
+    pauseFilm13AtEnd: function () {
+      this.pauseFilm13();
+      this.activateReplay();
     },
     hideFilm13Remote() {
       this.isFilm13RemoteHidden = true;
@@ -695,17 +664,12 @@ export default {
       this.isFilm13RemoteHidden = false;
     },
     changeActiveFrame(frame) {
-      // if (frame !== this.activeFrame) {
-      //   this.previousFrame = this.activeFrame;
-      // }
-      // this.activeFrame = frame;
       this.$store.commit("grid/changeActiveFrame", frame);
     },
     activateIntroFrame() {},
     activateAboutFrame() {},
     activateCreditsFrame() {},
     activateFilm13Frame() {
-      // this.unmuteFilm13();
       window.scroll({
         top: 0,
         left: 0,
@@ -725,7 +689,6 @@ export default {
     deactivateAboutFrame() {},
     deactivateCreditsFrame() {},
     deactivateFilm13Frame() {
-      // this.muteFilm13();
       this.isFilm13FrameHidden = true;
       this.pauseFilm13();
     },
@@ -771,7 +734,6 @@ export default {
         this.unmuteFilm13Sfx();
       }
       this.$store.commit("grid/toggleFilm13Playback", true);
-      // this.isFilm13Playing = true;
     },
     pauseFilm13() {
       const ref = this.$refs.film13;
@@ -782,8 +744,6 @@ export default {
       ref.pause();
       this.muteFilm13Sfx();
       this.$store.commit("grid/toggleFilm13Playback", false);
-
-      // this.isFilm13Playing = false;
     },
     toggleFilm13Playback() {
       if (this.isFilm13Playing) {
@@ -816,7 +776,6 @@ export default {
         return;
       }
       ref.unmute();
-      // this.isFilm13Muted = false;
       this.$store.commit("grid/toggleFilm13Audio", false);
     },
     muteFilm13Sfx() {
@@ -873,7 +832,6 @@ export default {
       if (!ref) {
         return;
       }
-      // get currentTime and subtract interval
       ref.player.getCurrentTime().then((seconds) => {
         const currentTime = seconds;
         const offset = 15;
@@ -883,9 +841,6 @@ export default {
         } else {
           jumpedTime = 0;
         }
-
-        // console.log(jumpedTime);
-
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {
@@ -903,13 +858,11 @@ export default {
       if (!ref) {
         return;
       }
-      // get currentTime and subtract interval
       ref.player.getCurrentTime().then((seconds) => {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-        // jumpedTime = 197;
-        // console.log(jumpedTime);
+        jumpedTime = 197;
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {

@@ -112,8 +112,10 @@ export default {
   created() {
     if (this.film13Replay) {
       // set modals for replay options, 0 & 11
-      console.log("setting modal vals");
-      this.$store.commit("grid/createPrevNextModalsForReplay");
+      // console.log("setting modal vals");
+      if (this.prevModal || this.activeModal) {
+        this.$store.commit("grid/createPrevNextModalsForReplay");
+      }
     }
   },
   mounted() {
@@ -170,3 +172,192 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+$site-width: 1920px;
+$transition: 0.3s ease-out all;
+$spacer: 10px;
+
+$bp-lg: 1440px;
+$bp-type: 1100px;
+$bp-sm: 1060px;
+
+$gold: rgb(202, 166, 17);
+$dark: rgb(0, 0, 0);
+$light: rgb(232, 232, 232);
+$gray: rgb(44, 44, 44);
+$white: $light;
+$tagline-container: 90%;
+
+$film13-grid-bp: 1060px;
+$film13-grid-bp-lg: 1600px;
+
+$grid-bp: $film13-grid-bp;
+$grid-bp-lg: $film13-grid-bp-lg;
+
+@mixin unsetBtn() {
+  background: transparent;
+  font-size: 1em;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0;
+  color: $light;
+  &:not(:disabled):hover,
+  &:hover {
+    cursor: pointer;
+    background: transparent;
+  }
+}
+
+// FILM TILE NAVIGATION
+.film-tile-navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100%;
+  position: relative;
+  z-index: 999;
+}
+
+.film-tile-navigation {
+  figure {
+    width: 100%;
+    // @media (min-width: $bp-sm) {
+    //   height: 24vw;
+    // }
+
+    @media (max-width: $bp-sm) and (orientation: portrait) {
+      flex: 0 0 50%;
+      height: unset;
+    }
+
+    @media (max-width: $bp-sm) and (orientation: landscape) {
+      height: 150px;
+      padding-top: 20px;
+      img {
+        object-fit: contain !important;
+      }
+    }
+
+    // background: $dark;
+    .placeholder {
+      width: 100%;
+      height: 24vw;
+      @media (max-width: $bp-sm) {
+        height: unset;
+      }
+    }
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .text {
+    margin-top: $spacer;
+    h2 {
+      font-size: 1.1em;
+    }
+    h3 {
+      font-size: 1em;
+    }
+  }
+
+  // replay grid
+
+  .replay-film13 {
+    .film-tile-navigation {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      height: 100%;
+      justify-content: center;
+    }
+  }
+
+  .modal-navigation-container {
+    width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    @media (max-width: $bp-sm) and (orientation: portrait) {
+      padding-top: $spacer * 3;
+      flex-direction: column;
+    }
+    position: relative;
+    z-index: 999;
+    .modal-navigation-item {
+      flex: 0 0 50%;
+      @media (min-width: $bp-sm) {
+        padding: $spacer * 3;
+      }
+      display: flex;
+      flex-direction: column-reverse;
+      @media (max-width: $bp-sm) and (orientation: portrait) {
+        flex-direction: row-reverse;
+        padding: $spacer 0;
+        align-items: center;
+      }
+      justify-content: center;
+      background: transparent;
+      transition: $transition;
+      * {
+        transition: 0.3s ease color;
+      }
+      img {
+        opacity: 1;
+        transition: 0.3s ease opacity;
+      }
+      &:hover {
+        cursor: pointer;
+        * {
+          color: $gold;
+        }
+      }
+    }
+
+    .text {
+      margin-top: $spacer * 3;
+      @media (max-width: $bp-sm) and (orientation: portrait) {
+        margin-top: 0;
+        margin-left: $spacer;
+      }
+    }
+    h3 {
+      text-transform: none;
+    }
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .countdown button {
+    @include unsetBtn;
+    padding: $spacer * 3;
+    color: rgba($light, 0.8);
+    transition: $transition;
+    &:hover {
+      cursor: pointer;
+      color: $gold;
+    }
+  }
+
+  @media (max-height: 380px) and (orientation: landscape) {
+    .modal-navigation-container {
+      flex-direction: row;
+      .modal-navigation-item {
+        flex-direction: column-reverse;
+        .image {
+          flex: 125px;
+          img {
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+}
+</style>

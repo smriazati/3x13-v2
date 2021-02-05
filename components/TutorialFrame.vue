@@ -1,25 +1,26 @@
 <template>
   <section ref="tutorialFrame" class="tutorialFrame">
-    <div v-if="isDataLoaded" class="tab-item-content">
-      <h2 class="section-title">
+    <div v-if="isDataLoaded" class="tab-group-container">
+      <h2 class="tab-item-title tab-item-title-full-width">
         {{ aboutData.acf.tutorial_headline }}
       </h2>
-      <!-- <div class="body-text" v-html="aboutData.acf.tutorial_body_text"></div> -->
-      <ul class="tutorial-list">
-        <li
-          v-for="item in aboutData.acf.tutorial_list"
-          :key="item.id"
-          class="tutorial-list-item"
-        >
-          <span v-if="item.icon" class="tutorial-list-item-image">
-            <ImageLoader :src="item.icon.sizes.medium" :alt="item.icon.alt" />
-          </span>
-          <span v-else class="placeholder-icon"></span>
-          <span v-if="item.text" class="tutorial-list-item-text">{{
-            item.text
-          }}</span>
-        </li>
-      </ul>
+      <div class="tab-item-content">
+        <ul class="tutorial-list">
+          <li
+            v-for="item in aboutData.acf.tutorial_list"
+            :key="item.id"
+            class="tutorial-list-item"
+          >
+            <span v-if="item.icon" class="tutorial-list-item-image">
+              <ImageLoader :src="item.icon.sizes.medium" :alt="item.icon.alt" />
+            </span>
+            <span v-else class="placeholder-icon"></span>
+            <span v-if="item.text" class="tutorial-list-item-text">{{
+              item.text
+            }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
@@ -50,3 +51,79 @@ export default {
 </script>
 
 
+
+<style lang="scss">
+$site-width: 1920px;
+$transition: 0.3s ease-out all;
+$spacer: 10px;
+
+$gold: rgb(202, 166, 17);
+$dark: rgb(0, 0, 0);
+$light: rgb(232, 232, 232);
+$gray: rgb(44, 44, 44);
+$white: $light;
+
+$bp-lg: 1440px;
+$bp-type: 1100px;
+$bp-sm: 1060px;
+
+@mixin unsetUl() {
+  list-style: none;
+  padding-left: 0;
+}
+
+//
+.tutorialFrame {
+  max-width: 800px;
+  margin: 0 auto;
+  @media (max-width: 800px) {
+    max-width: 90%;
+  }
+  // border: 1px solid $gold;
+  padding: $spacer;
+  .body-text {
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+}
+
+// tutorial
+
+.tutorial-list {
+  @include unsetUl;
+  display: flex;
+  flex-wrap: wrap;
+  @media (min-width: $bp-sm) {
+    width: 80%;
+    margin: 0 auto;
+  }
+  > * {
+    flex: 50%;
+  }
+  .tutorial-list-item-image {
+    .image {
+      margin-bottom: 0 !important;
+    }
+    img {
+      margin-bottom: 0 !important;
+      max-width: 150px;
+      max-height: 150px;
+    }
+  }
+  .tutorial-list-item {
+    display: flex;
+    flex-direction: column;
+    padding: $spacer * 3;
+    text-align: center;
+  }
+  .placeholder-icon {
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+    background: $gray;
+  }
+  .tutorial-list-item-text {
+    margin-bottom: 0 !important;
+  }
+}
+</style>
