@@ -70,7 +70,7 @@
               <div class="hover-wrapper">
                 <div v-for="item in filmData" :key="item.id" class="hover-item">
                   <ImageLoader
-                    :src="item.acf.film_poster_image.sizes.medium"
+                    :src="item.acf.film_poster_image.sizes.large"
                     :alt="item.acf.film_poster_image.alt"
                   />
                 </div>
@@ -915,7 +915,7 @@ export default {
         {
           hid: "twitter:image",
           name: "twitter:image",
-          content: this.aboutData.acf.seo_site_image.sizes.medium,
+          content: this.aboutData.acf.seo_site_image.sizes.large,
         },
 
         // Open Graph
@@ -943,7 +943,7 @@ export default {
         {
           hid: "og:image",
           property: "og:image",
-          content: this.aboutData.acf.seo_site_image.sizes.medium,
+          content: this.aboutData.acf.seo_site_image.sizes.large,
         },
         {
           hid: "og:image:secure_url",
