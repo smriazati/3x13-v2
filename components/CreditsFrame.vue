@@ -194,6 +194,8 @@ ul.credits-list {
 .credit-component .role {
   text-transform: none;
   letter-spacing: 0;
+  max-width: 25ch;
+  margin: 0 auto;
 }
 
 // credits accordion
@@ -201,7 +203,7 @@ ul.credits-list {
 .credit-component {
   grid-column: span 1;
   .credit-item-header {
-    margin-top: $spacer * 3;
+    margin-top: $spacer * 6;
     text-align: center;
   }
 
@@ -240,8 +242,10 @@ ul.credits-list {
     grid-row-start: 1;
     grid-row-end: 2;
     place-self: center;
-    padding-right: $spacer * 3;
-    padding-top: $spacer;
+    @media (min-width: $bp-sm) {
+      padding-right: 22px;
+    }
+    padding-top: 30px;
   }
 }
 
@@ -270,8 +274,8 @@ ul.credits-list {
 @media (min-width: $bp-sm) {
   .credit-item-image figure,
   .credit-item-image .placeholder {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     margin: 0 auto;
     img {
       max-width: 100%;
@@ -312,5 +316,8 @@ ul.credits-list {
 }
 .credit-item-image {
   margin-bottom: $spacer;
+}
+.credit-item-header.credit-item-visible {
+  padding: 0 10px;
 }
 </style>

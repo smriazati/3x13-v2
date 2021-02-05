@@ -323,6 +323,7 @@ export default {
   },
   data() {
     return {
+      siteUrl: "https://3x13film.ysdt.org",
       gridOptions: {
         controls: false,
       },
@@ -862,7 +863,7 @@ export default {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-        jumpedTime = 197;
+        // jumpedTime = 197;
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {
@@ -875,6 +876,87 @@ export default {
           });
       });
     },
+  },
+  head() {
+    return {
+      htmlAttrs: {
+        lang: "en",
+      },
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          hid: "description",
+          name: "description",
+          content: this.aboutData.acf.seo_site_description,
+        },
+        // Twitter
+        {
+          hid: "twitter:card",
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        { hid: "twitter:site", name: "twitter:site", content: "@nuxt_js" },
+        {
+          hid: "twitter:url",
+          name: "twitter:url",
+          content: this.siteUrl,
+        },
+        {
+          hid: "twitter:title",
+          name: "twitter:title",
+          content: this.aboutData.acf.seo_site_title,
+        },
+        {
+          hid: "twitter:description",
+          name: "twitter:description",
+          content: this.aboutData.acf.seo_site_description,
+        },
+        {
+          hid: "twitter:image",
+          name: "twitter:image",
+          content: this.aboutData.acf.seo_site_image.sizes.medium,
+        },
+
+        // Open Graph
+        {
+          hid: "og:site_name",
+          property: "og:site_name",
+          content: this.aboutData.acf.seo_site_title,
+        },
+        { hid: "og:type", property: "og:type", content: "website" },
+        {
+          hid: "og:url",
+          property: "og:url",
+          content: this.siteUrl,
+        },
+        {
+          hid: "og:title",
+          property: "og:title",
+          content: this.aboutData.acf.seo_site_title,
+        },
+        {
+          hid: "og:description",
+          property: "og:description",
+          content: this.aboutData.acf.seo_site_description,
+        },
+        {
+          hid: "og:image",
+          property: "og:image",
+          content: this.aboutData.acf.seo_site_image.sizes.medium,
+        },
+        {
+          hid: "og:image:secure_url",
+          property: "og:image:secure_url",
+          content: this.siteUrl,
+        },
+        {
+          hid: "og:image:alt",
+          property: "og:image:alt",
+          content: this.aboutData.acf.seo_site_image.alt,
+        },
+      ],
+    };
   },
 };
 </script>

@@ -906,30 +906,6 @@ button:disabled,
 }
 
 
-.supporters-gallery {
-  ul {
-    @include unsetUl;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    > * {
-      flex: 0 0 22%;
-      @media (max-width: $bp-sm) {
-        flex: 0 0 50%;
-      }
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      img {
-        max-width: 100%;
-        @media (max-width: $bp-sm) {
-          max-width: 100px;
-          margin: 0 auto;
-        }
-      }
-    }
-  }
-}
 
 // intro sections typography
 

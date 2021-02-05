@@ -34,7 +34,7 @@
     >
       <figure v-if="item.acf.credit_image" class="credit-item-image">
         <ImageLoader
-          :src="item.acf.credit_image.sizes.thumbnail"
+          :src="item.acf.credit_image.sizes.medium"
           :alt="item.acf.credit_image.alt"
         />
       </figure>
@@ -52,10 +52,12 @@
       class="credit-item-hidden credit-item-bio collapse"
       :class="isCollapsed ? 'collapse-hide' : 'collapse-show'"
     >
-      <div
-        class="credit-item-bio collapse-area"
-        v-html="item.acf.credit_bio"
-      ></div>
+      <div class="credit-item-bio collapse-area">
+        <div v-html="item.acf.credit_bio"></div>
+        <span v-if="item.acf.credit_website">
+          <a :href="item.acf.credit_website" target="_blank">(icon)</a>
+        </span>
+      </div>
     </div>
 
     <div
@@ -65,7 +67,7 @@
     >
       <figure v-if="item.acf.artist_image" class="credit-item-image">
         <ImageLoader
-          :src="item.acf.artist_image.sizes.thumbnail"
+          :src="item.acf.artist_image.sizes.medium"
           :alt="item.acf.artist_image.alt"
         />
       </figure>
@@ -83,10 +85,12 @@
       class="credit-item-hidden credit-item-bio collapse"
       :class="isCollapsed ? 'collapse-hide' : 'collapse-show'"
     >
-      <div
-        class="credit-item-bio collapse-area"
-        v-html="item.acf.artist_bio"
-      ></div>
+      <div class="credit-item-bio collapse-area">
+        <div v-html="item.acf.artist_bio"></div>
+        <span v-if="item.acf.artist_link">
+          <a :href="item.acf.artist_link" target="_blank">(icon)</a>
+        </span>
+      </div>
     </div>
   </li>
 </template>
@@ -114,3 +118,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.credit-item-bio * {
+  display: inline;
+}
+</style>

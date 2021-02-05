@@ -1,8 +1,10 @@
 <template>
   <nav class="intro-sections-nav">
-    <ul>
+    <ul v-if="isDataLoaded">
       <li v-if="showHome">
-        <button @click="goToHome">Home</button>
+        <button @click="goToHome">
+          {{ aboutData.acf.about_headline }}
+        </button>
       </li>
       <li>
         <button
@@ -31,7 +33,7 @@
           "
           @click="activateIntroSection('Tutorial')"
         >
-          How it works
+          {{ aboutData.acf.tutorial_headline }}
         </button>
       </li>
     </ul>
@@ -39,7 +41,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   props: {
@@ -49,6 +51,16 @@ export default {
     ...mapState({
       activeFrame: (state) => state.grid.activeFrame,
       activeIntroSection: (state) => state.grid.activeIntroSection,
+    }),
+    isDataLoaded() {
+      if (!this.$store.state.content.isAboutDataLoaded) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    ...mapGetters({
+      aboutData: "content/aboutData",
     }),
   },
   methods: {
