@@ -159,6 +159,12 @@ $blackBg: rgba($dark, 0.85);
     > * {
       flex: 0 0 22%;
       padding: 0 $spacer;
+      &:first-child {
+        padding-left: 0;
+      }
+      &:nth-child(4) {
+        padding-right: 0;
+      }
       @media (max-width: $bp-sm) {
         flex: 0 0 50%;
       }
