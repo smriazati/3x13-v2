@@ -135,10 +135,11 @@ $tagline-container: 60ch;
   justify-content: flex-start;
   button {
     @include unsetBtn();
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: $spacer * 3;
-    color: $light;
+    color: rgba($light, 0.8);
     transition: $transition;
     &:hover {
       cursor: pointer;

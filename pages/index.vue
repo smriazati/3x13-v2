@@ -463,7 +463,7 @@ export default {
       ) {
         console.log(window.innerWidth);
         if (window.innerWidth > 1060) {
-          const delay = 11;
+          const delay = 300;
           setTimeout(() => this.setCloseBtnPosition(), delay);
         }
       }
@@ -892,7 +892,7 @@ export default {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-        jumpedTime = 197;
+        // jumpedTime = 197;
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {

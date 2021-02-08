@@ -742,18 +742,27 @@ button:disabled,
       margin: 45px 0 $spacer*3 0;
     }
     .subtitle-controls .section-title {
-        font-size: 1em;
+        font-size: 16px;
     }
   }
 }
 
 // home page grid
-
+.container-intro {
+  width: 100%;
+  width: 100vw;
+}
 .container-intro header {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 3fr 1fr;
-  height: 100%;
+  grid-template-rows: 3fr 150px;
+  // height: 100%;
+  overflow-y: scroll;
+}
+
+.container-intro header .text-wrapper {
+  width: 100%;
+  width: 100vw;
 }
 
 // film 13
@@ -1285,7 +1294,7 @@ ul.subtitles {
   button {
     @include unsetBtn();
     opacity: 0;
-    animation:  .3s cubic-bezier(.93,.37,.56,.65) forwards fadeIn;
+    animation:  .3s cubic-bezier(.93,.37,.56,.65) .3s forwards fadeIn;
   }
   &:hover {
     cursor: pointer;
@@ -1296,7 +1305,7 @@ ul.subtitles {
     width: $spacer*3;
     height: $spacer*3;
     position: absolute;
-    right: $spacer;
+    right: $spacer*2;
     top: $spacer*3;
     .icon {
       height: 100%;
@@ -1339,6 +1348,8 @@ ul.subtitles {
 .container-intro {
   height: 100%;
   max-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 // modal grid layout 
@@ -1850,10 +1861,29 @@ $modal-bp: $grid-bp;
 
 
 // buttons hiding on mobile
+.credit-item-header .icon,
+.credit-item-header .icon > *,
 .pagination-button-container .icon,
 .pagination-button-container .icon > *,
 .mobile-menu-button .icon,
 .mobile-menu-button .icon > * {
   height: 30px;
   width: 30px;
+}
+
+// CBT fixes
+
+@media (max-width: $bp-sm) {
+  .container-intro .intro-sections-nav ul {
+    flex-wrap: wrap;
+  }
+  .container-intro .intro-sections-nav button {
+    padding: 10px !important;
+  }
+
+  .container-intro header nav {
+    width: 100% !important;
+    width: 100vw !important; // override .hover-wrapper widths
+  }
+
 }
