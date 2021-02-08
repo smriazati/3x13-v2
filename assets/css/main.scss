@@ -21,7 +21,7 @@ $film13-grid-bp-lg: 1600px;
 $grid-bp: $film13-grid-bp;
 $grid-bp-lg: $film13-grid-bp-lg;
 
-$tagline-container: 90%;
+$tagline-container: 60ch;
 
 @mixin unsetBtn() {
   background: transparent;
@@ -30,10 +30,12 @@ $tagline-container: 90%;
   text-transform: none;
   padding: 0;
   color: $light;
+  border: 0;
   &:not(:disabled):hover,
   &:hover {
     cursor: pointer;
     background: transparent;
+    border: 0;
   }
 }
 
@@ -217,9 +219,11 @@ button {
   border: none;
   padding: 10px;
   background: rgb(225, 225, 225);
+  border: 2px solid $gold;
   &:hover {
     cursor: pointer;
     background: rgb(215, 215, 215);;
+    border: 2px solid $gold;
   }
 }
 
@@ -229,6 +233,14 @@ img {
   overflow: hidden;
 }
 
+
+*:focus,
+*:active, 
+*:focus-visible,
+*:focus-within {
+  border: 0;
+  outline: none;
+}
 // setup layout
 
 html, body, #__nuxt, #__layout, #__layout > div {
@@ -237,6 +249,7 @@ html, body, #__nuxt, #__layout, #__layout > div {
   margin: 0;
   padding: 0;
   display: block;
+  background: $dark;
 }
 
 
@@ -538,8 +551,8 @@ body {
   color: $light;
 }
 
-::-moz-selection { background: $light; color: $dark }
-::selection { background: $light; color: $dark }
+::-moz-selection { background: $dark; color: $light }
+::selection { background: $dark; color: $light }
 
 
 
@@ -621,10 +634,6 @@ ol {
   }
 }
 
-
-.tutorial-list-item-text {
-  line-height: 1.5em;
-}
 .small {
   font-size: .8em;
 }
@@ -688,26 +697,14 @@ button:not(:disabled):hover,
   background: $gold;
 }
 
-@mixin unsetBtn() {
-  background: transparent;
-  font-size: 1em;
-  letter-spacing: 0;
-  text-transform: none;
-  padding: 0;
-  color: $light;
-  &:not(:disabled):hover,
-  &:hover {
-    cursor: pointer;
-    background: transparent;
-  } 
-}
-
 button:disabled,
 .btn.disabled {
   background: $gray;
   color: rgba($light, .5);
+  border: 2px solid $gray;
   &:hover {
     cursor: default;
+    border: 2px solid $gray;
   }
 }
 
@@ -738,11 +735,11 @@ button:disabled,
   header {
     padding-top: 35vh;
     @media (max-width: 768px) {
-      padding-top: 100px;
+      padding-top: 120px;
     }
 
     .play-film13-button {
-      margin: $spacer*3 0;
+      margin: 45px 0 $spacer*3 0;
     }
     .subtitle-controls .section-title {
         font-size: 1em;
@@ -757,13 +754,6 @@ button:disabled,
   grid-template-columns: 1fr;
   grid-template-rows: 3fr 1fr;
   height: 100%;
-
-  .intro-sections-nav {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: $spacer*3 0 $spacer 0;
-  }
 }
 
 // film 13
@@ -929,7 +919,6 @@ button:disabled,
   font-size: 28px;
   line-height: 40px;
   letter-spacing: 0;
-  max-width: 80ch;
   margin: 0 auto;
   @media (max-width: $bp-sm) {
     font-size: 18px;
@@ -940,8 +929,11 @@ button:disabled,
 }
 
 .site-tagline {
-  width: $tagline-container;
+  max-width: 90%;
   margin: 0 auto;
+  @media (min-width: 60ch) {
+    max-width: 60ch;
+  }
   margin-top: $spacer*3;
 }
 .section-title {
@@ -981,6 +973,9 @@ ul.subtitles {
   @media (max-width: 70ch) {
     width: 90%;
     margin: 0 auto;
+  }
+  br {
+    margin: 0 !important;
   }
 }
 
@@ -1070,14 +1065,22 @@ ul.subtitles {
 .layer-stack-intro-frames .close-button-container button {
     position: fixed;
     z-index: 999;
-    top: $spacer*3;
-    right: $spacer*3;
+    @media (max-width: $bp-sm) {
+      top: $spacer*3;
+      right: $spacer;
+    }
+    @media (min-width: 769px) and (max-width: $bp-sm) {
+      right: 100px;
+    }
     @include unsetBtn();
     .icon {
       border: 1px solid $gold;
       padding: $spacer/2;
       width: $spacer*3;
       height: $spacer*3;
+      @media (max-width: $bp-sm) {
+        border-bottom: 0;
+      }
     }
     .icon * {
       height: 100%;
@@ -1096,19 +1099,37 @@ ul.subtitles {
 .intro-frame:not(.section-hide) {
   // width: 70%;
   // width: 70vw;
-  max-width: 800px;
+  @media (min-width: $bp-sm + 1) {
+    max-width: 800px;
+  }
   margin: 0 auto;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10%;
-  margin-top: 10vh;
+  @media (min-width: $bp-sm + 1) {
+    margin-top: 10%;
+    margin-top: 10vh;
+  }
+
   height: 80%;
   height: 80vh;
   @media (max-width: $bp-sm) {
-    width: 85%;
-    width: 85vw;
-    margin-top: 7.5%;
-    margin-top: 7.5vh;
+    // width: calc(100% - 20px); // horizontal spacing 10px
+    // width: calc(100vw - 20px);
+    // height: calc(100% - 120px); 
+    // height: calc(100vh - 120px); // vertical spacing 60px
+    // padding: 60px 10px;
+    width: calc(100% - 20px);
+    width: calc(100vw - 20px);
+    height: calc(100% - 120px); 
+    height: calc(100vh - 120px); // vertical spacing 60px
+    margin: 60px auto;
+    overflow-y: scroll;
+    border: 1px solid $gold
+    // border-top: 1px solid $gold;
+  }
+  @media (min-width: 769px) and (max-width: $bp-sm) {
+    width: calc(100% - 200px);
+    width: calc(100vw - 200px);
   }
 }
 
@@ -1118,11 +1139,6 @@ ul.subtitles {
   opacity: 0;
 }
 
-
-
-
-
-
 .tab-group-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1130,27 +1146,37 @@ ul.subtitles {
   grid-template-rows: 5vh 1fr;
   // height: 100%;
   @media (max-width: $bp-sm) {
-    grid-template-rows: 30px 1fr;
+    grid-template-rows: 45px 1fr;
+    // height: 100%;
   }
-
   background: rgba($dark, 0.9);
-
-  max-width: 800px;
   margin: 0 auto;
-  @media (max-width: 800px) {
-    max-width: 90%;
+  @media (max-width: $bp-sm) {
+    max-width: 800px;
   }
-
+  @media (max-width: $bp-sm) {
+    max-width: 100%;
+  }
 
   > * {
-    border: 1px solid $gold;
-    padding: $spacer;
-    &.tab-item-title {
-      border-bottom: none;
-    }
-    &.tab-item-title:last-child {
-      border-left: none;
-    }
+      border: 1px solid $gold;
+      padding: $spacer;
+      &.tab-item-title {
+        border-bottom: none;
+      }
+      &.tab-item-title:last-child {
+        border-left: none;
+      }
+      @media (max-width: $bp-sm) {
+        &.tab-item-title {
+          border-top: 0;
+        }
+        &.tab-item-content {
+          border-bottom: 0;
+          border-left: 0;
+          border-right: 0;
+        }
+      }
     &.tab-item-title-full-width {
       grid-column: span 2;
     }
@@ -1172,7 +1198,7 @@ ul.subtitles {
     cursor: pointer;
   }
   @media (max-width: $bp-sm) {
-    font-size: 12px;
+    font-size: 18px;
   }
 }
 .active-tab-title {
@@ -1191,16 +1217,21 @@ ul.subtitles {
   grid-row-start: 2;
   grid-row-end: 3;
   overflow-y: scroll;
-  max-height: 75%;
-  max-height: 75vh;
+  @media (min-width: $bp-sm + 1) {
+    max-height: 75%;
+    max-height: 75vh;
+  }
+
 
   &:not(.tab-item-content-accordion) *:last-child {
     margin-bottom: $spacer*3;
   }
 
   .body-text {
-    max-width: 60ch;
-    margin: 0 auto;
+    @media (min-width: $bp-sm) {
+      max-width: 60ch;
+      margin: 0 auto;
+    }
   }
 }
 
@@ -1232,6 +1263,16 @@ ul.subtitles {
 }
 
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
 .close-button-container,
 .close-modal-container {
   width: 100%;
@@ -1243,6 +1284,8 @@ ul.subtitles {
   left: 0;
   button {
     @include unsetBtn();
+    opacity: 0;
+    animation:  .3s cubic-bezier(.93,.37,.56,.65) forwards fadeIn;
   }
   &:hover {
     cursor: pointer;
@@ -1254,7 +1297,7 @@ ul.subtitles {
     height: $spacer*3;
     position: absolute;
     right: $spacer;
-    top: $spacer;
+    top: $spacer*3;
     .icon {
       height: 100%;
     }
@@ -1299,6 +1342,9 @@ ul.subtitles {
 }
 
 // modal grid layout 
+.pagination-container-button button {
+  @include unsetBtn();
+}
 $modal-bp-lg: 1600px;
 $modal-bp: $grid-bp;
 .modal-grid-wrapper {
@@ -1426,7 +1472,7 @@ $modal-bp: $grid-bp;
 
 @media (max-width: $grid-bp) and (max-height: 500px) and (orientation: landscape) {
   .modal-grid-wrapper {
-    grid-template-columns: 15ch 1fr 15ch;
+    grid-template-columns: 5ch 1fr 5ch;
     grid-template-rows: 80%;
     .pagination-button-prev {
       grid-column-start: 1;
@@ -1593,7 +1639,7 @@ $modal-bp: $grid-bp;
 @media (max-width: $film13-grid-bp) and (orientation: landscape)  {
   .film13-grid-wrapper {
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: 10ch 1fr 10ch;
     width: 100%;
     width: 100vw;
     height: 100%;
@@ -1658,7 +1704,9 @@ $modal-bp: $grid-bp;
   }
   .hover-wrapper,
   .iframe-wrapper {
+    width: 78%;
     width: 78vw;
+    height: 59%;
     height: 59vw;
   }
   .hover-wrapper {
@@ -1710,13 +1758,13 @@ $modal-bp: $grid-bp;
     align-items: center;
   }
 
-  .intro-frame:not(.section-hide) {
-    margin-top: 7%;
-    margin-top: 7vh;
-    height: 70%;
-    height: 70vh;
-    padding: 0;
-  }
+  // .intro-frame:not(.section-hide) {
+  //   // margin-top: 7%;
+  //   // margin-top: 7vh;
+  //   // height: 70%;
+  //   // height: 70vh;
+  //   // padding: 0;
+  // }
   .modal-grid-wrapper {
     grid-template-columns: min-content 1fr min-content;
     grid-template-rows: 85%;
@@ -1757,22 +1805,24 @@ $modal-bp: $grid-bp;
 .replay-film13 {
   // other styles are in FILM TILE NAV component
   display: grid;
-  height: 100%;
+  // height: 100%;
   width: 100%;
-  grid-template-rows: 1fr min-content;
+  grid-template-rows: auto min-content;
   grid-template-columns: 1fr;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 999;
-  background: rgba($dark, 0.5);
+  background: rgba(0, 0, 0, 0.1);
+  padding-top: 15%;
+  padding-top: 20vh;
   .replay-button-container {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
     display: flex;
     justify-content: center;
     width: 100%;
-    padding-bottom: $spacer;
+    padding: $spacer*3 0;
     .icon {
       width: $spacer * 2;
       height: $spacer * 2;
@@ -1791,4 +1841,19 @@ $modal-bp: $grid-bp;
 
 .hide-replay-film-tiles {
   display: none;
+}
+
+.pagination-button-container button {
+  @include unsetBtn;
+}
+
+
+
+// buttons hiding on mobile
+.pagination-button-container .icon,
+.pagination-button-container .icon > *,
+.mobile-menu-button .icon,
+.mobile-menu-button .icon > * {
+  height: 30px;
+  width: 30px;
 }

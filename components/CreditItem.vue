@@ -32,6 +32,7 @@
       class="credit-item-header credit-item-visible"
       @click="toggleFilmmakerCollapse"
     >
+      <span class="icon back-button"><SvgThing name="Prev" /></span>
       <figure v-if="item.acf.credit_image" class="credit-item-image">
         <ImageLoader
           :src="item.acf.credit_image.sizes.medium"
@@ -65,6 +66,7 @@
       class="credit-item-header credit-item-visible"
       @click="toggleArtistCollapse"
     >
+      <span class="icon back-button"><SvgThing name="Prev" /></span>
       <figure v-if="item.acf.artist_image" class="credit-item-image">
         <ImageLoader
           :src="item.acf.artist_image.sizes.medium"

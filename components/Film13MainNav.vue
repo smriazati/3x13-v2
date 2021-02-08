@@ -1,26 +1,28 @@
 <template>
   <div class="film13-main-nav">
-    <button class="brand logo" @click="changeActiveFrame('Intro')">
-      3 x 13
-    </button>
-    <div class="mobile-menu-button" @click="toggleMenuCollapse">
-      <div v-if="isMobileMenuCollapsed" class="icon">
-        <SvgThing name="Hamburger" />
+    <div class="film13-main-nav-hover-wrapper">
+      <button class="brand logo" @click="changeActiveFrame('Intro')">
+        3 x 13
+      </button>
+      <div class="mobile-menu-button" @click="toggleMenuCollapse">
+        <div v-if="isMobileMenuCollapsed" class="icon">
+          <SvgThing name="Hamburger" />
+        </div>
+        <div v-else class="icon">
+          <SvgThing name="Close" />
+        </div>
       </div>
-      <div v-else class="icon">
-        <SvgThing name="Close" />
+      <div
+        :class="
+          isMobileMenuCollapsed ? 'mobile-menu-collapsed' : 'mobile-menu-open'
+        "
+        class="dropdown"
+      >
+        <IntroSectionsNav
+          @clicked-section-link="clickedSectionLink"
+          @go-to-home="changeActiveFrame('Intro')"
+        />
       </div>
-    </div>
-    <div
-      :class="
-        isMobileMenuCollapsed ? 'mobile-menu-collapsed' : 'mobile-menu-open'
-      "
-      class="dropdown"
-    >
-      <IntroSectionsNav
-        @clicked-section-link="clickedSectionLink"
-        @go-to-home="changeActiveFrame('Intro')"
-      />
     </div>
   </div>
 </template>
@@ -74,15 +76,12 @@ $dark: rgb(0, 0, 0);
 $light: rgb(232, 232, 232);
 $gray: rgb(44, 44, 44);
 $white: $light;
-$tagline-container: 90%;
 
 $film13-grid-bp: 1060px;
 $film13-grid-bp-lg: 1600px;
 
 $grid-bp: $film13-grid-bp;
 $grid-bp-lg: $film13-grid-bp-lg;
-
-$tagline-container: 90%;
 
 @mixin unsetBtn() {
   background: transparent;
@@ -91,10 +90,12 @@ $tagline-container: 90%;
   text-transform: none;
   padding: 0;
   color: $light;
+  border: 0;
   &:not(:disabled):hover,
   &:hover {
     cursor: pointer;
     background: transparent;
+    border: 0;
   }
 }
 
@@ -167,7 +168,7 @@ $tagline-container: 90%;
       transition: opacity 0.3s;
       @include slideInStartKey();
     }
-    &:hover {
+    .film13-main-nav-hover-wrapper:hover {
       .dropdown {
         opacity: 1;
         animation: 0.3s ease-in-out forwards slideRight;
@@ -262,11 +263,11 @@ $tagline-container: 90%;
     }
   }
 
-  .film13-main-nav:hover {
-    .mobile-menu-button .icon * {
-      fill: $gold !important;
-    }
-  }
+  // .film13-main-nav .film13-main-nav-hover-wrapper:hover {
+  //   .mobile-menu-button .icon * {
+  //     fill: $gold !important;
+  //   }
+  // }
 }
 
 // mobile landscape
@@ -293,6 +294,21 @@ $tagline-container: 90%;
   .mobile-menu-button .icon {
     width: 20px;
     height: 20px;
+  }
+}
+
+.mobile-menu-button {
+  @media (min-width: $bp-sm) {
+    height: 0;
+    .film13-main-nav-hover-wrapper:hover & {
+      .icon {
+        opacity: 0;
+      }
+    }
+  }
+  .icon {
+    opacity: 1;
+    transition: 0.1s ease-in opacity;
   }
 }
 </style>

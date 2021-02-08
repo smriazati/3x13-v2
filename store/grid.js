@@ -64,7 +64,7 @@ export const mutations = {
     toggleFullscreen: (state) => {
         state.isFullscreen = !state.isFullscreen;
     },
-    change: (state, payload) => {
+    changeFullscreen: (state, payload) => {
         state.isFullscreen = payload;
     },
     setSubtitle: (state, payload) => {

@@ -7,6 +7,7 @@
     >
       <div class="container-layer-stack">
         <div
+          ref="introFrames"
           class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
           :class="
             activeIntroSection != '' && activeIntroSection != undefined
@@ -101,7 +102,10 @@
                   <VidSubtitles />
                 </div>
               </div>
-              <IntroSectionsNav :active-intro-section="activeIntroSection" />
+              <IntroSectionsNav
+                :active-intro-section="activeIntroSection"
+                class="hover-wrapper"
+              />
             </header>
             <!-- /intro-sections -->
           </main>
@@ -136,7 +140,7 @@
               <div v-if="isFilm13ReplayActive" class="replay-film13">
                 <FilmTileNavigation
                   :film13-replay="true"
-                  :countdown-duration="10"
+                  :countdown-duration="15"
                   @start-watching-next="deactivateReplay()"
                 />
                 <div class="replay-button-container">
@@ -284,9 +288,12 @@
             </div>
             <div
               v-if="activeModalState === 'tiles'"
-              class="film-tile-navigation-container"
+              class="film-tile-navigation-container film13-grid-wrapper"
             >
-              <FilmTileNavigation :countdown-duration="5" />
+              <FilmTileNavigation
+                :countdown-duration="5"
+                class="container-film13"
+              />
             </div>
           </div>
         </div>
@@ -385,10 +392,12 @@ export default {
       if (this.subtitleLanguage === "") {
         options = {
           controls: true,
+          allowfullscreen: true,
         };
       } else {
         options = {
           controls: true,
+          allowfullscreen: true,
           texttrack: this.subtitleLanguage,
         };
       }
@@ -422,6 +431,9 @@ export default {
       if (this.previousFrame === "Credits") {
         this.deactivateCreditsFrame();
       }
+      if (this.previousFrame === "Film13" && this.isFilm13ReplayActive) {
+        this.deactivateReplay();
+      }
       if (this.previousFrame === "Film13" && this.activeFrame !== "FilmModal") {
         this.deactivateFilm13Frame();
       }
@@ -443,6 +455,16 @@ export default {
           this.pauseFilm13();
         } else {
           this.playFilm13();
+        }
+      }
+      if (
+        this.activeIntroSection !== "" &&
+        this.activeIntroSection !== undefined
+      ) {
+        console.log(window.innerWidth);
+        if (window.innerWidth > 1060) {
+          const delay = 11;
+          setTimeout(() => this.setCloseBtnPosition(), delay);
         }
       }
     },
@@ -469,6 +491,14 @@ export default {
     }
   },
   methods: {
+    setCloseBtnPosition() {
+      const section = this.$refs.introFrames.querySelector("section");
+      const closeBtn = this.$refs.introFrames.querySelector("button");
+      const sectionTop = section.offsetTop;
+      const sectionLeft = section.offsetWidth + section.offsetLeft - 1;
+      closeBtn.style.top = `${sectionTop}px`;
+      closeBtn.style.left = `${sectionLeft}px`;
+    },
     modalToModalNav() {
       this.$store.commit("grid/changeModalState", "switching");
     },
@@ -534,7 +564,6 @@ export default {
       this.showFilm13Grid();
       this.hoverStopperExit();
       this.playFilm13FromStart();
-      this.unmuteFilm13();
     },
     activateReplay() {
       this.$store.commit("grid/createPrevNextModalsForReplay");
@@ -650,7 +679,7 @@ export default {
       if (event.seconds > 195) {
         this.hideFilm13Remote();
       }
-      if (event.seconds > 200) {
+      if (event.seconds > 201) {
         this.pauseFilm13AtEnd();
       }
     },
@@ -731,9 +760,9 @@ export default {
         return;
       }
       ref.play();
-      if (!this.isFilm13Muted) {
-        this.unmuteFilm13Sfx();
-      }
+      // if (!this.isFilm13Muted) {
+      //   this.unmuteFilm13Sfx();
+      // }
       this.$store.commit("grid/toggleFilm13Playback", true);
     },
     pauseFilm13() {
@@ -743,7 +772,7 @@ export default {
       }
       console.log("pausing");
       ref.pause();
-      this.muteFilm13Sfx();
+      // this.muteFilm13Sfx();
       this.$store.commit("grid/toggleFilm13Playback", false);
     },
     toggleFilm13Playback() {
@@ -863,7 +892,7 @@ export default {
         const currentTime = seconds;
         const offset = 15;
         let jumpedTime = seconds + offset;
-        // jumpedTime = 197;
+        jumpedTime = 197;
         ref.player
           .setCurrentTime(jumpedTime)
           .then((seconds) => {

@@ -229,12 +229,37 @@ ul.credits-list {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 1fr;
   .credit-item-header {
-    display: flex;
-    flex-direction: column;
+    // display: flex;
+    // flex-direction: column;
     grid-column-start: 1;
     grid-column-end: 1;
     grid-row-start: 1;
     grid-row-end: 2;
+
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    grid-template-rows: repeat(2, min-content);
+    .icon {
+      width: 20px;
+      height: 20px;
+      grid-column-start: 1;
+      grid-column-end: 1;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      place-self: center;
+    }
+    .credit-item-image {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .credit-item-header-text {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 2;
+      grid-row-end: 3;
+    }
   }
   .credit-item-bio {
     grid-column-start: 2;
@@ -249,6 +274,11 @@ ul.credits-list {
   }
 }
 
+.accordion-collapsed {
+  .back-button {
+    display: none;
+  }
+}
 .accordions-hide-collapsed {
   .accordion-collapsed {
     display: none;

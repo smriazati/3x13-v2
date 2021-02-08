@@ -165,7 +165,7 @@ $blackBg: rgba($dark, 0.85);
       &:nth-child(4) {
         padding-right: 0;
       }
-      @media (max-width: $bp-sm) {
+      @media (max-width: 768px) {
         flex: 0 0 50%;
       }
       display: flex;
@@ -173,9 +173,10 @@ $blackBg: rgba($dark, 0.85);
       align-items: center;
       img {
         max-width: 100%;
-        @media (max-width: $bp-sm) {
+        @media (max-width: 768px) {
           max-width: 100px;
           margin: 0 auto;
+          margin-bottom: $spacer !important;
         }
       }
     }
@@ -183,7 +184,9 @@ $blackBg: rgba($dark, 0.85);
 }
 
 .body-text-narrow-container {
-  width: 70%;
+  @media (min-width: $bp-sm + 1) {
+    width: 70%;
+  }
   margin: 0 auto;
   text-align: center;
   margin-top: 30px;
@@ -195,16 +198,35 @@ $blackBg: rgba($dark, 0.85);
     margin-bottom: $spacer !important;
   }
   p {
-    font-size: 14px;
-    line-height: 22px;
+    @media (min-width: $bp-sm + 1) {
+      font-size: 14px;
+      line-height: 22px;
+    }
   }
 }
 
-.film-title {
+.container-about .tab-item-content .film-title.body-text {
   text-align: center;
+  margin-bottom: 60px;
   h3 {
     text-transform: none;
     font-size: 30px;
+    line-height: 30px;
+    margin-bottom: 0;
   }
+}
+
+.container-about .tab-item-content .body-text {
+  margin-bottom: 50px;
+  & p:last-child {
+    margin-bottom: 0;
+  }
+}
+.container-about
+  .tab-item-content:not(.tab-item-content-accordion)
+  .supporters-gallery
+  ul
+  > * {
+  margin-bottom: 0;
 }
 </style>

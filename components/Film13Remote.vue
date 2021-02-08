@@ -115,10 +115,12 @@ $remoteIconPadding: 11px;
   text-transform: none;
   padding: 0;
   color: $light;
+  border: 0;
   &:not(:disabled):hover,
   &:hover {
     cursor: pointer;
     background: transparent;
+    border: 0;
   }
 }
 

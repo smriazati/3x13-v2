@@ -98,7 +98,7 @@ $film13-grid-bp-lg: 1600px;
 $grid-bp: $film13-grid-bp;
 $grid-bp-lg: $film13-grid-bp-lg;
 
-$tagline-container: 90%;
+$tagline-container: 60ch;
 
 @mixin unsetBtn() {
   background: transparent;
@@ -107,10 +107,12 @@ $tagline-container: 90%;
   text-transform: none;
   padding: 0;
   color: $light;
+  border: 0;
   &:not(:disabled):hover,
   &:hover {
     cursor: pointer;
     background: transparent;
+    border: 0;
   }
 }
 
@@ -119,27 +121,38 @@ $tagline-container: 90%;
   padding-left: 0;
 }
 
+.container-intro header {
+  .intro-sections-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: $spacer * 3 0 $spacer 0;
+  }
+}
+
 .container-intro .intro-sections-nav {
+  margin: 0 auto;
+  justify-content: flex-start;
   button {
     @include unsetBtn();
     text-transform: uppercase;
+    letter-spacing: 1px;
     padding: $spacer * 3;
-    color: rgba($light, 0.8);
+    color: $light;
     transition: $transition;
     &:hover {
       cursor: pointer;
       color: $gold;
     }
-    color: rgba($light, 0.4);
     width: 100%;
     height: 100%;
   }
 
   ul {
     @include unsetUl();
-    display: flex;
-    width: $tagline-container;
-    margin: 0 auto;
+    display: flex !important;
+    // width: $tagline-container;
+    // margin: 0 auto;
     justify-content: space-between;
     text-align: center;
     > * {

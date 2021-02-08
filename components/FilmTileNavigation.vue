@@ -187,7 +187,6 @@ $dark: rgb(0, 0, 0);
 $light: rgb(232, 232, 232);
 $gray: rgb(44, 44, 44);
 $white: $light;
-$tagline-container: 90%;
 
 $film13-grid-bp: 1060px;
 $film13-grid-bp-lg: 1600px;
@@ -202,10 +201,12 @@ $grid-bp-lg: $film13-grid-bp-lg;
   text-transform: none;
   padding: 0;
   color: $light;
+  border: 0;
   &:not(:disabled):hover,
   &:hover {
     cursor: pointer;
     background: transparent;
+    border: 0;
   }
 }
 

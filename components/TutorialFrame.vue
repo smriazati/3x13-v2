@@ -74,17 +74,12 @@ $bp-sm: 1060px;
 
 //
 .tutorialFrame {
-  max-width: 800px;
   margin: 0 auto;
-  @media (max-width: 800px) {
-    max-width: 90%;
+  @media (min-width: $bp-sm + 1) {
+    max-width: 800px;
+    // padding: $spacer;
   }
   // border: 1px solid $gold;
-  padding: $spacer;
-  .body-text {
-    max-width: 60ch;
-    margin: 0 auto;
-  }
 }
 
 // tutorial
@@ -93,12 +88,13 @@ $bp-sm: 1060px;
   @include unsetUl;
   display: flex;
   flex-wrap: wrap;
-  @media (min-width: $bp-sm) {
+  padding-bottom: 60px;
+  @media (min-width: $bp-sm + 1) {
     width: 80%;
     margin: 0 auto;
   }
   > * {
-    flex: 50%;
+    flex: 0 0 48%;
   }
   .tutorial-list-item-image {
     .image {
@@ -106,24 +102,50 @@ $bp-sm: 1060px;
     }
     img {
       margin-bottom: 0 !important;
-      max-width: 150px;
-      max-height: 150px;
+      max-width: 100%;
+      @media (min-width: $bp-sm + 1) {
+        max-width: 150px;
+        max-height: 150px;
+      }
+      @media (min-width: 768px) and (max-width: $bp-sm) {
+        max-width: 200px;
+        max-height: 200px;
+      }
+      @media (max-width: 768px) {
+        max-height: 15vh;
+      }
     }
   }
   .tutorial-list-item {
     display: flex;
     flex-direction: column;
-    padding: $spacer * 3;
+    padding: $spacer;
+    @media (min-width: $bp-sm) {
+      padding: $spacer * 3;
+      padding-top: 0;
+    }
     text-align: center;
   }
   .placeholder-icon {
-    height: 150px;
-    width: 150px;
+    max-width: 100%;
+    @media (min-width: $bp-sm + 1) {
+      max-width: 150px;
+      max-height: 150px;
+    }
     margin: 0 auto;
     background: $gray;
   }
   .tutorial-list-item-text {
     margin-bottom: 0 !important;
+  }
+
+  .tutorial-list-item-text {
+    @media (min-width: $bp-sm + 1) {
+      line-height: 1.4em;
+      font-size: 1.2em;
+    }
+
+    text-transform: uppercase;
   }
 }
 </style>
