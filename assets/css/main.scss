@@ -1656,9 +1656,9 @@ ul.subtitles {
   right: $spacer*2;
   top: $spacer*3;
   z-index: 999;
-  @media (max-width: $bp-sm) {
-    right: $spacer;
-    top: $spacer*2;
+  @media (max-width: 768px) {
+    right: $spacer/2;
+    top: $spacer;
   }
   .icon {
     height: 100%;
