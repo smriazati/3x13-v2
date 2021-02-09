@@ -111,7 +111,7 @@ $remoteIconPadding: 11px;
 @mixin unsetBtn() {
   background: transparent;
   font-size: 1em;
-  letter-spacing: 0;
+  letter-spacing: 0.03em;
   text-transform: none;
   padding: 0;
   color: $light;

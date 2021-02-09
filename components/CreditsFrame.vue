@@ -216,7 +216,7 @@ ul.credits-list {
 }
 .credit-component .role {
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.03em;
   max-width: 25ch;
   margin: 0 auto;
 }

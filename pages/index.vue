@@ -516,15 +516,24 @@ export default {
       );
       let btnTop;
       let btnLeft;
+      console.log(section, container);
       if (window.innerWidth > 1060 && section) {
         btnTop = section.offsetTop;
         btnLeft = section.offsetWidth + section.offsetLeft - 1;
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
       } else if (section && container) {
+        // btnTop = container.offsetTop - 30;
         btnTop = section.offsetTop - 30;
-        btnLeft = container.offsetWidth + container.offsetLeft - 30;
+        let leftMargin = (window.innerWidth - container.offsetWidth) / 2;
+        btnLeft = container.offsetWidth + leftMargin - 30;
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
+      } else {
+        closeBtn.style.top = `30px`;
+        closeBtn.style.left = `30px`;
+        closeBtn.style.borderBottom = `1px solid rgb(202, 166, 17)`;
       }
-      closeBtn.style.top = `${btnTop}px`;
-      closeBtn.style.left = `${btnLeft}px`;
     },
     modalToModalNav() {
       this.$store.commit("grid/changeModalState", "switching");

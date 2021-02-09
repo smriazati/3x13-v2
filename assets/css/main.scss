@@ -26,7 +26,7 @@ $tagline-container: 60ch;
 @mixin unsetBtn() {
   background: transparent;
   font-size: 1em;
-  letter-spacing: 0;
+  letter-spacing: 0.03em;
   text-transform: none;
   padding: 0;
   color: $light;
@@ -1197,6 +1197,7 @@ button:disabled,
   h3 {
     font-size: 1em;
     text-transform: none;
+    letter-spacing: 0.03em;
     @media (max-width: $bp-sm) {
       font-size: .7em;
     }
@@ -1419,6 +1420,9 @@ ul.subtitles {
       @media (max-width: $bp-sm) {
         border-bottom: 0;
       }
+      @media (min-width: $bp-sm) {
+        border-left: 0;
+      }
     }
     .icon * {
       height: 100%;
@@ -1479,7 +1483,10 @@ ul.subtitles {
   background: rgba($dark, 0.9);
   margin: 0 auto;
   height: 80%;
-  height: 80vh;
+  @media (min-width: $bp-sm) {
+    height: 80vh;
+  }
+  
   @media (min-width: $bp-sm) {
     max-width: 800px;
   }
@@ -1534,7 +1541,7 @@ ul.subtitles {
     cursor: pointer;
   }
   @media (max-width: $bp-sm) {
-    font-size: 18px;
+    font-size: 14px;
   }
 }
 .active-tab-title {
@@ -1553,6 +1560,10 @@ ul.subtitles {
   grid-row-start: 2;
   grid-row-end: 3;
   height: 100%;
+  @media (max-width: 768px) {
+    height: 350px;
+    height: 60vh;
+  }
   overflow-y: scroll;
   // @media (min-width: $bp-sm) {
   //   max-height: 75%;
@@ -1855,6 +1866,7 @@ $modal-bp: $grid-bp;
   }
   h3 {
     text-transform: none;
+    letter-spacing: 0.03em;
   }
   .icon {
     height: $spacer*3;
