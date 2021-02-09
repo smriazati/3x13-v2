@@ -51,6 +51,24 @@ export default {
       id: process.env.GA_ID || ''
     }]
   ],
+  netlifyFiles: {
+    netlifyToml: {
+      build: {
+        environment: { FOO: process.env.FOO }
+      },
+      headers: [
+        {
+          for: '/*',
+          values: {
+            'X-Frame-Options': "DENY",
+            'X-XSS-Protection': '1; mode=block',
+            'cache-control': '',
+            'max-age': 0
+          }
+        }
+      ],
+    }
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
