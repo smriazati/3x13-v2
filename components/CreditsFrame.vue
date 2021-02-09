@@ -99,6 +99,8 @@ export default {
       areCollapsedFilmmakersHidden: false,
       savedScrollPlaceFilmmakers: 0,
       savedScrollPlaceArtists: 0,
+      scrollerFilms: null,
+      scrollerArtists: null,
     };
   },
   computed: {
@@ -118,34 +120,55 @@ export default {
 
   methods: {
     activateTab(tab) {
-      console.log(tab);
       this.isActiveTab = tab;
+      if (tab === "Artists") {
+        this.scrollToTopArtists();
+      } else {
+        this.scrollToTopFilms();
+      }
     },
     setLastPlace() {},
     scrollToLastPlace() {},
+    scrollToTopArtists: function () {
+      const top = this.$refs.artistsItemContent;
+      if (top) {
+        top.scrollTop = 0;
+      }
+    },
+    scrollToTopFilms: function () {
+      const top = this.$refs.filmmakersItemContent;
+      if (top) {
+        top.scrollTop = 0;
+      }
+    },
     toggleOtherArtistAccordions: function (payload) {
       this.areCollapsedArtistsHidden = !this.areCollapsedArtistsHidden;
-
       const top = this.$refs.artistsItemContent;
-
       if (this.areCollapsedArtistsHidden) {
         this.savedScrollPlaceArtists = top.scrollTop;
-        top.scrollTop = 0;
+        this.scrollToTopArtists();
       } else {
-        top.scrollTop = this.savedScrollPlaceArtists;
+        clearTimeout(this.scrollerArtists);
+        this.scrollerArtists = setTimeout(() => {
+          const top = this.$refs.artistsItemContent;
+          top.scrollTop = this.savedScrollPlaceArtists;
+          // console.log("scrolling to ", position);
+        }, 50);
       }
     },
     toggleOtherFilmmakerAccordions: function (payload) {
       this.areCollapsedFilmmakersHidden = !this.areCollapsedFilmmakersHidden;
       const top = this.$refs.filmmakersItemContent;
-
       if (this.areCollapsedFilmmakersHidden) {
         this.savedScrollPlaceFilmmakers = top.scrollTop;
-        top.scrollTop = 0;
-        // console.log("scrolling to top");
+        this.scrollToTopFilms();
       } else {
-        top.scrollTop = this.savedScrollPlaceFilmmakers;
-        // console.log("scrolling to ", this.savedScrollPlaceFilmmakers);
+        clearTimeout(this.scrollerFilms);
+        this.scrollerFilms = setTimeout(() => {
+          const top = this.$refs.filmmakersItemContent;
+          top.scrollTop = this.savedScrollPlaceFilmmakers;
+          // console.log("scrolling to ", position);
+        }, 50);
       }
     },
   },
@@ -235,7 +258,6 @@ ul.credits-list {
     grid-column-end: 1;
     grid-row-start: 1;
     grid-row-end: 2;
-
     display: grid;
     grid-template-columns: 40px 1fr 40px;
     grid-template-rows: repeat(2, min-content);

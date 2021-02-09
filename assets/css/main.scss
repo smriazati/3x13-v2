@@ -744,8 +744,8 @@ html, body, #__nuxt, #__layout, #__layout > div {
 @media (min-width: 768px) and (max-width: 1060px) and (max-height: 380px) {
   .hover-wrapper,
   .grid-film13 .iframe-wrapper div {
-    width: 345px !important;
-    height: 250px !important;
+    width: 340px !important;
+    height: 255px !important;
     max-width: unset;
     max-height: unset;
   }
@@ -795,14 +795,14 @@ html, body, #__nuxt, #__layout, #__layout > div {
   }
 }
 
-@media (min-width: 500px) and (max-width: 768px) and (min-height: 380px) and (max-height: 500px) and (orientation: landscape) {
+@media (min-width: 500px) and (max-width: 768px) and (min-height: 400px) and (max-height: 500px) and (orientation: landscape) {
   .hover-wrapper,
   .grid-film13 .iframe-wrapper div {
-    width: 270px !important;
-    height: 203px !important;
+    width: 511px !important;
+    height: 383px !important;
   }
   .hover-wrapper {
-    padding: 0px .5px 0px 1.75px;
+    padding: 2px 0px;
     grid-gap: 0px;
     * {
       font-size: 10px;
@@ -811,7 +811,8 @@ html, body, #__nuxt, #__layout, #__layout > div {
 }
 
 
-@media (min-width: 500px) and (max-width: 768px) and (max-height: 380px) {
+
+@media (min-width: 500px) and (max-width: 768px) and (max-height: 400px) {
   .hover-wrapper,
   .grid-film13 .iframe-wrapper div {
     width: 345px !important;
@@ -1434,40 +1435,35 @@ ul.subtitles {
 }
 
 .intro-frame:not(.section-hide) {
-  // width: 70%;
-  // width: 70vw;
+
   @media (min-width: $bp-sm) {
     max-width: 800px;
-  }
-  margin: 0 auto;
-  margin-left: auto;
-  margin-right: auto;
-  @media (min-width: $bp-sm) {
     margin-top: 10%;
     margin-top: 10vh;
   }
-
+  margin: 0 auto;
   height: 80%;
   height: 80vh;
-  @media (max-width: $bp-sm) {
-    // width: calc(100% - 20px); // horizontal spacing 10px
-    // width: calc(100vw - 20px);
-    // height: calc(100% - 120px); 
-    // height: calc(100vh - 120px); // vertical spacing 60px
-    // padding: 60px 10px;
-    width: calc(100% - 20px);
-    width: calc(100vw - 20px);
-    height: calc(100% - 120px); 
-    height: calc(100vh - 120px); // vertical spacing 60px
-    margin: 60px auto;
-    overflow-y: scroll;
-    border: 1px solid $gold
-    // border-top: 1px solid $gold;
-  }
-  @media (min-width: 768px) and (max-width: $bp-sm) {
-    width: calc(100% - 200px);
-    width: calc(100vw - 200px);
-  }
+  
+  // @media (max-width: $bp-sm) {
+  //   // width: calc(100% - 20px); // horizontal spacing 10px
+  //   // width: calc(100vw - 20px);
+  //   // height: calc(100% - 120px); 
+  //   // height: calc(100vh - 120px); // vertical spacing 60px
+  //   // padding: 60px 10px;
+  //   width: calc(100% - 20px);
+  //   width: calc(100vw - 20px);
+  //   height: calc(100% - 120px); 
+  //   height: calc(100vh - 120px); // vertical spacing 60px
+  //   margin: 60px auto;
+  //   overflow-y: scroll;
+  //   border: 1px solid $gold
+  //   // border-top: 1px solid $gold;
+  // }
+  // @media (min-width: 768px) and (max-width: $bp-sm) {
+  //   width: calc(100% - 200px);
+  //   width: calc(100vw - 200px);
+  // }
 }
 
 .inactive-tab,
@@ -1480,14 +1476,22 @@ ul.subtitles {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 45px 1fr;
-
   background: rgba($dark, 0.9);
   margin: 0 auto;
-  @media (max-width: $bp-sm) {
+  height: 80%;
+  height: 80vh;
+  @media (min-width: $bp-sm) {
     max-width: 800px;
   }
-  @media (max-width: $bp-sm) {
-    max-width: 100%;
+  @media (min-width: 768px) and (max-width: $bp-sm) {
+    width: 60ch;
+    margin-top: 10vh;
+  }
+
+  @media (max-width: 768px) {
+    width: 85%;
+    width: 85vw;
+    margin-top: 10vh;
   }
 
   > * {
@@ -1496,19 +1500,19 @@ ul.subtitles {
       &.tab-item-title {
         border-bottom: none;
       }
-      &.tab-item-title:last-child {
+      &:nth-child(2).tab-item-title {
         border-left: none;
       }
-      @media (max-width: $bp-sm) {
-        &.tab-item-title {
-          border-top: 0;
-        }
-        &.tab-item-content {
-          border-bottom: 0;
-          border-left: 0;
-          border-right: 0;
-        }
-      }
+      // @media (max-width: $bp-sm) {
+      //   &.tab-item-title {
+      //     border-top: 0;
+      //   }
+      //   &.tab-item-content {
+      //     border-bottom: 0;
+      //     border-left: 0;
+      //     border-right: 0;
+      //   }
+      // }
     &.tab-item-title-full-width {
       grid-column: span 2;
     }
@@ -1548,11 +1552,12 @@ ul.subtitles {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
+  height: 100%;
   overflow-y: scroll;
-  @media (min-width: $bp-sm) {
-    max-height: 75%;
-    max-height: 75vh;
-  }
+  // @media (min-width: $bp-sm) {
+  //   max-height: 75%;
+  //   max-height: 75vh;
+  // }
 
 
   &:not(.tab-item-content-accordion) *:last-child {
@@ -1623,31 +1628,37 @@ ul.subtitles {
     cursor: pointer;
   }
 }
-.close-modal-container {
-  .close-modal-button {
-    width: $spacer*3;
-    height: $spacer*3;
-    position: absolute;
-    right: $spacer*2;
-    top: $spacer*3;
-    .icon {
-      height: 100%;
-    }
-    .icon * {
-      height: 100%;
-      fill: $gray !important;
-      @media (max-width: $bp-sm) {
-        fill: $light !important;
-      }
-    }
-    &:hover {
-      .icon * {
-        fill: $gold !important;
-      }
+
+.close-modal-button {
+  @include unsetBtn;
+  width: $spacer*3;
+  height: $spacer*3;
+  position: fixed;
+  right: $spacer*2;
+  top: $spacer*3;
+  z-index: 999;
+  @media (max-width: $bp-sm) {
+    right: $spacer;
+    top: $spacer*2;
+  }
+  .icon {
+    height: 100%;
+  }
+  .icon * {
+    height: 100%;
+    fill: $gray !important;
+    @media (max-width: $bp-sm) {
+      fill: $light !important;
     }
   }
-
+  &:hover {
+    .icon * {
+      fill: $gold !important;
+    }
+  }
 }
+
+
 .modal-player-wrapper {
   z-index: 10;
   position: relative;
@@ -1684,7 +1695,7 @@ $modal-bp: $grid-bp;
 .modal-grid-wrapper {
   display: grid;
   position: relative;
-  z-index: 999;
+  z-index: 998;
   width: 100%;
   margin-top: 100px;
   @media (min-width: $modal-bp-lg) {
@@ -2161,13 +2172,6 @@ $modal-bp: $grid-bp;
   padding: 0 10px;
 }
 
-.hide-hover-borders {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-  background: rgba(0, 0, 0, 0);
-}
-.show-hover-borders {
+.touch .pagination-button-container .text {
   display: none;
 }

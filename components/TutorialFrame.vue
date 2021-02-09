@@ -88,6 +88,7 @@ $bp-sm: 1060px;
   @include unsetUl;
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 0 !important;
   // padding-bottom: 60px;
   @media (min-width: $bp-sm + 1) {
     width: 80%;

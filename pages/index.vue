@@ -1,307 +1,296 @@
 <template>
-  <div :class="isTouchScreen ? 'touch' : 'no-touch'" class="container">
-    <fullscreen
-      ref="fullscreen"
-      class="fullscreenWrapper"
-      @change="changeFullscreen"
-    >
-      <div class="container-layer-stack">
+  <fullscreen
+    ref="fullscreen"
+    :class="isTouchScreen ? 'touch' : 'no-touch'"
+    class="container fullscreenWrapper"
+    @change="changeFullscreen"
+  >
+    <div class="container-layer-stack">
+      <div
+        ref="introFrames"
+        class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
+        :class="
+          activeIntroSection != '' && activeIntroSection != undefined
+            ? 'layer-stack-show'
+            : 'layer-stack-hide'
+        "
+      >
         <div
-          ref="introFrames"
-          class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
+          v-if="activeIntroSection != '' && activeIntroSection != undefined"
+          class="close-button-container"
+          @click="deactivateIntroSection"
+        >
+          <button class="close-button close-intro-frame-btn">
+            <span class="visually-hidden">Close</span>
+            <span class="icon"><SvgThing name="Close" /></span>
+          </button>
+        </div>
+        <TutorialFrame
+          v-if="activeIntroSection === 'Tutorial'"
+          ref="tutorialSection"
+          class="container-tutorial intro-frame tutorial-text section-show-hide"
           :class="
-            activeIntroSection != '' && activeIntroSection != undefined
-              ? 'layer-stack-show'
-              : 'layer-stack-hide'
+            activeIntroSection === 'Tutorial' ? 'section-show' : 'section-hide'
           "
+          :active-intro-section="activeIntroSection"
+        />
+        <LazyAboutFrame
+          v-if="activeIntroSection === 'About'"
+          ref="aboutSection"
+          class="container-about intro-frame section-show-hide"
+          :class="
+            activeIntroSection === 'About' ? 'section-show' : 'section-hide'
+          "
+          :active-intro-section="activeIntroSection"
+        />
+        <LazyCreditsFrame
+          v-if="activeIntroSection === 'Credits'"
+          ref="creditsSection"
+          class="container-credits intro-frame section-show-hide"
+          :class="
+            activeIntroSection === 'Credits' ? 'section-show' : 'section-hide'
+          "
+          :active-intro-section="activeIntroSection"
+        />
+      </div>
+      <div
+        class="layer-stack layer-stack-intro"
+        :class="
+          activeFrame === frames[0] ? 'layer-stack-show' : 'layer-stack-hidden'
+        "
+      >
+        <div v-if="filmData" class="container-poster-images video-grid-overlay">
+          <div class="hover">
+            <div class="hover-wrapper">
+              <div v-for="item in filmData" :key="item.id" class="hover-item">
+                <ImageLoader
+                  :src="item.acf.film_poster_image.sizes.large"
+                  :alt="item.acf.film_poster_image.alt"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <main v-if="aboutData" class="container-intro">
+          <header ref="header">
+            <div class="text-wrapper">
+              <h1 class="site-logo center">
+                {{ aboutData.acf.intro_headline }}
+              </h1>
+              <div class="site-tagline intro-body-text center">
+                <p>{{ aboutData.acf.intro_body_text }}</p>
+              </div>
+              <nav class="play-film13-button">
+                <button
+                  ref="playBtn"
+                  :disabled="!isFilm13Loaded"
+                  @click="changeActiveFrame(frames[1])"
+                >
+                  <span v-if="!isFilm13Loaded">Loading Film</span>
+                  <span v-else>Enter Film</span>
+                </button>
+              </nav>
+              <div class="subtitle-controls center">
+                <h2 class="section-title">Subtitles</h2>
+                <VidSubtitles />
+              </div>
+            </div>
+            <IntroSectionsNav
+              :active-intro-section="activeIntroSection"
+              class="hover-wrapper"
+            />
+          </header>
+          <!-- /intro-sections -->
+        </main>
+      </div>
+      <!-- end frame0-->
+      <div
+        class="layer-stack layer-stack-film13"
+        :class="
+          activeFrame === frames[1] || !isFilm13FrameHidden
+            ? 'layer-stack-show'
+            : 'layer-stack-hidden'
+        "
+      >
+        <div class="film13-grid-wrapper">
+          <Film13MainNav
+            @mobile-menu-open="playFilm13"
+            @mobile-menu-close="pauseFilm13"
+          />
+          <div
+            v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
+            class="film13-remote"
+          >
+            <Film13Remote
+              @toggle-film13-playback="toggleFilm13Playback"
+              @toggle-film13-audio="toggleFilm13Audio"
+              @jump-film13-back="jumpFilm13Back"
+              @jump-film13-forward="jumpFilm13Forward"
+              @toggle-fullscreen="toggleFullscreen"
+            />
+          </div>
+          <div class="container-film13">
+            <div v-if="isFilm13ReplayActive" class="replay-film13">
+              <FilmTileNavigation
+                :film13-replay="true"
+                :countdown-duration="15"
+                @start-watching-next="deactivateReplay()"
+              />
+              <div class="replay-button-container">
+                <button
+                  class="replay button-icon button-small"
+                  @click="replayFilm13()"
+                >
+                  Replay Grid
+                </button>
+              </div>
+            </div>
+            <div ref="gridFilm13" class="grid-film13">
+              <div class="background background-iframe film13-background">
+                <div class="iframe-wrapper">
+                  <client-only>
+                    <div ref="film13Wrapper" class="film13-player-wrapper">
+                      <vimeo-player
+                        ref="film13"
+                        :video-url="gridLink"
+                        :video-id="null"
+                        :options="gridOptions"
+                        @ready="onFilm13Ready"
+                        @loaded="onFilm13Loaded"
+                        @timeupdate="onFilm13TimeUpdate"
+                        @ended="onFilm13Ended"
+                      >
+                      </vimeo-player>
+                    </div>
+                  </client-only>
+                </div>
+              </div>
+              <div class="hover">
+                <div
+                  :class="
+                    isHoverStopperOver
+                      ? 'hover-wrapper-overlay-exit'
+                      : 'hover-wrapper-overlay-enter'
+                  "
+                  class="hover-wrapper-overlay"
+                ></div>
+                <div class="hover-wrapper">
+                  <div
+                    v-for="(item, index) in filmData"
+                    :key="index"
+                    class="hover-item"
+                    @click="openFilmModal(index)"
+                    @mouseenter="playSfx(item.acf.film_order)"
+                  >
+                    <div class="hover-item-sound">
+                      <audio
+                        ref="sfx"
+                        :alt="item.acf.film_hover_sound.alt"
+                        :data-sfx-id="item.acf.film_order"
+                        @ended="onSfxEnding(item.acf.film_order)"
+                      >
+                        <source
+                          :src="item.acf.film_hover_sound.url"
+                          type="audio/mpeg"
+                        />
+                      </audio>
+                    </div>
+                    <div class="hover-item-text">
+                      <h2>{{ item.acf.artist_first_name }}</h2>
+                      <h3>{{ item.acf.artist_country }}</h3>
+                      <span class="icon"><SvgThing name="Play" /></span>
+                    </div>
+                    <div class="hover-item-darken"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end frame3 -->
+      <div
+        class="layer-stack layer-stack-film-modal"
+        :class="
+          activeFrame === frames[2] ? 'layer-stack-show' : 'layer-stack-hidden'
+        "
+      >
+        <div
+          v-if="filmData && activeFrame === frames[2]"
+          class="container-filmmodal"
         >
           <div
-            v-if="activeIntroSection != '' && activeIntroSection != undefined"
-            class="close-button-container"
-            @click="deactivateIntroSection"
+            class="close-modal-container close-modal-overlay"
+            @click="closeModal()"
+          ></div>
+          <div
+            v-if="showModalPlayer"
+            ref="filmModalWrapper"
+            class="modal-grid-wrapper"
           >
-            <button class="close-button close-intro-frame-btn">
+            <button class="close-modal-button" @click="closeModal()">
               <span class="visually-hidden">Close</span>
               <span class="icon"><SvgThing name="Close" /></span>
             </button>
-          </div>
-          <TutorialFrame
-            v-if="activeIntroSection === 'Tutorial'"
-            ref="tutorialSection"
-            class="container-tutorial intro-frame tutorial-text section-show-hide"
-            :class="
-              activeIntroSection === 'Tutorial'
-                ? 'section-show'
-                : 'section-hide'
-            "
-            :active-intro-section="activeIntroSection"
-          />
-          <LazyAboutFrame
-            v-if="activeIntroSection === 'About'"
-            ref="aboutSection"
-            class="container-about intro-frame section-show-hide"
-            :class="
-              activeIntroSection === 'About' ? 'section-show' : 'section-hide'
-            "
-            :active-intro-section="activeIntroSection"
-          />
-          <LazyCreditsFrame
-            v-if="activeIntroSection === 'Credits'"
-            ref="creditsSection"
-            class="container-credits intro-frame section-show-hide"
-            :class="
-              activeIntroSection === 'Credits' ? 'section-show' : 'section-hide'
-            "
-            :active-intro-section="activeIntroSection"
-          />
-        </div>
-        <div
-          class="layer-stack layer-stack-intro"
-          :class="
-            activeFrame === frames[0]
-              ? 'layer-stack-show'
-              : 'layer-stack-hidden'
-          "
-        >
-          <div
-            v-if="filmData"
-            class="container-poster-images video-grid-overlay"
-          >
-            <div class="hover">
-              <div class="hover-wrapper">
-                <div v-for="item in filmData" :key="item.id" class="hover-item">
-                  <ImageLoader
-                    :src="item.acf.film_poster_image.sizes.large"
-                    :alt="item.acf.film_poster_image.alt"
-                  />
+            <div class="pagination-button-container pagination-button-prev">
+              <button class="prev" @click="goToPrevModal()">
+                <div class="arrow">
+                  <span class="visually-hidden">Previous</span>
+                  <span class="icon"><SvgThing name="Prev" /></span>
                 </div>
-              </div>
-            </div>
-          </div>
-          <main v-if="aboutData" class="container-intro">
-            <header ref="header">
-              <div class="text-wrapper">
-                <h1 class="site-logo center">
-                  {{ aboutData.acf.intro_headline }}
-                </h1>
-                <div class="site-tagline intro-body-text center">
-                  <p>{{ aboutData.acf.intro_body_text }}</p>
+                <div class="text">
+                  <h2>
+                    {{ filmData[prevModal].acf.artist_first_name }}
+                  </h2>
+                  <h3>{{ filmData[prevModal].acf.artist_country }}</h3>
                 </div>
-                <nav class="play-film13-button">
-                  <button
-                    ref="playBtn"
-                    :disabled="!isFilm13Loaded"
-                    @click="changeActiveFrame(frames[1])"
-                  >
-                    <span v-if="!isFilm13Loaded">Loading Film</span>
-                    <span v-else>Enter Film</span>
-                  </button>
-                </nav>
-                <div class="subtitle-controls center">
-                  <h2 class="section-title">Subtitles</h2>
-                  <VidSubtitles />
-                </div>
-              </div>
-              <IntroSectionsNav
-                :active-intro-section="activeIntroSection"
-                class="hover-wrapper"
-              />
-            </header>
-            <!-- /intro-sections -->
-          </main>
-        </div>
-        <!-- end frame0-->
-        <div
-          class="layer-stack layer-stack-film13"
-          :class="
-            activeFrame === frames[1] || !isFilm13FrameHidden
-              ? 'layer-stack-show'
-              : 'layer-stack-hidden'
-          "
-        >
-          <div class="film13-grid-wrapper">
-            <Film13MainNav
-              @mobile-menu-open="playFilm13"
-              @mobile-menu-close="pauseFilm13"
-            />
-            <div
-              v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
-              class="film13-remote"
-            >
-              <Film13Remote
-                @toggle-film13-playback="toggleFilm13Playback"
-                @toggle-film13-audio="toggleFilm13Audio"
-                @jump-film13-back="jumpFilm13Back"
-                @jump-film13-forward="jumpFilm13Forward"
-                @toggle-fullscreen="toggleFullscreen"
-              />
-            </div>
-            <div class="container-film13">
-              <div v-if="isFilm13ReplayActive" class="replay-film13">
-                <FilmTileNavigation
-                  :film13-replay="true"
-                  :countdown-duration="15"
-                  @start-watching-next="deactivateReplay()"
-                />
-                <div class="replay-button-container">
-                  <button
-                    class="replay button-icon button-small"
-                    @click="replayFilm13()"
-                  >
-                    Replay Grid
-                  </button>
-                </div>
-              </div>
-              <div ref="gridFilm13" class="grid-film13">
-                <div class="background background-iframe film13-background">
-                  <div class="iframe-wrapper">
-                    <client-only>
-                      <div ref="film13Wrapper" class="film13-player-wrapper">
-                        <vimeo-player
-                          ref="film13"
-                          :video-url="gridLink"
-                          :video-id="null"
-                          :options="gridOptions"
-                          @ready="onFilm13Ready"
-                          @loaded="onFilm13Loaded"
-                          @timeupdate="onFilm13TimeUpdate"
-                          @ended="onFilm13Ended"
-                        >
-                        </vimeo-player>
-                      </div>
-                    </client-only>
-                  </div>
-                </div>
-                <div class="hover">
-                  <div
-                    :class="
-                      isHoverStopperOver
-                        ? 'hover-wrapper-overlay-exit'
-                        : 'hover-wrapper-overlay-enter'
-                    "
-                    class="hover-wrapper-overlay"
-                  ></div>
-                  <div class="hover-wrapper">
-                    <div
-                      v-for="(item, index) in filmData"
-                      :key="index"
-                      class="hover-item"
-                      @click="openFilmModal(index)"
-                      @mouseenter="playSfx(item.acf.film_order)"
-                    >
-                      <div class="hover-item-sound">
-                        <audio
-                          ref="sfx"
-                          :alt="item.acf.film_hover_sound.alt"
-                          :data-sfx-id="item.acf.film_order"
-                          @ended="onSfxEnding(item.acf.film_order)"
-                        >
-                          <source
-                            :src="item.acf.film_hover_sound.url"
-                            type="audio/mpeg"
-                          />
-                        </audio>
-                      </div>
-                      <div class="hover-item-text">
-                        <h2>{{ item.acf.artist_first_name }}</h2>
-                        <h3>{{ item.acf.artist_country }}</h3>
-                        <span class="icon"><SvgThing name="Play" /></span>
-                      </div>
-                      <div class="hover-item-darken"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- end frame3 -->
-        <div
-          class="layer-stack layer-stack-film-modal"
-          :class="
-            activeFrame === frames[2]
-              ? 'layer-stack-show'
-              : 'layer-stack-hidden'
-          "
-        >
-          <div
-            v-if="filmData && activeFrame === frames[2]"
-            class="container-filmmodal"
-          >
-            <div
-              class="close-modal-container close-modal-overlay"
-              @click="closeModal()"
-            >
-              <button class="close-modal-button">
-                <span class="visually-hidden">Close</span>
-                <span class="icon"><SvgThing name="Close" /></span>
               </button>
             </div>
-            <div
-              v-if="showModalPlayer"
-              ref="filmModalWrapper"
-              class="modal-grid-wrapper"
-            >
-              <div class="pagination-button-container pagination-button-prev">
-                <button class="prev" @click="goToPrevModal()">
-                  <div class="arrow">
-                    <span class="visually-hidden">Previous</span>
-                    <span class="icon"><SvgThing name="Prev" /></span>
-                  </div>
-                  <div class="text">
-                    <h2>
-                      {{ filmData[prevModal].acf.artist_first_name }}
-                    </h2>
-                    <h3>{{ filmData[prevModal].acf.artist_country }}</h3>
-                  </div>
-                </button>
+            <client-only>
+              <div class="modal-player-wrapper iframe-wrapper">
+                <vimeo-player
+                  ref="filmModal"
+                  :video-id="null"
+                  :options="modalOptions"
+                  :video-url="filmData[activeModal].acf.vimeo_private_link"
+                  @ready="onFilmModalReady"
+                  @loaded="onFilmModalLoaded"
+                  @texttrackchange="onFilmModalTextTrackUserChange"
+                  @ended="onFilmModalEnded"
+                >
+                </vimeo-player>
               </div>
-              <client-only>
-                <div class="modal-player-wrapper iframe-wrapper">
-                  <vimeo-player
-                    ref="filmModal"
-                    :video-id="null"
-                    :options="modalOptions"
-                    :video-url="filmData[activeModal].acf.vimeo_private_link"
-                    @ready="onFilmModalReady"
-                    @loaded="onFilmModalLoaded"
-                    @texttrackchange="onFilmModalTextTrackUserChange"
-                    @ended="onFilmModalEnded"
-                  >
-                  </vimeo-player>
+            </client-only>
+            <div class="pagination-button-container pagination-button-next">
+              <button class="next" @click="goToNextModal()">
+                <div class="arrow">
+                  <span class="visually-hidden">Next</span>
+                  <span class="icon"><SvgThing name="Next" /></span>
                 </div>
-              </client-only>
-              <div class="pagination-button-container pagination-button-next">
-                <button class="next" @click="goToNextModal()">
-                  <div class="arrow">
-                    <span class="visually-hidden">Next</span>
-                    <span class="icon"><SvgThing name="Next" /></span>
-                  </div>
-                  <div class="text">
-                    <h2>
-                      {{ filmData[nextModal].acf.artist_first_name }}
-                    </h2>
-                    <h3>{{ filmData[nextModal].acf.artist_country }}</h3>
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div
-              v-if="activeModalState === 'tiles'"
-              class="film-tile-navigation-container film13-grid-wrapper"
-            >
-              <FilmTileNavigation
-                :countdown-duration="5"
-                class="container-film13"
-              />
+                <div class="text">
+                  <h2>
+                    {{ filmData[nextModal].acf.artist_first_name }}
+                  </h2>
+                  <h3>{{ filmData[nextModal].acf.artist_country }}</h3>
+                </div>
+              </button>
             </div>
           </div>
+          <div
+            v-if="activeModalState === 'tiles'"
+            class="film-tile-navigation-container film13-grid-wrapper"
+          >
+            <FilmTileNavigation
+              :countdown-duration="5"
+              class="container-film13"
+            />
+          </div>
         </div>
-        <!-- end frame4 -->
       </div>
-      <!-- end layer-stack-wrapper -->
-    </fullscreen>
-  </div>
+      <!-- end frame4 -->
+    </div>
+    <!-- end layer-stack-wrapper -->
+  </fullscreen>
 </template>
 
 <script>
@@ -343,6 +332,8 @@ export default {
       isFilm13Loaded: false,
       isFilm13FrameHidden: true,
       isTouchScreen: false,
+      isWindowResizing: false,
+      resizeId: null,
     };
   },
 
@@ -459,14 +450,12 @@ export default {
         }
       }
       if (
-        this.activeIntroSection !== "" &&
-        this.activeIntroSection !== undefined
+        this.activeIntroSection === "About" ||
+        this.activeIntroSection === "Credits" ||
+        this.activeIntroSection === "Tutorial"
       ) {
-        console.log(window.innerWidth);
-        if (window.innerWidth > 1060) {
-          const delay = 300;
-          setTimeout(() => this.setCloseBtnPosition(), delay);
-        }
+        const delay = 300;
+        setTimeout(() => this.setCloseBtnPosition(), delay);
       }
     },
     activeModalState: function () {
@@ -483,6 +472,23 @@ export default {
         this.modalToModalNav();
       }
     },
+    isWindowResizing: function () {
+      if (
+        this.activeIntroSection === "About" ||
+        this.activeIntroSection === "Credits" ||
+        this.activeIntroSection === "Tutorial"
+      ) {
+        this.setCloseBtnPosition();
+      }
+    },
+  },
+  beforeMount() {
+    window.addEventListener("resize", this.onWindowResize);
+    window.addEventListener("touchstart", this.onTouchStartCallback, false);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onWindowResize);
+    window.addEventListener("touchstart", this.onTouchStartCallback);
   },
   mounted() {
     if (this.$refs.sfx) {
@@ -490,23 +496,35 @@ export default {
         s.load();
       });
     }
-    window.addEventListener("touchstart", this.onTouchStartCallback, false);
-
-    // window.addEventListener("resize", () => {
-    //   this.windowHeight = window.innerHeight;
-    // });
   },
   methods: {
     onTouchStartCallback: function () {
       this.isTouchScreen = true;
     },
+    onWindowResize: function () {
+      clearTimeout(this.resizeId);
+      this.isWindowResizing = true;
+      this.resizeId = setTimeout(() => {
+        this.isWindowResizing = false;
+      }, 500);
+    },
     setCloseBtnPosition() {
       const section = this.$refs.introFrames.querySelector("section");
       const closeBtn = this.$refs.introFrames.querySelector("button");
-      const sectionTop = section.offsetTop;
-      const sectionLeft = section.offsetWidth + section.offsetLeft - 1;
-      closeBtn.style.top = `${sectionTop}px`;
-      closeBtn.style.left = `${sectionLeft}px`;
+      const container = this.$refs.introFrames.querySelector(
+        ".tab-group-container"
+      );
+      let btnTop;
+      let btnLeft;
+      if (window.innerWidth > 1060 && section) {
+        btnTop = section.offsetTop;
+        btnLeft = section.offsetWidth + section.offsetLeft - 1;
+      } else if (section && container) {
+        btnTop = section.offsetTop - 30;
+        btnLeft = container.offsetWidth + container.offsetLeft - 30;
+      }
+      closeBtn.style.top = `${btnTop}px`;
+      closeBtn.style.left = `${btnLeft}px`;
     },
     modalToModalNav() {
       this.$store.commit("grid/changeModalState", "switching");
@@ -618,7 +636,7 @@ export default {
         ref.player
           .enableTextTrack(currentLang)
           .then(function (track) {
-            console.log("enabled the text");
+            // console.log("enabled the text");
             ref.play();
           })
           .catch(function (error) {
@@ -644,7 +662,7 @@ export default {
       }
     },
     updateModalPlayer(id) {
-      console.log("updating");
+      // console.log("updating");
       const ref = this.$refs.filmModal;
       if (!ref) {
         return;
@@ -779,7 +797,6 @@ export default {
       if (!ref) {
         return;
       }
-      console.log("pausing");
       ref.pause();
       // this.muteFilm13Sfx();
       this.$store.commit("grid/toggleFilm13Playback", false);
