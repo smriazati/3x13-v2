@@ -181,6 +181,13 @@
                     "
                     class="hover-wrapper-overlay"
                   ></div>
+                  <div
+                    :class="
+                      isWindowResizing
+                        ? 'hide-hover-borders'
+                        : 'show-hover-borders'
+                    "
+                  ></div>
                   <div class="hover-wrapper">
                     <div
                       v-for="(item, index) in filmData"
@@ -342,6 +349,7 @@ export default {
       isFilm13RemoteHidden: false,
       isFilm13Loaded: false,
       isFilm13FrameHidden: true,
+      isWindowResizing: false,
     };
   },
 
@@ -489,8 +497,25 @@ export default {
         s.load();
       });
     }
+    // window.addEventListener("resize", () => {
+    //   this.windowHeight = window.innerHeight;
+    // });
+  },
+  beforeMount() {
+    window.addEventListener("resize", this.hideHoverGridOnResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.hideHoverGridOnResize);
   },
   methods: {
+    hideHoverGridOnResize: function () {
+      clearTimeout(this.resizeId);
+      this.isWindowResizing = true;
+      this.resizeId = setTimeout(() => {
+        // Your callback method here.
+        this.isWindowResizing = false;
+      }, 500);
+    },
     setCloseBtnPosition() {
       const section = this.$refs.introFrames.querySelector("section");
       const closeBtn = this.$refs.introFrames.querySelector("button");

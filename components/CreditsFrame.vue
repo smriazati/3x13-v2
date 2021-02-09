@@ -350,4 +350,10 @@ ul.credits-list {
 .credit-item-header.credit-item-visible {
   padding: 0 10px;
 }
+.website-link.icon,
+.website-link.icon > * {
+  height: 10px;
+  width: 10px;
+  vertical-align: text-top;
+}
 </style>

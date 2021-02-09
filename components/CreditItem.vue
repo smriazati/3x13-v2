@@ -56,7 +56,12 @@
       <div class="credit-item-bio collapse-area">
         <div v-html="item.acf.credit_bio"></div>
         <span v-if="item.acf.credit_website">
-          <a :href="item.acf.credit_website" target="_blank">(icon)</a>
+          <a :href="item.acf.credit_website" target="_blank">
+            <span class="visually-hidden">External link</span>
+            <span class="icon website-link">
+              <SvgThing name="ExternalLink" />
+            </span>
+          </a>
         </span>
       </div>
     </div>
@@ -90,7 +95,12 @@
       <div class="credit-item-bio collapse-area">
         <div v-html="item.acf.artist_bio"></div>
         <span v-if="item.acf.artist_link">
-          <a :href="item.acf.artist_link" target="_blank">(icon)</a>
+          <a :href="item.acf.artist_link" target="_blank">
+            <span class="visually-hidden">External link</span>
+            <span class="icon website-link">
+              <SvgThing name="ExternalLink" />
+            </span>
+          </a>
         </span>
       </div>
     </div>

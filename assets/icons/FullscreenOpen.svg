@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40.5 40.5"><g id="Layer_4" data-name="Layer 4"><rect x="24.95" y="20.53" width="4" height="11.09" transform="translate(-10.47 28.49) rotate(-47.75)"/><polygon points="26.44 32.62 36.58 34.82 33.42 24.95 26.44 32.62"/><rect x="7.88" y="24.07" width="11.09" height="4" transform="translate(-14.04 15.8) rotate(-42.25)"/><polygon points="6.96 24.95 3.8 34.82 13.93 32.62 6.96 24.95"/><rect x="11.56" y="8.88" width="4" height="11.09" transform="translate(-6.24 14.76) rotate(-47.75)"/><polygon points="14.06 7.88 3.92 5.68 7.09 15.56 14.06 7.88"/><rect x="21.53" y="12.43" width="11.09" height="4" transform="translate(-2.67 21.95) rotate(-42.25)"/><polygon points="33.55 15.56 36.71 5.68 26.57 7.88 33.55 15.56"/></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 40.5 40.5" style="enable-background:new 0 0 40.5 40.5;" xml:space="preserve">
+<g>
+	<polygon points="31.3,27.3 24.2,20.9 21.5,23.8 28.6,30.3 26.4,32.6 36.6,34.8 33.4,25 	"/>
+	<polygon points="16.2,20.9 9.1,27.3 7,25 3.8,34.8 13.9,32.6 11.8,30.3 18.9,23.8 	"/>
+	<polygon points="14.1,7.9 3.9,5.7 7.1,15.6 9.2,13.2 16.3,19.6 19,16.7 11.9,10.2 	"/>
+	<polygon points="24.3,19.6 31.4,13.2 33.5,15.6 36.7,5.7 26.6,7.9 28.7,10.2 21.6,16.7 	"/>
+</g>
+</svg>
