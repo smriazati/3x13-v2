@@ -1479,13 +1479,8 @@ ul.subtitles {
 .tab-group-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 5% 1fr;
-  grid-template-rows: 5vh 1fr;
-  // height: 100%;
-  @media (max-width: $bp-sm) {
-    grid-template-rows: 45px 1fr;
-    // height: 100%;
-  }
+  grid-template-rows: 45px 1fr;
+
   background: rgba($dark, 0.9);
   margin: 0 auto;
   @media (max-width: $bp-sm) {
@@ -1934,7 +1929,7 @@ $modal-bp: $grid-bp;
       grid-column-end: 2;
       grid-row-start: 2;
       grid-row-end: 3;
-      overflow: hidden;
+      overflow-y: scroll;
     }
   }
   @media (min-width: $film13-grid-bp) {
@@ -2080,15 +2075,19 @@ $modal-bp: $grid-bp;
   display: grid;
   // height: 100%;
   width: 100%;
-  grid-template-rows: auto min-content;
+  grid-template-rows: min-content min-content;
   grid-template-columns: 1fr;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 999;
   background: rgba(0, 0, 0, 0.1);
-  padding-top: 15%;
-  padding-top: 20vh;
+  overflow-y: scroll;
+  @media (min-width: 500px) and (orientation: landscape) {
+    padding-top: 15%;
+    padding-top: 20vh;
+  }
+
   .replay-button-container {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
@@ -2154,6 +2153,12 @@ $modal-bp: $grid-bp;
   .fullscreen-btn {
     display: none;
   }
+}
+.touch .fullscreen-btn {
+  display: none;
+}
+.touch .film13-remote ul {
+  padding: 0 10px;
 }
 
 .hide-hover-borders {

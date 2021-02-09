@@ -338,6 +338,7 @@ $grid-bp-lg: $film13-grid-bp-lg;
   .countdown button {
     @include unsetBtn;
     padding: $spacer * 3;
+    padding-bottom: 0;
     color: rgba($light, 0.8);
     transition: $transition;
     &:hover {

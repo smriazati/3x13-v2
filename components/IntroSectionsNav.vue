@@ -157,7 +157,7 @@ $tagline-container: 60ch;
     justify-content: space-between;
     text-align: center;
     > * {
-      flex: 1;
+      flex: 0 0 33%;
     }
   }
 }
