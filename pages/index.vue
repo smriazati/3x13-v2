@@ -454,7 +454,7 @@ export default {
         this.activeIntroSection === "Credits" ||
         this.activeIntroSection === "Tutorial"
       ) {
-        const delay = 300;
+        const delay = 350;
         setTimeout(() => this.setCloseBtnPosition(), delay);
       }
     },
@@ -516,14 +516,12 @@ export default {
       );
       let btnTop;
       let btnLeft;
-      console.log(section, container);
       if (window.innerWidth > 1060 && section) {
         btnTop = section.offsetTop;
         btnLeft = section.offsetWidth + section.offsetLeft - 1;
         closeBtn.style.top = `${btnTop}px`;
         closeBtn.style.left = `${btnLeft}px`;
-      } else if (section && container) {
-        // btnTop = container.offsetTop - 30;
+      } else if (window.innerWidth < 1060 && section && container) {
         btnTop = section.offsetTop - 30;
         let leftMargin = (window.innerWidth - container.offsetWidth) / 2;
         btnLeft = container.offsetWidth + leftMargin - 30;
@@ -531,7 +529,7 @@ export default {
         closeBtn.style.left = `${btnLeft}px`;
       } else {
         closeBtn.style.top = `30px`;
-        closeBtn.style.left = `30px`;
+        closeBtn.style.right = `30px`;
         closeBtn.style.borderBottom = `1px solid rgb(202, 166, 17)`;
       }
     },

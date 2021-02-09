@@ -1439,15 +1439,20 @@ ul.subtitles {
 }
 
 .intro-frame:not(.section-hide) {
+  margin: 0 auto;
 
   @media (min-width: $bp-sm) {
     max-width: 800px;
     margin-top: 10%;
     margin-top: 10vh;
+    height: 80%;
+    height: 80vh;
   }
-  margin: 0 auto;
-  height: 80%;
-  height: 80vh;
+
+  @media (max-width: $bp-sm) {
+    width: 85%;
+    width: 85vw;
+  }
   
   // @media (max-width: $bp-sm) {
   //   // width: calc(100% - 20px); // horizontal spacing 10px
@@ -1496,8 +1501,8 @@ ul.subtitles {
   }
 
   @media (max-width: 768px) {
-    width: 85%;
-    width: 85vw;
+    // width: 85%;
+    // width: 85vw;
     margin-top: 10vh;
   }
 
