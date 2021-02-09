@@ -573,7 +573,13 @@ html, body, #__nuxt, #__layout, #__layout > div {
   .hover-wrapper {
     padding: 5px 12px;
   }
+  .fullscreenWrapper.fullscreen .hover-wrapper {
+    padding: 6px 12px;
+  }
+
 }
+
+
 
 @media (min-width: 1300px) and (max-width: 1600px) and (min-height: 900px) {
   .hover-wrapper,
@@ -1616,6 +1622,7 @@ ul.subtitles {
   max-height: 100%;
   overflow: hidden;
   background: $dark !important;
+  position: fixed;
 }
 
 
@@ -1659,6 +1666,12 @@ ul.subtitles {
   @media (max-width: 768px) {
     right: $spacer/2;
     top: $spacer;
+  }
+  @media (max-width: 768px) and (orientation: landscape) {
+    width: 5ch;
+    padding-left: 10px;
+    top: 20px;
+    right: 0;
   }
   .icon {
     height: 100%;
@@ -1716,7 +1729,7 @@ $modal-bp: $grid-bp;
   position: relative;
   z-index: 998;
   width: 100%;
-  margin-top: 100px;
+
   @media (min-width: $modal-bp-lg) {
     height: 100%;
     margin-top: 10%;
@@ -1773,10 +1786,12 @@ $modal-bp: $grid-bp;
   @media (max-width: $modal-bp) {
     grid-template-columns: repeat(2, 1fr);
     grid-gap: $spacer*2;
-    @media (max-width: $bp-sm) {
-      grid-row-gap: $spacer*4;
-    }
-    grid-template-rows: repeat(2, min-content);
+    margin-top: 50px; // button height + grid gap
+
+    // @media (max-width: $bp-sm) {
+    //   grid-row-gap: $spacer*4;
+    // }
+    grid-template-rows: min-content 30px;
     .modal-player-wrapper {
       grid-column-start: 1;
       grid-column-end: 3;
@@ -2196,4 +2211,8 @@ $modal-bp: $grid-bp;
 
 .touch .pagination-button-container .text {
   display: none;
+}
+
+.touch .modal-player-wrapper.iframe-wrapper {
+  background: $dark;
 }

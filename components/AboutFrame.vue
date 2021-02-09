@@ -119,6 +119,9 @@ export default {
       return logosArrFiltered;
     },
   },
+  mounted() {
+    this.$emit("on-component-mount");
+  },
   methods: {
     activateTab(tab) {
       console.log(tab);

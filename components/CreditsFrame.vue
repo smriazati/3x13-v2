@@ -117,7 +117,9 @@ export default {
       secondaryCredits: "content/secondaryCredits",
     }),
   },
-
+  mounted() {
+    this.$emit("on-component-mount");
+  },
   methods: {
     activateTab(tab) {
       this.isActiveTab = tab;

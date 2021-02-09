@@ -223,6 +223,12 @@ $grid-bp-lg: $film13-grid-bp-lg;
 }
 
 .film-tile-navigation {
+  .text {
+    @media (max-width: $bp-sm) and (orientation: portrait) {
+      flex: 0 0 45%;
+      height: unset;
+    }
+  }
   figure {
     width: 100%;
     // @media (min-width: $bp-sm) {
@@ -230,8 +236,9 @@ $grid-bp-lg: $film13-grid-bp-lg;
     // }
 
     @media (max-width: $bp-sm) and (orientation: portrait) {
-      flex: 0 0 50%;
+      flex: 0 0 45%;
       height: unset;
+      text-align: center;
     }
 
     @media (max-width: $bp-sm) and (orientation: landscape) {

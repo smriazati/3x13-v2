@@ -47,6 +47,9 @@ export default {
       aboutData: "content/aboutData",
     }),
   },
+  mounted() {
+    this.$emit("on-component-mount");
+  },
 };
 </script>
 

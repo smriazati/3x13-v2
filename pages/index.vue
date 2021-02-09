@@ -33,6 +33,7 @@
             activeIntroSection === 'Tutorial' ? 'section-show' : 'section-hide'
           "
           :active-intro-section="activeIntroSection"
+          @on-component-mount="setCloseBtnPosition"
         />
         <LazyAboutFrame
           v-if="activeIntroSection === 'About'"
@@ -42,6 +43,7 @@
             activeIntroSection === 'About' ? 'section-show' : 'section-hide'
           "
           :active-intro-section="activeIntroSection"
+          @on-component-mount="setCloseBtnPosition"
         />
         <LazyCreditsFrame
           v-if="activeIntroSection === 'Credits'"
@@ -51,6 +53,7 @@
             activeIntroSection === 'Credits' ? 'section-show' : 'section-hide'
           "
           :active-intro-section="activeIntroSection"
+          @on-component-mount="setCloseBtnPosition"
         />
       </div>
       <div
@@ -448,14 +451,6 @@ export default {
         } else {
           this.playFilm13();
         }
-      }
-      if (
-        this.activeIntroSection === "About" ||
-        this.activeIntroSection === "Credits" ||
-        this.activeIntroSection === "Tutorial"
-      ) {
-        const delay = 350;
-        setTimeout(() => this.setCloseBtnPosition(), delay);
       }
     },
     activeModalState: function () {
