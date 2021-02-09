@@ -374,8 +374,11 @@ ul.credits-list {
 }
 .website-link.icon,
 .website-link.icon > * {
-  height: 10px;
-  width: 10px;
+  height: 12px;
+  width: 12px;
   vertical-align: text-top;
+  &:hover {
+    fill: $gold !important;
+  }
 }
 </style>

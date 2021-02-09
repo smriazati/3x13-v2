@@ -223,8 +223,8 @@ body {
   color: $light;
 }
 
-::-moz-selection { background: $dark; color: $light }
-::selection { background: $dark; color: $light }
+::-moz-selection { background: $gray; color: $light }
+::selection { background: $gray; color: $light }
 
 
 //
@@ -961,6 +961,9 @@ ol {
     font-size: 12px;
     line-height: 20px;
   }
+  i, em {
+    font-style: italic;
+  }
 }
 
 .small {
@@ -1565,7 +1568,7 @@ ul.subtitles {
   grid-row-start: 2;
   grid-row-end: 3;
   height: 100%;
-  @media (max-width: 768px) {
+  @media (max-width: 1060px) {
     height: 350px;
     height: 60vh;
   }
@@ -2159,6 +2162,8 @@ $modal-bp: $grid-bp;
   height: 30px;
   width: 30px;
 }
+
+
 
 // CBT fixes
 
