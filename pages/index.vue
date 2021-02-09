@@ -64,7 +64,7 @@
             <div class="hover-wrapper">
               <div v-for="item in filmData" :key="item.id" class="hover-item">
                 <ImageLoader
-                  :src="item.acf.film_poster_image.sizes.large"
+                  :src="item.acf.film_poster_image.sizes.medium_large"
                   :alt="item.acf.film_poster_image.alt"
                 />
               </div>
