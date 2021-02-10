@@ -388,12 +388,14 @@ export default {
         options = {
           controls: true,
           allowfullscreen: true,
+          pip: false,
         };
       } else {
         options = {
           controls: true,
           allowfullscreen: true,
           texttrack: this.subtitleLanguage,
+          pip: false,
         };
       }
       return options;
