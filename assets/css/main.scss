@@ -1458,7 +1458,7 @@ ul.subtitles {
     height: 80vh;
     overflow: hidden;
   }
-  
+
   @media (min-width: $bp-sm) and (max-height: 675px) {
     height: 350px;
     height: 80vh;
@@ -1578,7 +1578,9 @@ ul.subtitles {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
-  height: 100%;
+  @media (max-width: $bp-sm) {
+    height: 100%;
+  }
   @media (max-width: 1060px) {
     height: 350px;
     height: 60vh;
