@@ -1454,7 +1454,16 @@ ul.subtitles {
     max-width: 800px;
     margin-top: 10%;
     margin-top: 10vh;
-    height: 80%;
+    height: 650px;
+    height: 80vh;
+  }
+  @media (min-width: $bp-sm) and (max-height: 675px) {
+    height: 350px;
+    height: 80vh;
+  }
+
+  @media (min-width: $bp-sm) and (max-height: 380px) {
+    height: 250px;
     height: 80vh;
   }
 
@@ -1462,26 +1471,6 @@ ul.subtitles {
     width: 85%;
     width: 85vw;
   }
-  
-  // @media (max-width: $bp-sm) {
-  //   // width: calc(100% - 20px); // horizontal spacing 10px
-  //   // width: calc(100vw - 20px);
-  //   // height: calc(100% - 120px); 
-  //   // height: calc(100vh - 120px); // vertical spacing 60px
-  //   // padding: 60px 10px;
-  //   width: calc(100% - 20px);
-  //   width: calc(100vw - 20px);
-  //   height: calc(100% - 120px); 
-  //   height: calc(100vh - 120px); // vertical spacing 60px
-  //   margin: 60px auto;
-  //   overflow-y: scroll;
-  //   border: 1px solid $gold
-  //   // border-top: 1px solid $gold;
-  // }
-  // @media (min-width: 768px) and (max-width: $bp-sm) {
-  //   width: calc(100% - 200px);
-  //   width: calc(100vw - 200px);
-  // }
 }
 
 .inactive-tab,
@@ -1498,20 +1487,29 @@ ul.subtitles {
   margin: 0 auto;
   height: 80%;
   @media (min-width: $bp-sm) {
+    height: 650px;
     height: 80vh;
   }
-  
+  @media (min-width: $bp-sm) and (max-height: 675px) {
+    height: 350px;
+    height: 80vh;
+  }
+  @media (min-width: $bp-sm) and (max-height: 380px) {
+    height: 250px;
+    height: 80vh;
+  }
   @media (min-width: $bp-sm) {
     max-width: 800px;
   }
+
   @media (min-width: 768px) and (max-width: $bp-sm) {
     width: 60ch;
+    margin-top: 10%;
     margin-top: 10vh;
   }
 
   @media (max-width: 768px) {
-    // width: 85%;
-    // width: 85vw;
+    margin-top: 10%;
     margin-top: 10vh;
   }
 

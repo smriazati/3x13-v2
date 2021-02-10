@@ -231,10 +231,6 @@ $grid-bp-lg: $film13-grid-bp-lg;
   }
   figure {
     width: 100%;
-    // @media (min-width: $bp-sm) {
-    //   height: 24vw;
-    // }
-
     @media (max-width: $bp-sm) and (orientation: portrait) {
       flex: 0 0 45%;
       height: unset;
