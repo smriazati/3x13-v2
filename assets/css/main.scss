@@ -1866,6 +1866,9 @@ $modal-bp: $grid-bp;
     grid-template-columns: 30px 1fr 30px;
     grid-template-rows: 80%;
     grid-gap: 0;
+    width: 100%;
+    width: 100vw;
+
     .pagination-button-prev {
       grid-column-start: 1;
       grid-column-end: 2;
