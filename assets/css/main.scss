@@ -1095,7 +1095,7 @@ button:disabled,
   grid-template-columns: 1fr;
   grid-template-rows: 3fr 150px;
   // height: 100%;
-  overflow-y: scroll;
+  // overflow-y: scroll;
 }
 
 .container-intro header .text-wrapper {
@@ -1963,7 +1963,7 @@ $modal-bp: $grid-bp;
     grid-template-columns: 100%;
     grid-template-columns: 100vw;
     grid-gap: $spacer*2;
-    grid-template-rows: min-content 1fr min-content;
+    grid-template-rows: 10ch 1fr 10ch;
     .film13-main-nav {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -2062,9 +2062,9 @@ $modal-bp: $grid-bp;
   }
 }
 @media (max-width: $bp-sm) and (orientation: landscape) {
-  .container-intro header {
-    overflow-y: scroll;
-  }
+  // .container-intro header {
+  //   overflow-y: scroll;
+  // }
   .modal-grid-wrapper {
     // margin-top: 15%;
     margin-top: 0;
@@ -2077,11 +2077,11 @@ $modal-bp: $grid-bp;
   }
 }
 
-@media (max-height: 600px) and (orientation: landscape) {
-  .container-intro header {
-    overflow-y: scroll;
-  }
-}
+// @media (max-height: 600px) and (orientation: landscape) {
+//   .container-intro header {
+//     overflow-y: scroll;
+//   }
+// }
 
 @media (max-height: 380px) and (orientation: landscape) {
 
