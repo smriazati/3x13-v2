@@ -2238,7 +2238,9 @@ $modal-bp: $grid-bp;
 }
 
 
-
+@media (max-width: 768px) and (max-height: 400px) and (orientation: landscape) {
+  @include modalSizerForIphones();
+}
 /* 2340x1080 pixels at 476ppi */
 @media only screen 
     and (device-width: 375px) 
