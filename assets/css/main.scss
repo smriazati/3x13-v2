@@ -229,6 +229,8 @@ body {
 
 //
 * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -1678,7 +1680,7 @@ ul.subtitles {
     top: $spacer;
   }
   @media (max-width: 768px) and (orientation: landscape) {
-    width: 5ch;
+    width: 30px;
     padding-left: 10px;
     top: 20px;
     right: 0;
@@ -1861,7 +1863,7 @@ $modal-bp: $grid-bp;
 
 @media (max-width: $grid-bp) and (max-height: 500px) and (orientation: landscape) {
   .modal-grid-wrapper {
-    grid-template-columns: 5ch 1fr 5ch;
+    grid-template-columns: 30px 1fr 30px;
     grid-template-rows: 80%;
     grid-gap: 0;
     .pagination-button-prev {
@@ -2089,7 +2091,7 @@ $modal-bp: $grid-bp;
 @media (max-height: 380px) and (orientation: landscape) {
 
   .modal-grid-wrapper {
-    grid-template-columns: 5ch 1fr 5ch;
+    grid-template-columns: 30px 1fr 30px;
     grid-gap: 0;
     grid-template-rows: 85%;
     width: 100%;
