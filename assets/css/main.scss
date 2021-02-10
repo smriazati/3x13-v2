@@ -1860,6 +1860,7 @@ $modal-bp: $grid-bp;
   .modal-grid-wrapper {
     grid-template-columns: 5ch 1fr 5ch;
     grid-template-rows: 80%;
+    grid-gap: 0;
     .pagination-button-prev {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -2086,6 +2087,8 @@ $modal-bp: $grid-bp;
 
   .modal-grid-wrapper {
     grid-template-columns: 5ch 1fr 5ch;
+    grid-gap: 0;
+
     grid-template-rows: 85%;
     width: 100%;
     width: 100vw;
