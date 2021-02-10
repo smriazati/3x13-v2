@@ -2228,6 +2228,7 @@ $modal-bp: $grid-bp;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 80vh;
   }
   .modal-grid-wrapper .modal-player-wrapper div {
     max-width: 440px; // height will not exceed 330px
