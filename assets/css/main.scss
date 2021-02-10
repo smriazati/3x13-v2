@@ -278,7 +278,9 @@ html, body, #__nuxt, #__layout, #__layout > div {
   padding: 0;
   display: block;
   background: $dark;
+  padding: env(safe-area-inset);
 }
+
 
 
 // icons 
