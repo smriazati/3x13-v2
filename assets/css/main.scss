@@ -1456,15 +1456,19 @@ ul.subtitles {
     margin-top: 10vh;
     height: 650px;
     height: 80vh;
+    overflow: hidden;
   }
+  
   @media (min-width: $bp-sm) and (max-height: 675px) {
     height: 350px;
     height: 80vh;
+    overflow: hidden;
   }
 
   @media (min-width: $bp-sm) and (max-height: 380px) {
     height: 250px;
     height: 80vh;
+    overflow: hidden;
   }
 
   @media (max-width: $bp-sm) {
@@ -1489,14 +1493,17 @@ ul.subtitles {
   @media (min-width: $bp-sm) {
     height: 650px;
     height: 80vh;
+    overflow: hidden;
   }
   @media (min-width: $bp-sm) and (max-height: 675px) {
     height: 350px;
     height: 80vh;
+    overflow: hidden;
   }
   @media (min-width: $bp-sm) and (max-height: 380px) {
     height: 250px;
     height: 80vh;
+    overflow: hidden;
   }
   @media (min-width: $bp-sm) {
     max-width: 800px;
