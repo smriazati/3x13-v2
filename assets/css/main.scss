@@ -1080,6 +1080,7 @@ button:disabled,
 }
 .container-intro header {
   display: grid;
+  width: 100%;
   grid-template-columns: 1fr;
   grid-template-rows: 3fr 150px;
   // height: 100%;
@@ -1130,6 +1131,7 @@ button:disabled,
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
 }
 
 .container-poster-images {
@@ -2228,7 +2230,6 @@ $modal-bp: $grid-bp;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
   }
   .modal-grid-wrapper .modal-player-wrapper div {
     max-width: 440px; // height will not exceed 330px
