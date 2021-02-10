@@ -2064,18 +2064,25 @@ $modal-bp: $grid-bp;
     // margin-top: 15%;
     margin-top: 0;
     grid-row-gap: $spacer*2;
+    height: 100%;
   }
   .modal-grid-wrapper .modal-player-wrapper {
-    width: auto;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
   }
 }
 
-@media (max-width: 820px) and (max-height: 400px) and (orientation: landscape) { // target iphones landscape 812 x 375
+@media (max-width: $bp-sm) and (max-height: 400px) and (orientation: landscape) { // target iphones landscape 812 x 375
+  .modal-grid-wrapper .modal-player-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .modal-grid-wrapper .modal-player-wrapper div {
     max-width: 440px; // height will not exceed 330px
     margin: 0 auto;
+    padding-bottom: 0;
   }
 }
 
@@ -2086,7 +2093,7 @@ $modal-bp: $grid-bp;
   .modal-grid-wrapper {
     grid-template-columns: 30px 1fr 30px;
     grid-gap: 0;
-    grid-template-rows: 85%;
+    grid-template-rows: 100%;
     width: 100%;
     width: 100vw;
     .pagination-button-prev {
