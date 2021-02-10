@@ -271,7 +271,14 @@ img {
   border: 0;
   outline: none;
 }
-// setup layout
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+html {
+  height: -webkit-fill-available;
+}
 
 html, body, #__nuxt, #__layout, #__layout > div {
   width: 100%;
@@ -1781,14 +1788,11 @@ $modal-bp: $grid-bp;
       }
     }
   }
-  @media (max-width: $modal-bp) {
+
+  @media (max-width: $modal-bp) and (orientation: portrait) {
     grid-template-columns: repeat(2, 1fr);
     grid-gap: $spacer*2;
     margin-top: 50px; // button height + grid gap
-
-    // @media (max-width: $bp-sm) {
-    //   grid-row-gap: $spacer*4;
-    // }
     grid-template-rows: min-content 30px;
     .modal-player-wrapper {
       grid-column-start: 1;
@@ -1850,8 +1854,8 @@ $modal-bp: $grid-bp;
 @media (max-width: $grid-bp) and (max-height: 500px) and (orientation: landscape) {
   .modal-grid-wrapper {
     grid-template-columns: 30px 1fr 30px;
-    grid-template-rows: 80%;
-    grid-gap: 0;
+    grid-template-rows: 80%; 
+    grid-gap: 75px;
     width: 100%;
     width: 100vw;
     padding: 0 15px;
@@ -1870,12 +1874,16 @@ $modal-bp: $grid-bp;
       grid-column-end: 3;
       grid-row-start: 1;
       grid-row-end: 2;
+      place-self: center;
+
     }
     .pagination-button-next {
       grid-column-start: 3;
       grid-column-end: 4;
       grid-row-start: 1;
       grid-row-end: 2;
+      place-self: center;
+
     }
   }
   .modal-grid-wrapper .pagination-button-container button .text {
@@ -2065,8 +2073,30 @@ $modal-bp: $grid-bp;
   .modal-grid-wrapper {
     // margin-top: 15%;
     margin-top: 0;
+    grid-template-columns: 30px 1fr 30px;
+    grid-template-rows: 100%;
     grid-row-gap: $spacer*2;
     height: 100%;
+    .pagination-button-prev {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      place-self: center;
+    }
+    .modal-player-wrapper {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .pagination-button-next {
+      grid-column-start: 3;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      place-self: center;
+    }
   }
   .modal-grid-wrapper .modal-player-wrapper {
     width: 100%;
@@ -2074,10 +2104,6 @@ $modal-bp: $grid-bp;
     margin: 0 auto;
   }
 }
-
-
-
-
 
 @media (max-height: 380px) and (orientation: landscape) {
 
@@ -2292,3 +2318,17 @@ $modal-bp: $grid-bp;
     and (device-height: 896px) 
     and (-webkit-device-pixel-ratio: 3) { @include modalSizerForIphones(); }
 
+
+@media screen and (max-width: $bp-sm) and (max-height: 375px) {
+  .modal-grid-wrapper {
+    grid-template-rows: 100%; 
+    grid-gap: 75px;
+  }
+  @include modalSizerForIphones();
+}
+
+@media (max-width: $modal-bp) {
+  .modal-grid-wrapper .icon * {
+    fill: rgba($light, 0.7) !important;
+  }
+}
