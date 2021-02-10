@@ -2073,7 +2073,23 @@ $modal-bp: $grid-bp;
   }
 }
 
-@media (max-width: $bp-sm) and (max-height: 400px) and (orientation: landscape) { // target iphones landscape 812 x 375
+
+
+@media (max-width: $bp-sm) and (min-height: 400px) and (max-height: 812px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3){ // target iphone pro 11
+  .modal-grid-wrapper .modal-player-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-grid-wrapper .modal-player-wrapper div {
+    max-width: 440px; // height will not exceed 330px
+    margin: 0 auto;
+    padding-bottom: 0;
+  }
+}
+
+
+@media (max-width: $bp-sm) and (max-height: 400px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3){ // target iphones landscape 812 x 375
   .modal-grid-wrapper .modal-player-wrapper {
     display: flex;
     justify-content: center;
