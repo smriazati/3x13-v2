@@ -1578,9 +1578,9 @@ ul.subtitles {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
-  @media (max-width: $bp-sm) {
-    height: 100%;
-  }
+  // @media (max-width: $bp-sm) {
+  //   height: 100%;
+  // }
   @media (max-width: 1060px) {
     height: 350px;
     height: 60vh;
