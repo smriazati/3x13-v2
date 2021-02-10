@@ -198,6 +198,9 @@ $grid-bp-lg: $film13-grid-bp-lg;
     * {
       color: rgba($light, 0.7);
       transition: $transition;
+      .icon * {
+        fill: rgba($light, 0.7) !important;
+      }
     }
   }
   .mobile-menu-button {
