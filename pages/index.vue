@@ -554,8 +554,8 @@ export default {
           this.playSound(order);
           this.$store.commit("sound/addSfx", order);
         } else if (!this.activeSfx.includes(order)) {
-          this.$store.commit("sound/addSfx", order);
           this.playSound(order);
+          this.$store.commit("sound/addSfx", order);
         }
       }
     },
@@ -565,8 +565,8 @@ export default {
         this.$refs.sfx.forEach((s) => {
           if (parseInt(order) === parseInt(s.dataset.sfxId)) {
             // console.log(s)
-            s.load();
-            const delay = 300;
+            // s.load();
+            const delay = 30;
             setTimeout(() => s.play(), delay);
           }
         });
