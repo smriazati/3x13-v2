@@ -2070,12 +2070,16 @@ $modal-bp: $grid-bp;
   }
 }
 @media (max-width: $bp-sm) and (orientation: landscape) {
+  .close-modal-button {
+    top: 10px;
+    right: 5px;
+  }
   .modal-grid-wrapper {
     // margin-top: 15%;
     margin-top: 0;
     grid-template-columns: 30px 1fr 30px;
     grid-template-rows: 100%;
-    grid-row-gap: $spacer*2;
+    grid-gap: $spacer*2;
     height: 100%;
     .pagination-button-prev {
       grid-column-start: 1;
@@ -2260,7 +2264,9 @@ $modal-bp: $grid-bp;
   .modal-grid-wrapper .modal-player-wrapper div {
     max-width: 440px; // height will not exceed 330px
     margin: 0 auto;
-    padding-bottom: 0;
+    @media (orientation: landscape) {
+      padding-bottom: 0;
+    }
   }
 }
 
