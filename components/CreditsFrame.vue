@@ -383,4 +383,8 @@ ul.credits-list {
     fill: $gold !important;
   }
 }
+
+.secondary .location {
+  font-size: 14px;
+}
 </style>
