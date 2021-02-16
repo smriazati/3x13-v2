@@ -1830,13 +1830,11 @@ $modal-bp: $grid-bp;
       width: 100%;
       .text {
         flex: 1;
-        @media (max-width: $bp-sm) {
-          h2 {
-            font-size: 18px;
-          }
-          h3 {
-            font-size: 14px;
-          }
+        h2 {
+          font-size: 14px;
+        }
+        h3 {
+          font-size: 12px;
         }
       }
       .arrow {
@@ -1878,6 +1876,7 @@ $modal-bp: $grid-bp;
       grid-column-end: 2;
       grid-row-start: 1;
       grid-row-end: 2;
+      width: 100%;
     }
     .modal-player-wrapper {
       grid-column-start: 2;
@@ -1893,14 +1892,23 @@ $modal-bp: $grid-bp;
       grid-row-start: 1;
       grid-row-end: 2;
       place-self: center;
+      width: 100%;
 
     }
   }
-  .modal-grid-wrapper .pagination-button-container button .text {
-    display: none;
-  }
+  // .modal-grid-wrapper .pagination-button-container button .text {
+  //   display: none;
+  // }
   .modal-grid-wrapper .pagination-button-container button {
-    padding: $spacer/2 !important;
+    // padding: $spacer/2 !important;
+    .text {
+      h2 {
+        font-size: 14px;
+      }
+      h3 {
+        font-size: 12px;
+      }
+    }
   }
 }
 
@@ -2087,16 +2095,22 @@ $modal-bp: $grid-bp;
   .modal-grid-wrapper {
     // margin-top: 15%;
     margin-top: 0;
-    grid-template-columns: 30px 1fr 30px;
+    padding: 0 5px;
+    // grid-template-columns: 30px 1fr 30px;
+    grid-template-columns: 60px 1fr 60px;
     grid-template-rows: 100%;
-    grid-gap: $spacer*2;
+    grid-gap: $spacer*4;
     height: 100%;
+    .pagination-button-container {
+      width: 100%;
+    }
     .pagination-button-prev {
       grid-column-start: 1;
       grid-column-end: 2;
       grid-row-start: 1;
       grid-row-end: 2;
       place-self: center;
+      width: 100%;
     }
     .modal-player-wrapper {
       grid-column-start: 2;
@@ -2109,7 +2123,40 @@ $modal-bp: $grid-bp;
       grid-column-end: 4;
       grid-row-start: 1;
       grid-row-end: 2;
+      
       place-self: center;
+      width: 100%;
+    }
+    .pagination-button-container button,
+    .pagination-button-container button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      .text {
+        h2 {
+          font-size: 14px;
+        }
+        h3 {
+          font-size: 12px;
+        }
+      }
+    }
+    .pagination-button-container.pagination-button-prev button {
+      align-items: flex-start;
+      padding-left: 5px;
+      .text {
+        text-align: left;
+        padding-top: 10px;
+      }
+    }
+    .pagination-button-container.pagination-button-next button {
+      align-items: flex-end;
+      padding-right: 5px;
+      .text {
+        text-align: right;
+        padding-top: 10px;
+      }
     }
   }
   .modal-grid-wrapper .modal-player-wrapper {
@@ -2122,7 +2169,8 @@ $modal-bp: $grid-bp;
 @media (max-height: 380px) and (orientation: landscape) {
 
   .modal-grid-wrapper {
-    grid-template-columns: 30px 1fr 30px;
+    // grid-template-columns: 40px 1fr 40px;
+    grid-template-columns: 90px 1fr 90px;
     grid-gap: 0;
     grid-template-rows: 100%;
     width: 100%;
@@ -2149,15 +2197,40 @@ $modal-bp: $grid-bp;
     .pagination-button-container.pagination-button-prev button {
       flex-direction: column;
       justify-content: center;
-      padding: $spacer;
+      width: 100%;
+      // padding: $spacer;
       .arrow {
         height: 30px;
         width: 30px;
       }
-      .text {
-        display: none;
-      }
     }
+
+    .pagination-button-container.pagination-button-next button .arrow {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .pagination-button-container.pagination-button-next button .text {
+      text-align: right;
+      width: 100%;
+      transform: translateX(5px);
+      padding-top: 10px;
+    }
+
+    .pagination-button-container.pagination-button-prev button .arrow {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .pagination-button-container.pagination-button-prev button .text {
+      text-align: left;
+      width: 100%;
+      transform: translateX(-5px);
+      padding-top: 10px;
+    }
+
   }
 }
 
@@ -2254,9 +2327,9 @@ $modal-bp: $grid-bp;
   padding: 0 10px;
 }
 
-.touch .pagination-button-container .text {
-  display: none;
-}
+// .touch .pagination-button-container .text {
+//   display: none;
+// }
 
 .touch .modal-player-wrapper.iframe-wrapper {
   background: $dark;
@@ -2338,7 +2411,7 @@ $modal-bp: $grid-bp;
 @media screen and (max-width: $bp-sm) and (max-height: 375px) {
   .modal-grid-wrapper {
     grid-template-rows: 100%; 
-    grid-gap: 75px;
+    // grid-gap: 65px;
   }
   @include modalSizerForIphones();
 }
@@ -2346,5 +2419,43 @@ $modal-bp: $grid-bp;
 @media (max-width: $modal-bp) {
   .modal-grid-wrapper .icon * {
     fill: rgba($light, 0.7) !important;
+  }
+}
+
+// show names & locations on modal pagination update 2.16.21
+@media (max-width: $modal-bp) and (orientation: portrait) {
+  .modal-grid-wrapper .pagination-button-container button {
+    display: flex;
+    flex-direction: column !important;
+
+    &.next .text {
+      padding-left: 15px;
+      text-align: left;
+    }
+    &.prev .text {
+      padding-right: 15px;
+      text-align: right;
+    }
+  }
+  .modal-grid-wrapper .pagination-button-next button {
+    align-items: flex-start;
+  }
+  .modal-grid-wrapper .pagination-button-prev button {
+    align-items: flex-end;
+  }
+}
+
+// modal player problem area
+
+@media (min-width: 768px) and (max-height: 600px) and (orientation: landscape) {
+  .modal-grid-wrapper .modal-player-wrapper {
+    width: 65%;
+    margin: 0 auto;
+  }
+}
+
+@media (orientation: landscape) {
+  .modal-grid-wrapper .text {
+    height: 0;
   }
 }
