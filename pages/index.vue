@@ -590,8 +590,9 @@ export default {
       this.activateReplay();
     },
     replayFilm13() {
-      console.log("replaying film 13");
-      this.deactivateReplay();
+      // console.log("replaying film 13");
+      // this.deactivateReplay();
+      this.isFilm13ReplayActive = false;
       this.showFilm13Grid();
       this.hoverStopperExit();
       this.playFilm13FromStart();
