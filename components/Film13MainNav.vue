@@ -48,7 +48,7 @@ export default {
       const gridBp = 1060;
       if (window.innerWidth < gridBp) {
         this.isMobileMenuCollapsed = !this.isMobileMenuCollapsed;
-        console.log("menu collapse is ", this.isMobileMenuCollapsed);
+        // console.log("menu collapse is ", this.isMobileMenuCollapsed);
         if (this.isMobileMenuCollapsed) {
           this.$emit("mobile-menu-open"); // play film13
         }
@@ -63,7 +63,6 @@ export default {
 
 
 <style lang="scss">
-$site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
@@ -78,10 +77,7 @@ $gray: rgb(44, 44, 44);
 $white: $light;
 
 $film13-grid-bp: 1060px;
-$film13-grid-bp-lg: 1600px;
-
 $grid-bp: $film13-grid-bp;
-$grid-bp-lg: $film13-grid-bp-lg;
 
 @mixin unsetBtn() {
   background: transparent;
@@ -138,7 +134,7 @@ $grid-bp-lg: $film13-grid-bp-lg;
   }
 }
 
-@media (min-width: $film13-grid-bp + 1) {
+@media (min-width: $film13-grid-bp) {
   .film13-grid-wrapper .film13-main-nav {
     ul {
       @include unsetUl;
@@ -249,7 +245,7 @@ $grid-bp-lg: $film13-grid-bp-lg;
 }
 
 // mobile nav
-@media (min-width: $film13-grid-bp + 1) {
+@media (min-width: $film13-grid-bp) {
   .mobile-menu-button {
     // display: none;
     width: 25px;

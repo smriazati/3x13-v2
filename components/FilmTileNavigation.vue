@@ -1,5 +1,5 @@
 <template>
-  <nav class="film-tile-navigation">
+  <nav class="film-tile-navigation" :style="{ width: containerWidth + 'px' }">
     <div v-if="filmData && !areTilesHidden" class="modal-navigation-container">
       <div
         v-if="prevModal >= 0"
@@ -61,6 +61,7 @@ export default {
   props: {
     countdownDuration: Number,
     film13Replay: Boolean,
+    containerWidth: Number,
   },
   data() {
     return {
@@ -131,7 +132,7 @@ export default {
       if (this.film13Replay) {
         this.hideTiles();
       }
-      this.deactivateReplay();
+      this.emitStartWatchingNext();
       this.$store.commit("grid/changeModalState", "player");
       this.$store.commit("grid/activateModal", this.prevModal);
 
@@ -143,7 +144,7 @@ export default {
       if (this.film13Replay) {
         this.hideTiles();
       }
-      this.deactivateReplay();
+      this.emitStartWatchingNext();
 
       this.$store.commit("grid/changeModalState", "player");
       this.$store.commit("grid/activateModal", this.nextModal);
@@ -155,13 +156,13 @@ export default {
       if (this.film13Replay) {
         this.hideTiles();
       }
-      this.deactivateReplay();
+      this.emitStartWatchingNext();
 
       this.$store.commit("grid/activateModal", 0);
       this.$store.commit("grid/changeModalState", "player");
       this.$store.commit("grid/changeActiveFrame", "FilmModal");
     },
-    deactivateReplay() {
+    emitStartWatchingNext() {
       this.$emit("start-watching-next");
     },
     startTimer() {
@@ -174,7 +175,6 @@ export default {
 </script>
 
 <style lang="scss">
-$site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
@@ -187,12 +187,6 @@ $dark: rgb(0, 0, 0);
 $light: rgb(232, 232, 232);
 $gray: rgb(44, 44, 44);
 $white: $light;
-
-$film13-grid-bp: 1060px;
-$film13-grid-bp-lg: 1600px;
-
-$grid-bp: $film13-grid-bp;
-$grid-bp-lg: $film13-grid-bp-lg;
 
 @mixin unsetBtn() {
   background: transparent;
@@ -297,6 +291,7 @@ $grid-bp-lg: $film13-grid-bp-lg;
       flex: 0 0 50%;
       @media (min-width: $bp-sm) {
         padding: $spacer * 3;
+        padding-bottom: 0;
       }
       display: flex;
       flex-direction: column-reverse;
@@ -365,5 +360,9 @@ $grid-bp-lg: $film13-grid-bp-lg;
       }
     }
   }
+}
+
+nav.film-tile-navigation {
+  margin: 0 auto;
 }
 </style>

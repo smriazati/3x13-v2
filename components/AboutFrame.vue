@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     activateTab(tab) {
-      console.log(tab);
+      // console.log(tab);
       this.isActiveTab = tab;
     },
   },
@@ -132,7 +132,6 @@ export default {
 </script>
 
 <style lang="scss">
-$site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 

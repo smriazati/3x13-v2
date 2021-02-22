@@ -53,9 +53,6 @@ export default {
   ],
   netlifyFiles: {
     netlifyToml: {
-      build: {
-        environment: { FOO: process.env.FOO }
-      },
       headers: [
         {
           for: '/*',

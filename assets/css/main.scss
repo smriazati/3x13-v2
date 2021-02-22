@@ -1,10 +1,11 @@
-$site-width: 1920px;
+$maxGridWidth: calc(1440px + 30ch);
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
 $bp-lg: 1440px;
 $bp-type: 1100px;
 $bp-sm: 1060px;
+$bp-huge: 2160px;
 
 $gold: rgb(202, 166, 17);
 $dark: rgb(0, 0, 0);
@@ -15,11 +16,14 @@ $white: $light;
 $blackBg: rgba( $dark, .85 );
 
 $film13-grid-bp: 1060px;
-$film13-grid-bp-lg: 1600px;
+$film13-grid-bp-lg: 1644px;
 
 
 $grid-bp: $film13-grid-bp;
 $grid-bp-lg: $film13-grid-bp-lg;
+
+$modal-bp-lg: $grid-bp-lg;
+$modal-bp: $grid-bp;
 
 $tagline-container: 60ch;
 
@@ -48,6 +52,15 @@ $tagline-container: 60ch;
   opacity: 0;
 }
 
+@mixin fullViewportWidth {
+  width: 100%;
+  width: 100vw;
+  @media (min-width: $bp-huge) and (min-height: 1080px) {
+    width: $maxGridWidth;
+    margin: 0 auto;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -66,30 +79,6 @@ $tagline-container: 60ch;
   to {
     transform: translateY(0);
     opacity: 1;
-  }
-}
-
-@keyframes hoverOverlayFadeOut {
-  from {
-    opacity: 1;
-    display: block;
-  }
-  
-  to {
-    opacity: 0;
-    display: none;
-    max-height: 0;
-  }
-}
-@keyframes hoverOverlayEnter {
-  from {
-    opacity: 0;
-    display: none;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    display: block;
   }
 }
 
@@ -332,7 +321,9 @@ html, body, #__nuxt, #__layout, #__layout > div {
   left: 0;
   min-height: 100%;
   width: 100%;
-  width: 100vw;
+
+  @include fullViewportWidth;
+
   height: 100%;
   max-height: 100%;
   overflow: hidden;
@@ -456,12 +447,15 @@ html, body, #__nuxt, #__layout, #__layout > div {
   background: rgba(0,0,0,0);
 }
 
-.hover-wrapper-overlay-exit {
-  animation: 1.2s ease-in 3s forwards hoverOverlayFadeOut;
+.show-hover-stopper {
+    opacity: 1;
+    display: block;
 }
 
-.hover-wrapper-overlay-enter {
-  animation: 1s ease-in forwards hoverOverlayFadeIn;
+.hide-hover-stopper {
+  opacity: 0;
+  display: none;
+  max-height: 0;
 }
 
 .hover-item {
@@ -524,9 +518,13 @@ html, body, #__nuxt, #__layout, #__layout > div {
   margin: 0 auto;
 }
 
-// trying removing 1300px from these
 
 .hover-wrapper {
+
+  // @media (min-width: $maxGridWidth) {
+  //   width: calc(1440px + 30ch);
+  //   height: 1080px;
+  // }
 
   @media (min-width: $grid-bp-lg) { 
     padding: 6px 12px;
@@ -581,7 +579,7 @@ html, body, #__nuxt, #__layout, #__layout > div {
 
 // 
 
-@media (min-width: 1600px) and (min-height: 900px) {
+@media (min-width: $film13-grid-bp-lg) and (min-height: 900px) {
   // .hover-wrapper,
   // .grid-film13 .iframe-wrapper div {
   //   // width: 999px;
@@ -598,7 +596,7 @@ html, body, #__nuxt, #__layout, #__layout > div {
 
 
 
-@media (min-width: 1300px) and (max-width: 1600px) and (min-height: 900px) {
+@media (min-width: 1300px) and (max-width: $film13-grid-bp-lg) and (min-height: 900px) {
   .hover-wrapper,
   .grid-film13 .iframe-wrapper div {
     width: 999px;
@@ -789,7 +787,7 @@ html, body, #__nuxt, #__layout, #__layout > div {
     height: 338px !important;
   }
   .hover-wrapper {
-    padding: 2px 4px 2px 6px;
+    padding: 2px 5px 2px 6px;
     grid-gap: 1px;
   }
 }
@@ -1072,15 +1070,6 @@ button:disabled,
   text-align: center;
   position: relative;
   header {
-    padding-top: 25vh;
-    @media (max-width: 768px) {
-      padding-top: 35vh;
-    }
-    
-    @media (max-width: 768px) {
-      padding-top: 120px;
-    }
-
     .play-film13-button {
       margin: 45px 0 $spacer*3 0;
     }
@@ -1092,21 +1081,12 @@ button:disabled,
 
 // home page grid
 .container-intro {
-  width: 100%;
-  width: 100vw;
-}
-.container-intro header {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 1fr;
-  grid-template-rows: 3fr 150px;
-  // height: 100%;
-  // overflow-y: scroll;
+  @include fullViewportWidth;
 }
 
+
 .container-intro header .text-wrapper {
-  width: 100%;
-  width: 100vw;
+  @include fullViewportWidth;
 }
 
 // film 13
@@ -1142,8 +1122,9 @@ button:disabled,
   z-index: 0;
   top: 0;
   left: 0;
-  width: 100%;
-  width: 100vw;
+  @include fullViewportWidth;
+
+
   height: 100%;
   display: flex;
   justify-content: center;
@@ -1458,7 +1439,7 @@ ul.subtitles {
 .intro-frame:not(.section-hide) {
   margin: 0 auto;
 
-  @media (min-width: $bp-sm) {
+  @media (min-width: $bp-sm) and (max-width: $maxGridWidth) {
     max-width: 800px;
     margin-top: 10%;
     margin-top: 10vh;
@@ -1526,6 +1507,16 @@ ul.subtitles {
   @media (max-width: 768px) {
     margin-top: 10%;
     margin-top: 10vh;
+  }
+
+  @media (min-height: 1080px) {
+    height: 900px;
+    margin-top: 90px;
+  }
+
+  @media (min-width: $maxGridWidth) {
+    height: 900px;
+    margin-top: 90px;
   }
 
   > * {
@@ -1737,8 +1728,7 @@ ul.subtitles {
 .pagination-container-button button {
   @include unsetBtn();
 }
-$modal-bp-lg: 1600px;
-$modal-bp: $grid-bp;
+
 .modal-grid-wrapper {
   display: grid;
   position: relative;
@@ -2015,8 +2005,8 @@ $modal-bp: $grid-bp;
   @media (min-width: $film13-grid-bp) {
     display: grid;
     grid-template-columns: 15ch 1fr 15ch;
-    width: 100%;
-    width: 100vw;
+    @include fullViewportWidth;
+
     height: 100%;
     // height: 100vh;
     grid-template-rows: 1fr;
@@ -2457,5 +2447,84 @@ $modal-bp: $grid-bp;
 @media (orientation: landscape) {
   .modal-grid-wrapper .text {
     height: 0;
+  }
+}
+
+.pagination-button-container {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+// hover grid overlay on huge screens
+@media (min-width: $bp-huge) and (min-height: 1080px) {
+  .container-layer-stack {
+    width: $maxGridWidth;
+    height: 1080px;
+    margin: 0 auto;
+  }
+}
+
+// redesigning home page
+.container-intro header,
+.container-intro .intro-sections-nav {
+  position: unset;
+}
+
+.container-intro.activate-centered-layout header,
+.container-intro.activate-centered-layout .intro-sections-nav {
+  position: fixed;
+}
+
+.container-intro.activate-centered-layout {
+  nav.unset-position ul {
+    opacity: 0;
+  }
+
+  nav.set-position ul {
+    opacity: 1;
+  }
+}
+
+.container-intro:not(.activate-centered-layout) {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 180px;
+  grid-template-rows: min-content 25vh;
+  padding-top: 25vh;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .container-intro .hover-wrapper {
+    width: 100% !important;
+  }
+}
+
+
+@media (min-width: $bp-huge) and (min-height: 1080px){
+  .hover-wrapper,
+  .container .layer-stack,
+  .container-layer-stack {
+    max-height: 1080px;
+    height: 1080px;
+    min-height: 1080px;
+  }
+  .intro-frame:not(.section-hide) {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+// odd dimensions
+
+@media (min-width: 1900px) and (min-height: 900px) and (max-height: 1080px) {
+    .hover-wrapper,
+  .grid-film13 .iframe-wrapper div {
+    width: 1200px;
+    height: 900px;
+  }
+  .hover-wrapper {
+    padding: 5px 12px;
   }
 }

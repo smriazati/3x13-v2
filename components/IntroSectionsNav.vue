@@ -1,11 +1,12 @@
 <template>
-  <nav class="intro-sections-nav">
+  <nav
+    class="intro-sections-nav"
+    :style="{
+      top: offsetTop + 'px',
+      left: offsetLeft + 'px',
+    }"
+  >
     <ul v-if="isDataLoaded">
-      <li v-if="showHome">
-        <button @click="goToHome">
-          {{ aboutData.acf.about_headline }}
-        </button>
-      </li>
       <li>
         <button
           :class="
@@ -45,7 +46,8 @@ import { mapState, mapGetters } from "vuex";
 
 export default {
   props: {
-    showHome: Boolean,
+    offsetTop: Number,
+    offsetLeft: Number,
   },
   computed: {
     ...mapState({
@@ -77,7 +79,6 @@ export default {
 </script>
 
 <style lang="scss">
-$site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
@@ -91,12 +92,6 @@ $light: rgb(232, 232, 232);
 $gray: rgb(44, 44, 44);
 $white: $light;
 $tagline-container: 90%;
-
-$film13-grid-bp: 1060px;
-$film13-grid-bp-lg: 1600px;
-
-$grid-bp: $film13-grid-bp;
-$grid-bp-lg: $film13-grid-bp-lg;
 
 $tagline-container: 60ch;
 
@@ -121,7 +116,7 @@ $tagline-container: 60ch;
   padding-left: 0;
 }
 
-.container-intro header {
+.container-intro {
   .intro-sections-nav {
     display: flex;
     flex-direction: column;

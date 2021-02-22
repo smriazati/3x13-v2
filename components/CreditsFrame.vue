@@ -180,7 +180,6 @@ export default {
 
 
 <style lang="scss">
-$site-width: 1920px;
 $transition: 0.3s ease-out all;
 $spacer: 10px;
 
@@ -386,5 +385,8 @@ ul.credits-list {
 
 .secondary .location {
   font-size: 14px;
+  @media (max-width: $bp-sm) {
+    font-size: 12px;
+  }
 }
 </style>

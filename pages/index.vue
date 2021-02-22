@@ -5,7 +5,7 @@
     class="container fullscreenWrapper"
     @change="changeFullscreen"
   >
-    <div class="container-layer-stack">
+    <div ref="containerLayerStack" class="container-layer-stack">
       <div
         ref="introFrames"
         class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
@@ -64,7 +64,7 @@
       >
         <div v-if="filmData" class="container-poster-images video-grid-overlay">
           <div class="hover">
-            <div class="hover-wrapper">
+            <div ref="posterImagesGrid" class="hover-wrapper">
               <div v-for="item in filmData" :key="item.id" class="hover-item">
                 <ImageLoader
                   :src="item.acf.film_poster_image.sizes.medium_large"
@@ -74,8 +74,17 @@
             </div>
           </div>
         </div>
-        <main v-if="aboutData" class="container-intro">
-          <header ref="header">
+        <main
+          v-if="aboutData"
+          :class="isContainerIntroCentered ? 'activate-centered-layout' : ''"
+          class="container-intro"
+        >
+          <header
+            ref="header"
+            :style="{
+              top: containerIntroHeaderOffsetTop + 'px',
+            }"
+          >
             <div class="text-wrapper">
               <h1 class="site-logo center">
                 {{ aboutData.acf.intro_headline }}
@@ -98,11 +107,16 @@
                 <VidSubtitles />
               </div>
             </div>
-            <IntroSectionsNav
-              :active-intro-section="activeIntroSection"
-              class="hover-wrapper"
-            />
           </header>
+          <IntroSectionsNav
+            ref="introSectionsNav"
+            :offset-top="introSectionsNavOffsetTop"
+            :offset-left="introSectionsNavOffsetLeft"
+            :class="
+              isContainerIntroPositionSet ? 'set-position' : 'unset-position'
+            "
+            class="hover-wrapper"
+          />
           <!-- /intro-sections -->
         </main>
       </div>
@@ -120,10 +134,7 @@
             @mobile-menu-open="playFilm13"
             @mobile-menu-close="pauseFilm13"
           />
-          <div
-            v-if="!isFilm13ReplayActive || !isFilm13RemoteHidden"
-            class="film13-remote"
-          >
+          <div v-if="!isFilm13RemoteHidden" class="film13-remote">
             <Film13Remote
               @toggle-film13-playback="toggleFilm13Playback"
               @toggle-film13-audio="toggleFilm13Audio"
@@ -132,22 +143,23 @@
               @toggle-fullscreen="toggleFullscreen"
             />
           </div>
-          <div class="container-film13">
-            <div v-if="isFilm13ReplayActive" class="replay-film13">
-              <FilmTileNavigation
-                :film13-replay="true"
-                :countdown-duration="15"
-                @start-watching-next="deactivateReplay()"
-              />
-              <div class="replay-button-container">
-                <button
-                  class="replay button-icon button-small"
-                  @click="replayFilm13()"
-                >
-                  Replay Grid
-                </button>
-              </div>
+          <div v-if="isFilm13ReplayActive" class="replay-film13">
+            <FilmTileNavigation
+              :film13-replay="true"
+              :container-width="film13GridWidth"
+              :countdown-duration="15"
+              @start-watching-next="resetFilm13()"
+            />
+            <div class="replay-button-container">
+              <button
+                class="replay button-icon button-small"
+                @click="replayFilm13()"
+              >
+                Replay Grid
+              </button>
             </div>
+          </div>
+          <div class="container-film13">
             <div ref="gridFilm13" class="grid-film13">
               <div class="background background-iframe film13-background">
                 <div class="iframe-wrapper">
@@ -155,6 +167,7 @@
                     <div ref="film13Wrapper" class="film13-player-wrapper">
                       <vimeo-player
                         ref="film13"
+                        :key="film13key"
                         :video-url="gridLink"
                         :video-id="null"
                         :options="gridOptions"
@@ -171,9 +184,9 @@
               <div class="hover">
                 <div
                   :class="
-                    isHoverStopperOver
-                      ? 'hover-wrapper-overlay-exit'
-                      : 'hover-wrapper-overlay-enter'
+                    showHoverStopper
+                      ? 'show-hover-stopper hover-wrapper-overlay-exit'
+                      : 'hide-hover-stopper hover-wrapper-overlay-enter'
                   "
                   class="hover-wrapper-overlay"
                 ></div>
@@ -281,11 +294,11 @@
           </div>
           <div
             v-if="activeModalState === 'tiles'"
-            class="film-tile-navigation-container film13-grid-wrapper"
+            class="film-tile-navigation-container"
           >
             <FilmTileNavigation
-              :countdown-duration="5"
-              class="container-film13"
+              :countdown-duration="5000"
+              :container-width="film13GridWidth"
             />
           </div>
         </div>
@@ -322,13 +335,26 @@ export default {
   },
   data() {
     return {
+      isContainerIntroPositionSet: false,
+      isContainerIntroCentered: true,
+      introSectionsNavOffsetLeft: null,
+      introSectionsNavOffsetTop: null,
+      containerIntroHeaderOffsetTop: null,
+      film13CurrentSeconds: null,
+      clickedReplayButton: false,
+      isFilm13Resetting: false,
+      film13key: 100,
+      isPrevPromiseToJumpBackResolved: null,
+      isPrevPromiseToJumpForwardResolved: null,
+      film13EndPauseFrame: 201,
+      film13duration: null,
       siteUrl: "https://3x13film.ysdt.org",
       gridOptions: {
         controls: false,
       },
       isFilm13Ready: false,
       isFilm13ReplayActive: false,
-      isHoverStopperOver: false,
+      // isHoverStopperOver: false,
       isFilmModalEnded: false,
       fullscreen: false,
       isFilm13RemoteHidden: false,
@@ -366,6 +392,20 @@ export default {
       }
       return false;
     },
+    showHoverStopper: function () {
+      if (this.film13CurrentSeconds < 3) {
+        // blank frames at start
+        return true;
+      } else if (this.film13CurrentSeconds > 180) {
+        // credits
+        return true;
+      } else if (this.film13CurrentSeconds == null) {
+        // not yet loaded or started
+        return true;
+      } else {
+        return false;
+      }
+    },
     activeModal: {
       get: function () {
         return this.$store.state.grid.activeModal;
@@ -399,6 +439,10 @@ export default {
         };
       }
       return options;
+    },
+    film13GridWidth: function () {
+      const gridWidth = this.$refs.gridFilm13.clientWidth;
+      return gridWidth;
     },
   },
   watch: {
@@ -477,6 +521,10 @@ export default {
       ) {
         this.setCloseBtnPosition();
       }
+
+      // if (!this.isWindowResizing) {
+      //   this.setContainerIntroPositions(); // reset positions once resize is complete
+      // }
     },
   },
   beforeMount() {
@@ -493,17 +541,62 @@ export default {
         s.load();
       });
     }
+
+    this.setContainerIntroPositions();
   },
   methods: {
+    setContainerIntroPositions() {
+      // set things up
+      var gridHeight = this.$refs.posterImagesGrid.clientHeight;
+      var gridOffsetTop = this.$refs.posterImagesGrid.offsetTop;
+      var headerHeight = this.$refs.header.clientHeight;
+      // console.log(headerHeight);
+      // var headerHeightCap = headerHeight + 250;
+      const navHeight = 100;
+
+      // should we center things?
+      var windowHeight = window.innerHeight;
+      const gridHeightCap = 495; // 395 + 100
+      // console.log(
+      //   `hWindow${windowHeight}, hHeader${headerHeight}, hGrid${gridHeight}`
+      // );
+      // if (windowHeight < headerHeightCap || gridHeight < gridHeightCap) {
+      if (gridHeight < gridHeightCap) {
+        this.isContainerIntroCentered = false;
+      } else {
+        this.isContainerIntroCentered = true;
+      }
+
+      // console.log(`isContainerIntroCentered: ${this.isContainerIntroCentered}`);
+
+      if (this.isContainerIntroCentered) {
+        // header is centered in the grid
+        this.containerIntroHeaderOffsetTop =
+          (gridHeight - headerHeight) / 2 + gridOffsetTop;
+
+        // nav hangs out at the bottom
+        this.introSectionsNavOffsetTop = gridHeight + gridOffsetTop - navHeight;
+        this.introSectionsNavOffsetLeft = this.$refs.posterImagesGrid.offsetLeft;
+
+        this.isContainerIntroPositionSet = true;
+      } else {
+        this.containerIntroHeaderOffsetTop = null;
+        this.introSectionsNavOffsetLeft = null;
+        this.introSectionsNavOffsetTop = null;
+      }
+      // console.log(headerHeight, "end");
+    },
     onTouchStartCallback: function () {
       this.isTouchScreen = true;
     },
     onWindowResize: function () {
       clearTimeout(this.resizeId);
+      this.isContainerIntroPositionSet = false;
       this.isWindowResizing = true;
       this.resizeId = setTimeout(() => {
         this.isWindowResizing = false;
-      }, 500);
+        this.setContainerIntroPositions();
+      }, 200);
     },
     setCloseBtnPosition() {
       const section = this.$refs.introFrames.querySelector("section");
@@ -513,15 +606,37 @@ export default {
       );
       let btnTop;
       let btnLeft;
-      if (window.innerWidth > 1060 && section) {
+      if (
+        window.innerWidth < 2160 &&
+        window.innerWidth > 1060 &&
+        window.innerHeight < 1080 &&
+        section
+      ) {
         btnTop = section.offsetTop;
         btnLeft = section.offsetWidth + section.offsetLeft - 1;
+        console.log("first", btnTop, btnLeft);
+
         closeBtn.style.top = `${btnTop}px`;
         closeBtn.style.left = `${btnLeft}px`;
-      } else if (window.innerWidth < 1060 && section && container) {
+      } else if (
+        window.innerWidth < 1060 &&
+        window.innerheight < 1080 &&
+        section &&
+        container
+      ) {
         btnTop = section.offsetTop - 30;
         let leftMargin = (window.innerWidth - container.offsetWidth) / 2;
         btnLeft = container.offsetWidth + leftMargin - 30;
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
+      } else if (
+        (window.innerWidth >= 2160 || window.innerHeight >= 1080) &&
+        section
+      ) {
+        let siteOffsetLeft = this.$refs.containerLayerStack.offsetLeft;
+        btnTop = section.offsetTop;
+        btnLeft = section.offsetWidth + section.offsetLeft + siteOffsetLeft;
+        console.log("second", btnTop, btnLeft);
         closeBtn.style.top = `${btnTop}px`;
         closeBtn.style.left = `${btnLeft}px`;
       } else {
@@ -541,12 +656,12 @@ export default {
       this.$refs.fullscreen.toggle(); // recommended
       this.$store.commit("grid/toggleFullscreen");
     },
-    hoverStopperExit() {
-      this.isHoverStopperOver = true;
-    },
-    hoverStopperEnter() {
-      this.isHoverStopperOver = false;
-    },
+    // hoverStopperExit() {
+    //   this.isHoverStopperOver = true;
+    // },
+    // hoverStopperEnter() {
+    //   this.isHoverStopperOver = false;
+    // },
     playSfx(order) {
       if (!this.isFilm13Muted) {
         if (!this.activeSfx) {
@@ -567,7 +682,16 @@ export default {
             // console.log(s)
             // s.load();
             const delay = 30;
-            setTimeout(() => s.play(), delay);
+            setTimeout(
+              () =>
+                s
+                  .play()
+                  .then()
+                  .catch((error) => {
+                    console.log(error);
+                  }),
+              delay
+            );
           }
         });
       }
@@ -577,6 +701,16 @@ export default {
     },
     onFilm13Loaded() {
       this.isFilm13Loaded = true;
+      this.getFilm13Duration();
+      if (this.isFilm13Resetting && this.clickedReplayButton) {
+        this.replayFilmFromStart();
+        this.isFilm13Resetting = false;
+      }
+
+      if (this.isFilm13Resetting && !this.clickedReplayButton) {
+        this.pauseFilmAtStart();
+        this.isFilm13Resetting = false;
+      }
       // console.log("loaded");
     },
     onFilm13Ready() {
@@ -589,21 +723,26 @@ export default {
       // console.log("ended now");
       this.activateReplay();
     },
+    resetFilm13() {
+      this.deactivateReplay();
+      this.updateFilm13Key();
+    },
     replayFilm13() {
-      // console.log("replaying film 13");
-      // this.deactivateReplay();
-      this.isFilm13ReplayActive = false;
-      this.showFilm13Grid();
-      this.hoverStopperExit();
-      this.playFilm13FromStart();
+      this.clickedReplayButton = true;
+      this.deactivateReplay();
+      this.updateFilm13Key();
     },
     activateReplay() {
       this.$store.commit("grid/createPrevNextModalsForReplay");
+      this.hideFilm13Remote();
       this.isFilm13ReplayActive = true;
     },
     deactivateReplay() {
       this.isFilm13ReplayActive = false;
-      this.setFilm13ToStart();
+    },
+    updateFilm13Key() {
+      this.film13key++;
+      this.isFilm13Resetting = true;
     },
     hideFilm13Grid() {
       const ref = this.$refs.gridFilm13;
@@ -636,15 +775,25 @@ export default {
       // console.log("modal loaded");
       const currentLang = this.subtitleLanguage;
       if (currentLang === "") {
-        ref.play();
+        ref
+          .play()
+          .then()
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         ref.player
           .enableTextTrack(currentLang)
           .then(function (track) {
             // console.log("enabled the text");
-            ref.play();
+            ref
+              .play()
+              .then()
+              .catch((error) => {
+                console.log(error);
+              });
           })
-          .catch(function (error) {
+          .catch(() => {
             console.log(error);
           });
       }
@@ -661,9 +810,9 @@ export default {
       if (this.activeModalState === "tiles") {
         this.$store.commit("grid/changeModalState", "player");
       }
-      if (this.isFilm13ReplayActive) {
-        this.deactivateReplay();
-        this.playFilm13FromStart();
+      if (this.isFilm13Resetting) {
+        this.replayFilmFromStart();
+        this.isFilm13Resetting = false;
       }
     },
     updateModalPlayer(id) {
@@ -702,16 +851,11 @@ export default {
       this.changeActiveFrame(this.frames[2]);
     },
     onFilm13TimeUpdate(event, data, player) {
-      // console.log("timeupdate");
-      if (this.isHoverStopperOver) {
-        if (event.seconds > 180) {
-          this.hoverStopperEnter();
-        }
-      }
+      this.film13CurrentSeconds = event.seconds;
       if (event.seconds > 195) {
         this.hideFilm13Remote();
       }
-      if (event.seconds > 201) {
+      if (event.seconds > this.film13EndPauseFrame) {
         this.pauseFilm13AtEnd();
       }
     },
@@ -736,12 +880,12 @@ export default {
         top: 0,
         left: 0,
       });
-      this.hoverStopperExit();
+      // this.hoverStopperExit();
       this.playFilm13();
     },
-    showFilm13Frame() {
-      this.hoverStopperExit();
-    },
+    // showFilm13Frame() {
+    //   // this.hoverStopperExit();
+    // },
     activateFilmModalFrame(id) {
       this.playFilmModal();
     },
@@ -774,7 +918,7 @@ export default {
             track.kind = "subtitles";
             ref.play();
           })
-          .catch(function (error) {
+          .catch(() => {
             console.log(error);
           });
       }
@@ -784,27 +928,87 @@ export default {
       if (!ref) {
         return;
       }
-      ref.pause();
+      ref
+        .pause()
+        .then()
+        .catch((error) => {
+          console.log(error);
+        });
     },
     playFilm13() {
       const ref = this.$refs.film13;
       if (!ref) {
         return;
       }
-      ref.play();
+      // ref.play();
+      ref
+        .play()
+        .then(() => {
+          this.$store.commit("grid/toggleFilm13Playback", true);
+        })
+        .catch(() => {
+          console.log(error);
+        });
       // if (!this.isFilm13Muted) {
       //   this.unmuteFilm13Sfx();
       // }
-      this.$store.commit("grid/toggleFilm13Playback", true);
+    },
+    pauseFilmAtStart: function () {
+      const ref = this.$refs.film13;
+      if (!ref) {
+        return;
+      }
+      // ref.play();
+      ref
+        .play()
+        .then(() => {
+          // this.hoverStopperExit();
+          this.showFilm13Remote();
+          ref
+            .pause()
+            .then(() => {
+              this.$store.commit("grid/toggleFilm13Playback", false);
+            })
+            .catch(() => {
+              console.log(error);
+            });
+        })
+        .catch(() => {
+          console.log(error);
+        });
+    },
+    replayFilmFromStart() {
+      const ref = this.$refs.film13;
+      if (!ref) {
+        return;
+      }
+      // ref.play();
+      ref
+        .play()
+        .then(() => {
+          // this.hoverStopperExit();
+          this.showFilm13Remote();
+          this.$store.commit("grid/toggleFilm13Playback", true);
+        })
+        .catch(() => {
+          console.log(error);
+        });
     },
     pauseFilm13() {
       const ref = this.$refs.film13;
       if (!ref) {
         return;
       }
-      ref.pause();
+      // ref.pause();
+      ref
+        .pause()
+        .then(() => {
+          this.$store.commit("grid/toggleFilm13Playback", false);
+        })
+        .catch(() => {
+          console.log(error);
+        });
       // this.muteFilm13Sfx();
-      this.$store.commit("grid/toggleFilm13Playback", false);
     },
     toggleFilm13Playback() {
       if (this.isFilm13Playing) {
@@ -863,78 +1067,101 @@ export default {
         return;
       }
       ref.player
-        .setCurrentTime(0)
-        .then((seconds) => {
-          this.pauseFilm13();
-          this.showFilm13Remote();
-        })
-        .catch(function (error) {
-          console.log(`${ref} player time jump to start failed: ${error}`);
-        });
-    },
-    playFilm13FromStart() {
-      const ref = this.$refs.film13;
-
-      if (!ref) {
-        return;
-      }
-      ref.player
-        .setCurrentTime(0)
-        .then((seconds) => {
-          this.playFilm13();
-          this.showFilm13Remote();
-        })
-        .catch(function (error) {
-          console.log(`${ref} player time jump/pause failed. error: ${error}`);
+        .unload()
+        .then(() => this.activateFilm13Frame)
+        .catch((error) => {
+          console.log(error);
         });
     },
     jumpFilm13Back() {
       const ref = this.$refs.film13;
-      if (!ref) {
+      const previouslyResolved = this.isPrevPromiseToJumpBackResolved;
+      if (!ref || previouslyResolved === false) {
         return;
       }
-      ref.player.getCurrentTime().then((seconds) => {
-        const currentTime = seconds;
-        const offset = 15;
-        let jumpedTime;
-        if (currentTime > offset) {
-          jumpedTime = seconds - offset;
-        } else {
-          jumpedTime = 0;
-        }
-        ref.player
-          .setCurrentTime(jumpedTime)
-          .then((seconds) => {
-            this.playFilm13();
-          })
-          .catch(function (error) {
-            console.log(
-              `${ref} player time jump/pause failed. error: ${error}`
-            );
-          });
-      });
+      ref.player
+        .getCurrentTime()
+        .then((seconds) => {
+          const currentTime = seconds;
+          const offset = 15;
+          let jumpedTime;
+          if (currentTime > offset) {
+            jumpedTime = seconds - offset;
+          } else {
+            jumpedTime = 0;
+          }
+          this.isPrevPromiseToJumpBackResolved = false;
+          ref.player
+            .setCurrentTime(jumpedTime)
+            .then(() => {
+              this.playFilm13();
+              this.isPrevPromiseToJumpBackResolved = true;
+            })
+            .catch(() => {
+              console.log(
+                `${ref} player time jump/pause failed. error: ${error}`
+              );
+            });
+        })
+        .catch(() => {
+          console.log(error);
+        });
     },
-    jumpFilm13Forward() {
+    getFilm13Duration() {
       let ref = this.$refs.film13;
       if (!ref) {
         return;
       }
-      ref.player.getCurrentTime().then((seconds) => {
-        const currentTime = seconds;
-        const offset = 15;
-        let jumpedTime = seconds + offset;
-        // jumpedTime = 197;
-        ref.player
-          .setCurrentTime(jumpedTime)
-          .then((seconds) => {
-            this.playFilm13();
-          })
-          .catch(function (error) {
-            console.log(
-              `${ref} player time jump/pause failed. error: ${error}`
-            );
-          });
-      });
+      ref.player
+        .getDuration()
+        .then((duration) => {
+          this.film13duration = duration;
+        })
+        .catch(() => {
+          console.log(error);
+        });
+    },
+    jumpFilm13Forward() {
+      let ref = this.$refs.film13;
+      const previouslyResolved = this.isPrevPromiseToJumpForwardResolved;
+
+      if (!ref || previouslyResolved === false) {
+        return;
+      }
+      ref.player
+        .getCurrentTime()
+        .then((seconds) => {
+          const currentTime = seconds;
+          const offset = 15;
+          let jumpedTime = seconds + offset;
+          let maxJumpTime = this.film13duration - offset;
+
+          if (currentTime > maxJumpTime) {
+            // console.log(
+            //   `playback is ${currentTime}, past ${maxJumpTime}, jump to end`
+            // );
+            jumpedTime = this.film13EndPauseFrame;
+          }
+
+          // jumpedTime = 197;
+
+          this.isPrevPromiseToJumpForwardResolved = false;
+
+          ref.player
+            .setCurrentTime(jumpedTime)
+            .then(() => {
+              this.playFilm13();
+              this.isPrevPromiseToJumpForwardResolved = true;
+            })
+            .catch(() => {
+              console.log(
+                `${ref} player time jump/pause failed. error: ${error}`
+              );
+            });
+        })
+        .catch(() => {
+          console.log(error);
+        });
     },
   },
   head() {
