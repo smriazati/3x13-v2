@@ -620,7 +620,7 @@ export default {
         closeBtn.style.left = `${btnLeft}px`;
       } else if (
         window.innerWidth < 1060 &&
-        window.innerheight < 1080 &&
+        window.innerHeight < 1080 &&
         container &&
         section
       ) {
