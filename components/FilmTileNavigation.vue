@@ -365,4 +365,24 @@ $white: $light;
 nav.film-tile-navigation {
   margin: 0 auto;
 }
+
+.replay-film13 {
+  @media (max-width: $bp-sm) and (orientation: portrait) {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    position: unset;
+    top: unset;
+    left: unset;
+    place-self: center;
+  }
+  @media (max-width: $bp-sm) and (orientation: landscape) {
+    place-self: center;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
 </style>
