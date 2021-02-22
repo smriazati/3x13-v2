@@ -2484,7 +2484,7 @@ ul.subtitles {
   padding-top: 25vh;
 }
 
-.container-intro:not(.activate-centered-layout) {
+.container-intro.activate-centered-layout {
   .header-position-set {
     opacity: 1;
   }

@@ -704,11 +704,17 @@ export default {
       this.getFilm13Duration();
       if (this.isFilm13Resetting && this.clickedReplayButton) {
         this.replayFilmFromStart();
+        if (this.isFilm13Muted) {
+          this.muteFilm13();
+        }
         this.isFilm13Resetting = false;
       }
 
       if (this.isFilm13Resetting && !this.clickedReplayButton) {
         this.pauseFilmAtStart();
+        if (this.isFilm13Muted) {
+          this.muteFilm13();
+        }
         this.isFilm13Resetting = false;
       }
       // console.log("loaded");
