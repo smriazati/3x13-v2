@@ -614,7 +614,7 @@ export default {
       ) {
         btnTop = section.offsetTop;
         btnLeft = section.offsetWidth + section.offsetLeft - 1;
-        console.log("first", btnTop, btnLeft);
+        // console.log("first", btnTop, btnLeft);
 
         closeBtn.style.top = `${btnTop}px`;
         closeBtn.style.left = `${btnLeft}px`;
@@ -631,12 +631,13 @@ export default {
         closeBtn.style.left = `${btnLeft}px`;
       } else if (
         (window.innerWidth >= 2160 || window.innerHeight >= 1080) &&
-        section
+        section &&
+        container
       ) {
         let siteOffsetLeft = this.$refs.containerLayerStack.offsetLeft;
         btnTop = section.offsetTop;
-        btnLeft = section.offsetWidth + section.offsetLeft + siteOffsetLeft;
-        console.log("second", btnTop, btnLeft);
+        btnLeft = container.offsetWidth + section.offsetLeft + siteOffsetLeft;
+        // console.log("second", btnTop, btnLeft);
         closeBtn.style.top = `${btnTop}px`;
         closeBtn.style.left = `${btnLeft}px`;
       } else {
