@@ -81,6 +81,11 @@
         >
           <header
             ref="header"
+            :class="
+              isContainerIntroPositionSet
+                ? 'header-position-set'
+                : 'header-position-unset'
+            "
             :style="{
               top: containerIntroHeaderOffsetTop + 'px',
             }"
@@ -555,12 +560,7 @@ export default {
       const navHeight = 100;
 
       // should we center things?
-      var windowHeight = window.innerHeight;
       const gridHeightCap = 495; // 395 + 100
-      // console.log(
-      //   `hWindow${windowHeight}, hHeader${headerHeight}, hGrid${gridHeight}`
-      // );
-      // if (windowHeight < headerHeightCap || gridHeight < gridHeightCap) {
       if (gridHeight < gridHeightCap) {
         this.isContainerIntroCentered = false;
       } else {
@@ -621,8 +621,8 @@ export default {
       } else if (
         window.innerWidth < 1060 &&
         window.innerheight < 1080 &&
-        section &&
-        container
+        container &&
+        section
       ) {
         btnTop = section.offsetTop - 30;
         let leftMargin = (window.innerWidth - container.offsetWidth) / 2;

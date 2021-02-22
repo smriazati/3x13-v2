@@ -1438,11 +1438,13 @@ ul.subtitles {
 
 .intro-frame:not(.section-hide) {
   margin: 0 auto;
-
-  @media (min-width: $bp-sm) and (max-width: $maxGridWidth) {
+  @media (min-width: $bp-sm) {
     max-width: 800px;
     margin-top: 10%;
     margin-top: 10vh;
+  }
+
+  @media (min-width: $bp-sm) and (max-width: $maxGridWidth) {
     height: 650px;
     height: 80vh;
     overflow: hidden;
@@ -1483,6 +1485,7 @@ ul.subtitles {
     height: 650px;
     height: 80vh;
     overflow: hidden;
+    margin-top: 10vh;
   }
   @media (min-width: $bp-sm) and (max-height: 675px) {
     height: 350px;
@@ -1509,15 +1512,11 @@ ul.subtitles {
     margin-top: 10vh;
   }
 
-  @media (min-height: 1080px) {
+  @media (min-height: 1080px) and (min-width: $maxGridWidth) {
     height: 900px;
     margin-top: 90px;
   }
 
-  @media (min-width: $maxGridWidth) {
-    height: 900px;
-    margin-top: 90px;
-  }
 
   > * {
       border: 1px solid $gold;
@@ -1528,16 +1527,6 @@ ul.subtitles {
       &:nth-child(2).tab-item-title {
         border-left: none;
       }
-      // @media (max-width: $bp-sm) {
-      //   &.tab-item-title {
-      //     border-top: 0;
-      //   }
-      //   &.tab-item-content {
-      //     border-bottom: 0;
-      //     border-left: 0;
-      //     border-right: 0;
-      //   }
-      // }
     &.tab-item-title-full-width {
       grid-column: span 2;
     }
@@ -2495,6 +2484,14 @@ ul.subtitles {
   padding-top: 25vh;
 }
 
+.container-intro:not(.activate-centered-layout) {
+  .header-position-set {
+    opacity: 1;
+  }
+  .header-position-unset {
+    opacity: 0;
+  }
+}
 @media (max-width: 768px) and (orientation: portrait) {
   .container-intro .hover-wrapper {
     width: 100% !important;
@@ -2517,7 +2514,6 @@ ul.subtitles {
 }
 
 // odd dimensions
-
 @media (min-width: 1900px) and (min-height: 900px) and (max-height: 1080px) {
     .hover-wrapper,
   .grid-film13 .iframe-wrapper div {
