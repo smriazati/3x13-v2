@@ -302,7 +302,7 @@
             class="film-tile-navigation-container"
           >
             <FilmTileNavigation
-              :countdown-duration="5000"
+              :countdown-duration="5"
               :container-width="film13GridWidth"
             />
           </div>
