@@ -117,6 +117,7 @@
             ref="introSectionsNav"
             :offset-top="introSectionsNavOffsetTop"
             :offset-left="introSectionsNavOffsetLeft"
+            :nav-width="introSectionsNavWidth"
             :class="
               isContainerIntroPositionSet ? 'set-position' : 'unset-position'
             "
@@ -344,6 +345,7 @@ export default {
       isContainerIntroCentered: true,
       introSectionsNavOffsetLeft: null,
       introSectionsNavOffsetTop: null,
+      introSectionsNavWidth: null,
       containerIntroHeaderOffsetTop: null,
       film13CurrentSeconds: null,
       clickedReplayButton: false,
@@ -553,6 +555,7 @@ export default {
     setContainerIntroPositions() {
       // set things up
       var gridHeight = this.$refs.posterImagesGrid.clientHeight;
+      var gridWidth = this.$refs.posterImagesGrid.clientWidth;
       var gridOffsetTop = this.$refs.posterImagesGrid.offsetTop;
       var headerHeight = this.$refs.header.clientHeight;
       // console.log(headerHeight);
@@ -577,7 +580,7 @@ export default {
         // nav hangs out at the bottom
         this.introSectionsNavOffsetTop = gridHeight + gridOffsetTop - navHeight;
         this.introSectionsNavOffsetLeft = this.$refs.posterImagesGrid.offsetLeft;
-
+        this.introSectionsNavWidth = gridWidth;
         this.isContainerIntroPositionSet = true;
       } else {
         this.containerIntroHeaderOffsetTop = null;

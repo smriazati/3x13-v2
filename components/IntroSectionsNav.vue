@@ -4,6 +4,7 @@
     :style="{
       top: offsetTop + 'px',
       left: offsetLeft + 'px',
+      width: navWidth + 'px',
     }"
   >
     <ul v-if="isDataLoaded">
@@ -48,6 +49,7 @@ export default {
   props: {
     offsetTop: Number,
     offsetLeft: Number,
+    navWidth: Number,
   },
   computed: {
     ...mapState({
