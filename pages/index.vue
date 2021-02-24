@@ -560,7 +560,7 @@ export default {
       var headerHeight = this.$refs.header.clientHeight;
       // console.log(headerHeight);
       // var headerHeightCap = headerHeight + 250;
-      const navHeight = 100;
+      const navHeight = 70;
 
       // should we center things?
       const gridHeightCap = 495; // 395 + 100
