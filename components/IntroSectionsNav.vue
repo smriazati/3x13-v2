@@ -123,6 +123,10 @@ $tagline-container: 60ch;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+  }
+}
+.container-intro:not(.activate-centered-layout) {
+  .intro-sections-nav {
     padding: $spacer * 3 0 $spacer 0;
   }
 }
