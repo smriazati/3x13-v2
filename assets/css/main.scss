@@ -2576,7 +2576,7 @@ ul.subtitles {
 }
 
 // disable text inflation  https://developer.mozilla.org/en-US/docs/Web/CSS/text-size-adjust
-.hover-wrapper {
+body {
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
 }
