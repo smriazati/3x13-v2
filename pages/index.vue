@@ -582,11 +582,17 @@ export default {
         this.introSectionsNavOffsetLeft = this.$refs.posterImagesGrid.offsetLeft;
         this.introSectionsNavWidth = gridWidth;
         this.isContainerIntroPositionSet = true;
+        if (gridWidth >= 1440) {
+          console.log("hi its big!");
+          console.log(this.$refs.introSectionsNav);
+          this.$refs.introSectionsNav.$el.style.minWidth = `${1440}px`;
+        }
       } else {
         this.containerIntroHeaderOffsetTop = null;
         this.introSectionsNavOffsetLeft = null;
         this.introSectionsNavOffsetTop = null;
       }
+
       // console.log(headerHeight, "end");
     },
     onTouchStartCallback: function () {
