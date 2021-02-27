@@ -392,6 +392,7 @@ export default {
       aboutData: "content/aboutData",
       filmData: "content/filmData",
       gridLink: "content/gridLink",
+      modalOptions: "grid/modalOptions",
     }),
     showModalPlayer: function () {
       if (this.activeModal >= 0 && this.activeModalState === "player") {
@@ -428,24 +429,6 @@ export default {
       set: function (payload) {
         this.$store.commit("grid/activateIntroSection", payload);
       },
-    },
-    modalOptions() {
-      let options;
-      if (this.subtitleLanguage === "") {
-        options = {
-          controls: true,
-          allowfullscreen: true,
-          pip: false,
-        };
-      } else {
-        options = {
-          controls: true,
-          allowfullscreen: true,
-          texttrack: this.subtitleLanguage,
-          pip: false,
-        };
-      }
-      return options;
     },
     film13GridWidth: function () {
       const gridWidth = this.$refs.gridFilm13.clientWidth;
@@ -537,10 +520,16 @@ export default {
   beforeMount() {
     window.addEventListener("resize", this.onWindowResize);
     window.addEventListener("touchstart", this.onTouchStartCallback, false);
+    window.addEventListener(
+      "orientationchange",
+      this.onOrientationChange,
+      false
+    );
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onWindowResize);
-    window.addEventListener("touchstart", this.onTouchStartCallback);
+    window.removeEventListener("touchstart", this.onTouchStartCallback);
+    window.removeEventListener("orientationchange", this.onOrientationChange);
   },
   mounted() {
     if (this.$refs.sfx) {
@@ -597,6 +586,16 @@ export default {
     },
     onTouchStartCallback: function () {
       this.isTouchScreen = true;
+    },
+    onOrientationChange: function () {
+      if (
+        this.activeIntroSection === "About" ||
+        this.activeIntroSection === "Credits" ||
+        this.activeIntroSection === "Tutorial"
+      ) {
+        this.setCloseBtnPosition();
+      }
+      this.setContainerIntroPositions();
     },
     onWindowResize: function () {
       clearTimeout(this.resizeId);
@@ -666,12 +665,6 @@ export default {
       this.$refs.fullscreen.toggle(); // recommended
       this.$store.commit("grid/toggleFullscreen");
     },
-    // hoverStopperExit() {
-    //   this.isHoverStopperOver = true;
-    // },
-    // hoverStopperEnter() {
-    //   this.isHoverStopperOver = false;
-    // },
     playSfx(order) {
       if (!this.isFilm13Muted) {
         if (!this.activeSfx) {
@@ -788,31 +781,31 @@ export default {
       if (!ref) {
         return;
       }
-      // console.log("modal loaded");
-      const currentLang = this.subtitleLanguage;
-      if (currentLang === "") {
-        ref
-          .play()
-          .then()
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        ref.player
-          .enableTextTrack(currentLang)
-          .then(function (track) {
-            // console.log("enabled the text");
-            ref
-              .play()
-              .then()
-              .catch((error) => {
-                console.log(error);
-              });
-          })
-          .catch(() => {
-            console.log(error);
-          });
-      }
+      ref
+        .play()
+        .then()
+        .catch((error) => {
+          console.log(
+            `onFilmModalLoad event: The film modal PLAY promise failed to resolve. ERROR: ${error}`
+          );
+        });
+      // ref.player
+      //   .enableTextTrack(this.subtitleLanguage)
+      //   .then(() => {
+      //     ref
+      //       .play()
+      //       .then()
+      //       .catch((error) => {
+      //         console.log(
+      //           `After successfully enabling text track, the film modal promise failed to resolve. ERROR: ${error}`
+      //         );
+      //       });
+      //   })
+      //   .catch(() => {
+      //     console.log(
+      //       `The film modal enable text track promise failed to resolve. ERROR: ${error}, SUBTITLE LANGUAGE: ${this.subtitleLanguage}`
+      //     );
+      //   });
     },
     onFilmModalReady() {
       this.playFilmModal();
@@ -924,20 +917,29 @@ export default {
       if (!ref) {
         return;
       }
-      const currentLang = this.$store.state.grid.subtitleLanguage;
-      if (currentLang === "") {
-        ref.play();
-      } else {
-        ref.player
-          .enableTextTrack(currentLang)
-          .then(function (track) {
-            track.kind = "subtitles";
-            ref.play();
-          })
-          .catch(() => {
-            console.log(error);
-          });
-      }
+      ref
+        .play()
+        .then()
+        .catch((error) => {
+          console.log(
+            `playFilmModal methodt: The film modal PLAY promise failed to resolve. ERROR: ${error}`
+          );
+        });
+      // const currentLang = this.$store.state.grid.subtitleLanguage;
+
+      // if (currentLang === "") {
+      //   ref.play();
+      // } else {
+      //   ref.player
+      //     .enableTextTrack(currentLang)
+      //     .then(function (track) {
+      //       track.kind = "subtitles";
+      //       ref.play();
+      //     })
+      //     .catch(() => {
+      //       console.log(error);
+      //     });
+      // }
     },
     pauseFilmModal() {
       const ref = this.$refs.filmModal;

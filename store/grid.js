@@ -1,24 +1,43 @@
 export const state = () => ({
-    isGridPlaying: false,
-    subtitleLanguage: '',
     activeIntroSection: '',
+    activeModal: null,
+    activeModalState: 'player',
+    activeFrame: 'Intro',
+    frames: ["Intro", "Film13", "FilmModal", "Tutorial"],
     introSections: [
         'About', 'Credits', 'Tutorial'
     ],
-    previouslyActiveModal: null,
-    prevModal: 0,
-    activeModal: null,
-    nextModal: 11,
-    previousFrame: '',
-    activeFrame: 'Intro',
-    frames: ["Intro", "Film13", "FilmModal", "Tutorial"],
-    isFullscreen: false,
-    activeModalState: 'player',
-    modalStates: ['player', 'tiles'],
     isFilm13Playing: true,
-    isFilm13Muted: false
+    isFilm13Muted: false,
+    isFullscreen: false,
+    isGridPlaying: false,
+    modalStates: ['player', 'tiles'],
+    subtitleLanguage: 'en',
+    previousFrame: '',
+    prevModal: 0,
+    previouslyActiveModal: null,
+    nextModal: 11,
 })
 
+export const getters = {
+    modalOptions: (state) => {
+        if (state.subtitleLanguage !== '') {
+            return {
+                controls: true,
+                allowfullscreen: true,
+                texttrack: state.subtitleLanguage,
+                pip: false,
+            }
+        } else {
+            return {
+                controls: true,
+                allowfullscreen: true,
+                pip: false,
+            }
+        }
+
+    }
+}
 
 export const mutations = {
     activateIntroSection: (state, payload) => {
