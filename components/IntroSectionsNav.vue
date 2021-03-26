@@ -5,6 +5,7 @@
       top: offsetTop + 'px',
       left: offsetLeft + 'px',
       width: navWidth + 'px',
+      minWidth: navWidth + 'px',
     }"
   >
     <ul v-if="isDataLoaded">

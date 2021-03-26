@@ -2573,9 +2573,16 @@ ul.subtitles {
   .container-poster-images .hover-wrapper,
   .grid-film13 {
     max-width: 1440px;
+  }
+}
+
+@media (min-width: $bp-sm) and (min-height: 1081px) {
+  .container-poster-images .hover-wrapper,
+  .grid-film13 {
     max-height: 1080px;
   }
 }
+
 
 // center the site when it's full screen
 .fullscreenWrapper.fullscreen {
