@@ -7,6 +7,17 @@
   >
     <div ref="containerLayerStack" class="container-layer-stack">
       <div
+        ref="preFilmModalFrame"
+        class="layer-stack layer-stack-prefilmmodal-frames layer-stack-show-hide"
+        :class="
+          activeFrame === 'preFilmModal'
+            ? 'layer-stack-show'
+            : 'layer-stack-hide'
+        "
+      >
+        <PreFilmModal @continue-to-film="changeActiveFrame(frames[1])" />
+      </div>
+      <div
         ref="introFrames"
         class="layer-stack layer-stack-intro-frames layer-stack-show-hide"
         :class="
@@ -101,16 +112,16 @@
                 <button
                   ref="playBtn"
                   :disabled="!isFilm13Loaded"
-                  @click="changeActiveFrame(frames[1])"
+                  @click="homeClickEnterFilm"
                 >
                   <span v-if="!isFilm13Loaded">Loading Film</span>
                   <span v-else>Enter Film</span>
                 </button>
               </nav>
-              <div class="subtitle-controls center">
+              <!-- <div class="subtitle-controls center">
                 <h2 class="section-title">Subtitles</h2>
                 <VidSubtitles />
-              </div>
+              </div> -->
             </div>
           </header>
           <IntroSectionsNav
@@ -341,6 +352,7 @@ export default {
   },
   data() {
     return {
+      clickedPlayOnce: false,
       isContainerIntroPositionSet: false,
       isContainerIntroCentered: true,
       introSectionsNavOffsetLeft: null,
@@ -436,6 +448,16 @@ export default {
     },
   },
   watch: {
+    introSectionsNavWidth() {
+      var gridWidth = this.$refs.posterImagesGrid.clientWidth;
+      var gridHeight = this.$refs.posterImagesGrid.clientHeight;
+      this.introSectionsNavWidth = gridWidth;
+      if (gridWidth >= 1440 && gridHeight >= 1081) {
+        // console.log("hi its big!");
+        // console.log(this.$refs.introSectionsNav);
+        this.$refs.introSectionsNav.$el.style.minWidth = `${1440}px`;
+      }
+    },
     activeFrame() {
       if (this.activeFrame === "Intro") {
         this.activateIntroFrame();
@@ -541,6 +563,15 @@ export default {
     this.setContainerIntroPositions();
   },
   methods: {
+    homeClickEnterFilm() {
+      if (!this.clickedPlayOnce) {
+        // on first play
+        this.changeActiveFrame("preFilmModal");
+        this.clickedPlayOnce = true;
+      } else {
+        this.changeActiveFrame(this.frames[1]);
+      }
+    },
     setContainerIntroPositions() {
       // set things up
       var gridHeight = this.$refs.posterImagesGrid.clientHeight;
@@ -571,11 +602,11 @@ export default {
         this.introSectionsNavOffsetLeft = this.$refs.posterImagesGrid.offsetLeft;
         this.introSectionsNavWidth = gridWidth;
         this.isContainerIntroPositionSet = true;
-        if (gridWidth >= 1440) {
-          console.log("hi its big!");
-          console.log(this.$refs.introSectionsNav);
-          this.$refs.introSectionsNav.$el.style.minWidth = `${1440}px`;
-        }
+        // if (gridWidth >= 1440) {
+        //   // console.log("hi its big!");
+        //   // console.log(this.$refs.introSectionsNav);
+        //   this.$refs.introSectionsNav.$el.style.minWidth = `${1440}px`;
+        // }
       } else {
         this.containerIntroHeaderOffsetTop = null;
         this.introSectionsNavOffsetLeft = null;
@@ -612,6 +643,8 @@ export default {
       const container = this.$refs.introFrames.querySelector(
         ".tab-group-container"
       );
+      const containerLayerStackTop = this.$refs.containerLayerStack.offsetTop;
+
       let btnTop;
       let btnLeft;
       if (
@@ -620,7 +653,7 @@ export default {
         window.innerHeight < 1080 &&
         section
       ) {
-        btnTop = section.offsetTop;
+        btnTop = section.offsetTop + containerLayerStackTop;
         btnLeft = section.offsetWidth + section.offsetLeft - 1;
         // console.log("first", btnTop, btnLeft);
 
@@ -632,7 +665,7 @@ export default {
         container &&
         section
       ) {
-        btnTop = section.offsetTop - 30;
+        btnTop = section.offsetTop - 30 + containerLayerStackTop;
         let leftMargin = (window.innerWidth - container.offsetWidth) / 2;
         btnLeft = container.offsetWidth + leftMargin - 30;
         closeBtn.style.top = `${btnTop}px`;
@@ -643,7 +676,7 @@ export default {
         container
       ) {
         let siteOffsetLeft = this.$refs.containerLayerStack.offsetLeft;
-        btnTop = section.offsetTop;
+        btnTop = section.offsetTop + containerLayerStackTop;
         btnLeft = container.offsetWidth + section.offsetLeft + siteOffsetLeft;
         // console.log("second", btnTop, btnLeft);
         closeBtn.style.top = `${btnTop}px`;

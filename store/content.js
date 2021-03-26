@@ -25,6 +25,16 @@ export const mutations = {
 }
 
 export const getters = {
+    languages: (state) => {
+        if (!state.isAboutDataLoaded) {
+            return false;
+        }
+
+        let rawLanguages = state.rawDataAbout.acf.languages; // object 
+        let langCount = parseInt(state.rawDataAbout.acf.language_count); // number 
+        let rawLanguagesArray = Object.values(rawLanguages);
+        return rawLanguagesArray.slice(0, langCount);
+    },
     totalVideos: (state) => {
         return state.rawDataFilms.length
     },

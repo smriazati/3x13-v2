@@ -312,6 +312,14 @@ html, body, #__nuxt, #__layout, #__layout > div {
   overflow: hidden;
 }
 
+@media (min-width: 1440px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 .container .layer-stack-wrapper {
   position: relative;
 }
@@ -2565,6 +2573,7 @@ ul.subtitles {
   .container-poster-images .hover-wrapper,
   .grid-film13 {
     max-width: 1440px;
+    max-height: 1080px;
   }
 }
 

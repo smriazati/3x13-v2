@@ -1,24 +1,38 @@
 <template>
-  <ul class="subtitles">
+  <ul v-if="isDataLoaded" class="subtitles">
     <li
-      :class="activeSubtitle === 'en' ? 'active-sub' : 'inactive-sub'"
-      @click="subtitleChange('en')"
+      v-for="(item, index) in languages"
+      :key="index"
+      :data-code="item.language_subtitle_code"
+      :class="
+        selectedLang === item.language_subtitle_code
+          ? 'active-sub'
+          : 'inactive-sub'
+      "
+      @click="subtitleChange(item.language_subtitle_code)"
     >
-      English
-    </li>
-    <li
-      :class="activeSubtitle === 'ar' ? 'active-sub' : 'inactive-sub'"
-      @click="subtitleChange('ar')"
-    >
-      عربى
+      {{ item.language_label }}
     </li>
   </ul>
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
+
 export default {
   computed: {
-    activeSubtitle: {
+    isDataLoaded() {
+      if (!this.$store.state.content.isAboutDataLoaded) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    ...mapGetters({
+      aboutData: "content/aboutData",
+      languages: "content/languages",
+    }),
+    selectedLang: {
       // return this.$store.state.grid.activeIntroSection;
       // getter
       get: function () {

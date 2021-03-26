@@ -12,7 +12,7 @@ export const state = () => ({
     isFullscreen: false,
     isGridPlaying: false,
     modalStates: ['player', 'tiles'],
-    subtitleLanguage: 'en',
+    subtitleLanguage: '',
     previousFrame: '',
     prevModal: 0,
     previouslyActiveModal: null,

@@ -38,6 +38,12 @@
           {{ aboutData.acf.tutorial_headline }}
         </button>
       </li>
+      <li class="dropdown-menu-item subtitles-menu-item">
+        <button>Subtitles</button>
+        <div class="navigation-subtitles dropdown-menu">
+          <VidSubtitles />
+        </div>
+      </li>
     </ul>
   </nav>
 </template>
@@ -159,6 +165,56 @@ $tagline-container: 60ch;
     text-align: center;
     > * {
       flex: 0 0 33%;
+    }
+  }
+}
+
+.container-intro .subtitles-menu-item {
+  display: none;
+}
+
+@media (min-width: 1061px) {
+  .dropdown-menu-item {
+    .dropdown-menu {
+      // display: none;
+      // max-height: 0;
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: 0.3s ease all;
+      li {
+        font-size: 0.8em;
+        line-height: 1.5em;
+        &::before {
+          content: "-";
+        }
+      }
+    }
+    &:hover {
+      .dropdown-menu {
+        opacity: 1;
+        transform: translateX(0);
+        max-height: unset;
+        display: flex;
+      }
+    }
+  }
+}
+@media (max-width: 1060px) {
+  .dropdown-menu-item {
+    .dropdown-menu {
+      .subtitles {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        > * {
+          padding: 5px 0;
+        }
+      }
+    }
+    li {
+      font-size: 18px;
+      line-height: 24px;
+      text-align: center;
     }
   }
 }
