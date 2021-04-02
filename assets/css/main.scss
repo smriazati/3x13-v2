@@ -996,6 +996,14 @@ a,
   }
 }
 
+.link-hover {
+  &:hover {
+    cursor: pointer;
+    color: $gold;
+  }
+}
+
+
 .link-invert {
   color: $light;
   &:hover {
@@ -1027,6 +1035,14 @@ button,
   &.btn-transp {
     background: transparent;
     color: $light;
+  }
+}
+
+.btn-flat {
+  border: 2px solid $gold;
+  padding: 10px 20px;
+  &:hover {
+    padding: 10px 20px;
   }
 }
 

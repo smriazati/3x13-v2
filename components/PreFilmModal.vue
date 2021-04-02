@@ -22,27 +22,48 @@
         </ul>
 
         <div class="continue-section">
-          <div class="select-language">
-            <div class="select">
-              <select
-                id="languages"
-                v-model="selectedLang"
-                name="languages"
-                :class="selectedLang === '' ? 'highlight' : 'no-highlight'"
+          <div
+            :class="selectedLang === '' ? 'no-lang-selected' : 'lang-selected'"
+            class="select-language"
+          >
+            <button
+              :class="isLanguageMenuOpen ? 'open' : 'close'"
+              class="btn-flat dropdown-trigger"
+              @click="openDropdown"
+            >
+              Select your language
+              <!-- <span v-if="selectedLang === '' || !isLanguageMenuOpen">
+                Select your language</span
               >
-                <option disabled value="">Select your language</option>
-                <option
-                  v-for="(item, index) in languages"
-                  :key="index"
-                  :value="item.language_subtitle_code"
-                >
-                  {{ item.language_label }}
-                </option>
-              </select>
-            </div>
+              <span v-else>Language: {{ selectedLangLabel }} </span> -->
+            </button>
+            <ul
+              :class="isLanguageMenuOpen ? 'show' : 'hide'"
+              class="dropdown-list"
+            >
+              <li
+                v-for="(item, index) in languages"
+                :key="index"
+                class="link-hover"
+                :class="
+                  selectedLangLabel === item.language_label
+                    ? 'active-sub'
+                    : 'inactive-sub'
+                "
+                @click="
+                  setLanguage(item.language_subtitle_code, item.language_label)
+                "
+              >
+                {{ item.language_label }}
+              </li>
+            </ul>
           </div>
           <div ref="continueBtn" class="continue-button">
-            <button :disabled="selectedLang === ''" @click="continueToFilm">
+            <button
+              class="btn-flat"
+              :disabled="selectedLang === ''"
+              @click="continueToFilm"
+            >
               {{ aboutData.acf.prefilmmodal_continue_button_text }}
             </button>
             <label
@@ -61,6 +82,12 @@
 import { mapGetters, mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      isLanguageMenuOpen: false,
+      selectedLangLabel: "",
+    };
+  },
   computed: {
     isDataLoaded() {
       if (!this.$store.state.content.isAboutDataLoaded) {
@@ -96,6 +123,19 @@ export default {
     continueToFilm() {
       this.$emit("continue-to-film");
     },
+    toggleDropdown() {
+      this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
+    },
+    openDropdown() {
+      this.isLanguageMenuOpen = true;
+    },
+    setLanguage(code, label) {
+      this.$store.commit("grid/setSubtitle", code);
+      this.selectedLangLabel = label;
+      // if (this.isLanguageMenuOpen) {
+      //   this.isLanguageMenuOpen = false;
+      // }
+    },
   },
 };
 </script>
@@ -130,53 +170,6 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: 30px;
-  .select-language {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    margin-bottom: 30px;
-    label {
-      line-height: 1.2em;
-      font-size: 1em;
-      font-style: italic;
-      color: #767676;
-    }
-    .select {
-      position: relative;
-      margin-bottom: 0 !important;
-
-      &::after {
-        content: " ";
-        display: block;
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 10px solid #767676;
-        position: absolute;
-        right: 22px;
-        top: 28px;
-        height: auto;
-      }
-      select {
-        padding: 11px 44px;
-        border: 0;
-        margin: 10px;
-        font-size: 1em;
-        font-family: "Nunito Sans", sans-serif;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        text-align: center;
-        color: #2c2c2c;
-        background: #e8e8e8;
-        border: 2px solid #e8e8e8;
-        &.highlight {
-          border: 2px solid #caa611;
-        }
-      }
-    }
-  }
 }
 
 // mobile layouts
@@ -225,6 +218,70 @@ export default {
     &.show {
       opacity: 1;
     }
+  }
+}
+
+$grayedOut: rgb(75, 75, 75);
+.select-language {
+  overflow: hidden;
+  &.lang-selected {
+    button {
+      background: $grayedOut !important;
+      border: 2px solid $grayedOut !important;
+    }
+    li.inactive-sub {
+      color: $grayedOut !important;
+      &:hover {
+        color: rgb(202, 166, 17) !important;
+      }
+    }
+    .dropdown-list {
+      border: 2px solid $grayedOut !important;
+    }
+  }
+}
+.dropdown-trigger {
+  z-index: 10;
+  position: relative;
+  &.open {
+    background: rgb(202, 166, 17);
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+.dropdown-list {
+  z-index: 9;
+  position: relative;
+  list-style: none;
+  padding-left: 0;
+  font-size: 1em;
+  padding: 10px;
+  border: 2px solid rgb(202, 166, 17);
+  li {
+    margin-bottom: 0 !important;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    &.active-sub {
+      color: rgb(202, 166, 17);
+      &:hover {
+        cursor: default;
+      }
+    }
+  }
+  transition: 0.3s ease all;
+  &.show {
+    transform: translateY(0);
+    height: auto;
+    opacity: 1;
+  }
+  &.hide {
+    transform: translateY(-150px);
+    height: 0;
+    opacity: 0;
   }
 }
 </style>

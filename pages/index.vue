@@ -111,6 +111,7 @@
               <nav class="play-film13-button">
                 <button
                   ref="playBtn"
+                  class="btn-flat"
                   :disabled="!isFilm13Loaded"
                   @click="homeClickEnterFilm"
                 >
