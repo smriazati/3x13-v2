@@ -583,9 +583,9 @@ export default {
       // console.log(modal);
       // modal.classList.add("layer-stack-slide-left");
       this.$refs.preFilmModalFrame.classList.add("layer-stack-slide-left");
-      console.log(this.$refs.preFilmModalFrame.classList);
+      // console.log(this.$refs.preFilmModalFrame.classList);
       this.changeActiveFrame(this.frames[1]);
-      console.log(this.$refs.preFilmModalFrame.classList);
+      // console.log(this.$refs.preFilmModalFrame.classList);
     },
     closePreFilmModal() {
       this.changeActiveFrame(this.frames[0]);

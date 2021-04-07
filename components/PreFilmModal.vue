@@ -64,7 +64,10 @@
               :disabled="selectedLang === ''"
               @click="continueToFilm"
             >
-              {{ aboutData.acf.prefilmmodal_continue_button_text }}
+              <div class="icon-holder">
+                <SvgThing name="Play" />
+              </div>
+              <!-- {{ aboutData.acf.prefilmmodal_continue_button_text }} -->
             </button>
             <label
               for="languages"
@@ -161,6 +164,43 @@ export default {
 // .layer-stack-prefilmmodal-frames.layer-stack-show {
 //   opacity: 1;
 // }
+
+.tutorial-list {
+  justify-content: center;
+  > *:nth-child(2) {
+    display: none !important;
+  }
+}
+
+.continue-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.continue-button button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  padding: 10px 0;
+  &:hover {
+    padding: 10px 0;
+  }
+}
+.icon-holder {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    margin-bottom: 0 !important;
+    width: 50px;
+    height: 50px;
+  }
+}
 
 .continue-section {
   display: flex;
