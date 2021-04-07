@@ -15,7 +15,17 @@
             : 'layer-stack-hide'
         "
       >
-        <PreFilmModal @continue-to-film="changeActiveFrame(frames[1])" />
+        <div
+          :class="showPreFilmModalCloseBtn ? 'show-btn' : 'hide-btn'"
+          class="close-button-container"
+          @click="closePreFilmModal"
+        >
+          <button class="close-button close-intro-frame-btn">
+            <span class="visually-hidden">Close</span>
+            <span class="icon"><SvgThing name="Close" /></span>
+          </button>
+        </div>
+        <PreFilmModal @continue-to-film="proceedToFilm()" />
       </div>
       <div
         ref="introFrames"
@@ -353,6 +363,7 @@ export default {
   },
   data() {
     return {
+      showPreFilmModalCloseBtn: false,
       clickedPlayOnce: false,
       isContainerIntroPositionSet: false,
       isContainerIntroCentered: true,
@@ -534,6 +545,9 @@ export default {
       ) {
         this.setCloseBtnPosition();
       }
+      if (this.activeFrame === "preFilmModal") {
+        this.setPreFilmCloseBtnPosition();
+      }
 
       // if (!this.isWindowResizing) {
       //   this.setContainerIntroPositions(); // reset positions once resize is complete
@@ -564,11 +578,29 @@ export default {
     this.setContainerIntroPositions();
   },
   methods: {
+    proceedToFilm() {
+      // layer-stack-slide-left
+      // console.log(modal);
+      // modal.classList.add("layer-stack-slide-left");
+      this.$refs.preFilmModalFrame.classList.add("layer-stack-slide-left");
+      console.log(this.$refs.preFilmModalFrame.classList);
+      this.changeActiveFrame(this.frames[1]);
+      console.log(this.$refs.preFilmModalFrame.classList);
+    },
+    closePreFilmModal() {
+      this.changeActiveFrame(this.frames[0]);
+      this.clickedPlayOnce = false;
+    },
     homeClickEnterFilm() {
       if (!this.clickedPlayOnce) {
         // on first play
+        const closeBtn = this.$refs.preFilmModalFrame.querySelector("button");
+        closeBtn.style.opacity = "0";
         this.changeActiveFrame("preFilmModal");
         this.clickedPlayOnce = true;
+        const delay = 1000;
+        setTimeout(() => this.setPreFilmCloseBtnPosition(), delay);
+        //
       } else {
         this.changeActiveFrame(this.frames[1]);
       }
@@ -627,6 +659,9 @@ export default {
       ) {
         this.setCloseBtnPosition();
       }
+      if (this.activeFrame === "preFilmModal") {
+        this.setPreFilmCloseBtnPosition();
+      }
       this.setContainerIntroPositions();
     },
     onWindowResize: function () {
@@ -637,6 +672,57 @@ export default {
         this.isWindowResizing = false;
         this.setContainerIntroPositions();
       }, 200);
+    },
+    setPreFilmCloseBtnPosition() {
+      const section = this.$refs.preFilmModalFrame.querySelector("section");
+      const closeBtn = this.$refs.preFilmModalFrame.querySelector("button");
+      const container = this.$refs.preFilmModalFrame.querySelector(
+        ".tab-group-container"
+      );
+      const containerLayerStackTop = this.$refs.containerLayerStack.offsetTop;
+
+      let btnTop;
+      let btnLeft;
+      if (
+        window.innerWidth < 2160 &&
+        window.innerWidth > 1060 &&
+        window.innerHeight < 1080 &&
+        section
+      ) {
+        btnTop = section.offsetTop + containerLayerStackTop;
+        btnLeft = section.offsetWidth + section.offsetLeft - 1;
+        // console.log("first", btnTop, btnLeft);
+
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
+      } else if (
+        window.innerWidth < 1060 &&
+        window.innerHeight < 1080 &&
+        container &&
+        section
+      ) {
+        btnTop = section.offsetTop - 30 + containerLayerStackTop;
+        let leftMargin = (window.innerWidth - container.offsetWidth) / 2;
+        btnLeft = container.offsetWidth + leftMargin - 30;
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
+      } else if (
+        (window.innerWidth >= 2160 || window.innerHeight >= 1080) &&
+        section &&
+        container
+      ) {
+        let siteOffsetLeft = this.$refs.containerLayerStack.offsetLeft;
+        btnTop = section.offsetTop + containerLayerStackTop;
+        btnLeft = container.offsetWidth + section.offsetLeft + siteOffsetLeft;
+        // console.log("second", btnTop, btnLeft);
+        closeBtn.style.top = `${btnTop}px`;
+        closeBtn.style.left = `${btnLeft}px`;
+      } else {
+        closeBtn.style.top = `30px`;
+        closeBtn.style.right = `30px`;
+        closeBtn.style.borderBottom = `1px solid rgb(202, 166, 17)`;
+      }
+      this.showPreFilmModalCloseBtn = true;
     },
     setCloseBtnPosition() {
       const section = this.$refs.introFrames.querySelector("section");

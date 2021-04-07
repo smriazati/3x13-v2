@@ -119,6 +119,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$emit("on-component-mount");
+  },
   methods: {
     continueToFilm() {
       this.$emit("continue-to-film");
@@ -142,27 +145,21 @@ export default {
 
 <style lang="scss">
 .layer-stack-prefilmmodal-frames {
-  transition: 0.3s ease opacity;
+  // transition: 0.3s ease opacity;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  section {
+    z-index: 1000;
+    position: relative;
+  }
 }
 
-.layer-stack-prefilmmodal-frames.layer-stack-hide {
-  opacity: 0;
-}
-.layer-stack-prefilmmodal-frames.layer-stack-show {
-  opacity: 1;
-}
-
-// @media (min-height: 600px) {
-//   .layer-stack-prefilmmodal-frames {
-//     .pre-film-modal {
-//       .tab-group-container {
-//         height: auto;
-//       }
-//     }
-//   }
+// .layer-stack-prefilmmodal-frames.layer-stack-hide {
+//   opacity: 0;
+// }
+// .layer-stack-prefilmmodal-frames.layer-stack-show {
+//   opacity: 1;
 // }
 
 .continue-section {

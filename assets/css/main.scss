@@ -1373,6 +1373,20 @@ ul.subtitles {
 }
 
 
+.layer-stack-prefilmmodal-frames {
+  transition: .6s ease opacity;
+}
+.layer-stack-show.layer-stack-prefilmmodal-frames {
+  opacity: 1;
+}
+
+
+.layer-stack-hide.layer-stack-prefilmmodal-frames {
+  opacity: 0
+}
+
+
+
 .layer-stack-intro {
   transition: 1s ease transform;
 }
@@ -1382,6 +1396,7 @@ ul.subtitles {
 .layer-stack-hidden.layer-stack-intro {
   transform: translateX(-100vw);
 }
+
 
 .layer-stack-film13 {
   transition: 1s ease opacity;
@@ -1424,6 +1439,8 @@ ul.subtitles {
 .layer-stack-intro-frames {
   background: rgba($dark, 0.8);
 }
+
+.layer-stack-prefilmmodal-frames .close-button-container button,
 .layer-stack-intro-frames .close-button-container button {
     position: fixed;
     z-index: 999;
@@ -2600,15 +2617,10 @@ ul.subtitles {
 }
 
 
-// center the site when it's full screen
-.fullscreenWrapper.fullscreen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-// disable text inflation  https://developer.mozilla.org/en-US/docs/Web/CSS/text-size-adjust
-// body {
-//   -webkit-text-size-adjust: none;
-//   text-size-adjust: none;
-// }
+.hide-btn {
+  opacity: 0
+}
+.show-btn {
+  opacity: 1;
+}
