@@ -26,12 +26,18 @@
             :class="selectedLang === '' ? 'no-lang-selected' : 'lang-selected'"
             class="select-language"
           >
+            <label
+              for="selectLang"
+              :class="selectedLang === '' ? 'show' : 'hide'"
+              >{{ aboutData.acf.prefilmmodal_language_select_text }}</label
+            >
             <button
+              name="selectLang"
               :class="isLanguageMenuOpen ? 'open' : 'close'"
               class="btn-flat dropdown-trigger"
               @click="openDropdown"
             >
-              Select your language
+              Select
               <!-- <span v-if="selectedLang === '' || !isLanguageMenuOpen">
                 Select your language</span
               >
@@ -46,7 +52,7 @@
                 :key="index"
                 class="link-hover"
                 :class="
-                  selectedLangLabel === item.language_label
+                  selectedLang === item.language_subtitle_code
                     ? 'active-sub'
                     : 'inactive-sub'
                 "
@@ -57,23 +63,15 @@
                 {{ item.language_label }}
               </li>
             </ul>
-          </div>
-          <div ref="continueBtn" class="continue-button">
-            <button
-              class="btn-flat"
-              :disabled="selectedLang === ''"
-              @click="continueToFilm"
-            >
-              <div class="icon-holder">
-                <SvgThing name="Play" />
-              </div>
-              <!-- {{ aboutData.acf.prefilmmodal_continue_button_text }} -->
-            </button>
-            <label
-              for="languages"
-              :class="selectedLang === '' ? 'show' : 'hide'"
-              >{{ aboutData.acf.prefilmmodal_language_select_text }}</label
-            >
+            <div ref="continueBtn" class="continue-button">
+              <button
+                class="btn-flat"
+                :class="selectedLang == '' ? 'hide' : 'show'"
+                @click="continueToFilm"
+              >
+                {{ aboutData.acf.prefilmmodal_continue_button_text }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -135,12 +133,15 @@ export default {
     openDropdown() {
       this.isLanguageMenuOpen = true;
     },
+    closeDropdown() {
+      this.isLanguageMenuOpen = false;
+    },
     setLanguage(code, label) {
       this.$store.commit("grid/setSubtitle", code);
       this.selectedLangLabel = label;
-      // if (this.isLanguageMenuOpen) {
-      //   this.isLanguageMenuOpen = false;
-      // }
+      if (this.isLanguageMenuOpen) {
+        this.closeDropdown();
+      }
     },
   },
 };
@@ -158,18 +159,9 @@ export default {
   }
 }
 
-// .layer-stack-prefilmmodal-frames.layer-stack-hide {
-//   opacity: 0;
-// }
-// .layer-stack-prefilmmodal-frames.layer-stack-show {
-//   opacity: 1;
-// }
-
 .tutorial-list {
   justify-content: center;
-  > *:nth-child(2) {
-    display: none !important;
-  }
+  margin: 0 auto;
 }
 
 .continue-button {
@@ -262,19 +254,46 @@ $grayedOut: rgb(75, 75, 75);
 .select-language {
   overflow: hidden;
   &.lang-selected {
-    button {
-      background: $grayedOut !important;
-      border: 2px solid $grayedOut !important;
-    }
-    li.inactive-sub {
-      color: $grayedOut !important;
-      &:hover {
-        color: rgb(202, 166, 17) !important;
-      }
-    }
-    .dropdown-list {
-      border: 2px solid $grayedOut !important;
-    }
+    // button.dropdown-trigger {
+    //   background: $grayedOut !important;
+    //   border: 2px solid $grayedOut !important;
+    // }
+    // li.inactive-sub {
+    //   color: $grayedOut !important;
+    //   &:hover {
+    //     color: rgb(202, 166, 17) !important;
+    //   }
+    // }
+    // .dropdown-list {
+    //   border: 2px solid $grayedOut !important;
+    // }
+  }
+}
+
+.lang-selected .dropdown-trigger {
+  background: transparent !important;
+  border: 2px solid $grayedOut !important;
+  color: #7b7b7b !important;
+  &:hover,
+  &.open {
+    color: #fff !important;
+    background: rgb(202, 166, 17) !important;
+    border: 2px solid rgb(202, 166, 17) !important;
+  }
+}
+
+.dropdown-list.show {
+  margin-bottom: 15px;
+}
+
+.continue-button button {
+  &.hide {
+    opacity: 0;
+    max-height: 0;
+  }
+  &.show {
+    opacity: 1;
+    max-height: auto;
   }
 }
 .dropdown-trigger {
@@ -318,7 +337,26 @@ $grayedOut: rgb(75, 75, 75);
   &.hide {
     transform: translateY(-150px);
     height: 0;
+    overflow: hidden;
     opacity: 0;
+  }
+}
+
+.select-language {
+  display: flex;
+  flex-direction: column;
+  label {
+    margin-bottom: 15px;
+  }
+  label {
+    font-style: italic;
+    opacity: 0.8;
+  }
+  .continue-button {
+    width: 100%;
+    button {
+      width: 100%;
+    }
   }
 }
 </style>

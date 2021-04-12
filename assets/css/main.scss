@@ -965,7 +965,8 @@ h1, h2, h3, h4 {
 .tutorial-list-item-text,
 p,
 ul,
-ol {
+ol,
+label {
   font-weight: 400;
   font-size: 1em;
   letter-spacing: 0.03em;
@@ -1457,6 +1458,7 @@ ul.subtitles {
       padding: $spacer/2;
       width: $spacer*3;
       height: $spacer*3;
+      justify-content: center;
       @media (max-width: $bp-sm) {
         border-bottom: 0;
       }
